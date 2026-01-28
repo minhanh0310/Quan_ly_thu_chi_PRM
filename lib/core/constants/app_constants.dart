@@ -1,8 +1,8 @@
 abstract final class AppConst {
   // TODO: uodate app name
-  static const String appName = '';
+  static const String appName = 'Expense Managing App';
 
-  static const String robotoFont = 'Roboto';
+  static const String poppinsFont = 'Poppins';
 
   // Business
 
