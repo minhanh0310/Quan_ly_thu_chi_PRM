@@ -18,6 +18,9 @@ export 'core/theme/theme_provider.dart';
 
 // Widgets
 export 'core/widgets/app_gap.dart';
+export 'core/widgets/template/custom_app_bar.dart';
+export 'core/widgets/template/custom_text_field.dart';
+export 'core/widgets/template/primary_button.dart';
 
 // Routers
 export 'core/routers/routes.dart';

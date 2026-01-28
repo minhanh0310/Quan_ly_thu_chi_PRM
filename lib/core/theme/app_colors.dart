@@ -24,13 +24,17 @@ class AppColors {
 
   static const Color white = Color(0xFFFFFFFF);
 
+  static const Color black = Color(0xFF000000);
+
   static const Color blackBackground = Color(0xFF1B262C);
+
+  static const Color lightGray = Color(0xffCACACA);
 
   //
 
   static const Color brand = electricBlue;
 
-  static const Color primary = electricBlue; // Dark Gunmetal 34281C
+  static const Color primary = Color(0xff3629B7); // Dark Gunmetal 34281C
 
   // static const Color secondary = ;
 

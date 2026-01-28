@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import 'responsive_sizedbox.dart';
-
 abstract final class AppGap {
   static const Widget g2 = Gap(2);
   static const Widget g4 = Gap(4);
