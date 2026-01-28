@@ -1,14 +1,19 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_localizations/flutter_localizations.dart'; // Để hỗ trợ tiếng Việt
-import 'dashboard_screen.dart';
-import 'report_screen.dart';
-import 'add_transaction_screen.dart';
-import 'settings_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/theme/theme_provider.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/routers/routes.dart';
 
 void main() {
-  runApp(const MyApp());
+  // khoi tao truoc khi chay app
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,64 +21,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Quản Lý Thu Chi',
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('vi', 'VN')], // Thiết lập tiếng Việt
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        textTheme: GoogleFonts.robotoTextTheme(),
-        useMaterial3: true,
-      ),
-      home: const MainContainer(),
-    );
-  }
-}
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Expense Managing App',
+          debugShowCheckedModeBanner: false,
+          theme: themeProvider.currentTheme,
+          themeMode: themeProvider.isDarkMode
+              ? ThemeMode.dark
+              : ThemeMode.light,
 
-class MainContainer extends StatefulWidget {
-  const MainContainer({super.key});
-
-  @override
-  State<MainContainer> createState() => _MainContainerState();
-}
-
-class _MainContainerState extends State<MainContainer> {
-  int _currentIndex = 0;
-
-  // Danh sách các màn hình
-  final List<Widget> _screens = [
-    const DashboardScreen(), // Index 0: Sổ giao dịch
-    const ReportScreen(),    // Index 1: Báo cáo
-    const AddTransactionScreen(), // Index 2: Nhập liệu
-    const SettingsScreen(),       // Index 3: Cài đặt
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _currentIndex == 0 ? AppBar(
-        title: const Text("Sổ Thu Chi"),
-        backgroundColor: Colors.orange,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-      ) : null, // Chỉ hiện AppBar ở Dashboard, Report đã có AppBar riêng
-      body: _screens[_currentIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        indicatorColor: Colors.orange.withOpacity(0.2),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.book), label: 'Sổ cái'),
-          NavigationDestination(icon: Icon(Icons.pie_chart), label: 'Báo cáo'),
-          NavigationDestination(icon: Icon(Icons.add_circle, size: 30, color: Colors.orange), label: 'Nhập'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Khác'),
-        ],
-      ),
+          builder: (context, child) {
+            return ResponsiveBreakpoints.builder(
+              child: child!,
+              breakpoints: [
+                const Breakpoint(start: 0, end: 450, name: MOBILE),
+                const Breakpoint(start: 451, end: 800, name: TABLET),
+                const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+                const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+              ],
+            );
+          },
+          routes: AppRoutes.routes,
+          initialRoute: AppRoutes.splash,
+        );
+      },
     );
   }
 }
