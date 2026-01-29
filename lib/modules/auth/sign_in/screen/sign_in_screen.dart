@@ -35,7 +35,7 @@ class _SignInScreenState extends State<SignInScreen> {
           backgroundColor: isDark ? AppColors.blackBackground : AppColors.white,
           appBar: AppBar(
             title: Text(
-              'Get Started',
+              'Sign In',
               style: AppTextStyle.s20.copyWith(
                 color: AppColors.white,
                 fontWeight: FontWeight.w600,

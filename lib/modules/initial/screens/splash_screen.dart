@@ -1,5 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
-import 'package:Quan_ly_thu_chi_PRM/modules/auth/screens/sign_in_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_in/screen/sign_in_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

@@ -52,7 +52,7 @@ class SignInForm extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.forgetPw);
+                Navigator.pushNamed(context, AppRoutes.forgotPw);
               },
               child: Text(
                 'Forgot your password?',
