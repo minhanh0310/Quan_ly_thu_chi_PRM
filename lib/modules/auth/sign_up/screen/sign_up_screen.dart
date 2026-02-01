@@ -1,6 +1,6 @@
 // import 'package:flutter/widgets.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
-import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/sign_up_form.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_up/widgets/sign_up_form.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_header.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_redirect_text.dart';
 
@@ -35,7 +35,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         top: false,
         child: Scaffold(
           backgroundColor: isDark ? AppColors.blackBackground : AppColors.white,
-          appBar: CustomAppBar(title: 'Sign In'),
+          appBar: CustomAppBar(
+            title: 'Sign In',
+            backgroundColor: AppColors.mainColor,
+            iconColor: AppColors.white,
+            titleColor: AppColors.white,
+          ),
           body: Column(
             children: [
               Expanded(

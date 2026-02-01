@@ -2,8 +2,7 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:stylish_shopping_app/core/extensions/theme_extension.dart';
 
-class CustomAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onBackPressed;
   final Color? backgroundColor;
@@ -26,8 +25,7 @@ class CustomAppBar extends StatelessWidget
   Widget build(BuildContext context) {
     return AppBar(
       scrolledUnderElevation: 0,
-      backgroundColor:
-          backgroundColor ?? AppColors.mainColor,
+      backgroundColor: backgroundColor ?? AppColors.white,
       elevation: 0,
       automaticallyImplyLeading: false,
       leading: Padding(
@@ -37,7 +35,7 @@ class CustomAppBar extends StatelessWidget
           icon: Icon(
             Icons.arrow_back_ios,
             size: 16,
-            color: iconColor ?? Colors.white,
+            color: iconColor ?? AppColors.black,
           ),
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
@@ -48,7 +46,7 @@ class CustomAppBar extends StatelessWidget
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: titleColor ?? Colors.white,
+          color: titleColor ?? AppColors.black,
         ),
       ),
       centerTitle: false,
@@ -58,8 +56,7 @@ class CustomAppBar extends StatelessWidget
 }
 
 // Alternative version with SVG icon support
-class CustomAppBarSvg extends StatelessWidget
-    implements PreferredSizeWidget {
+class CustomAppBarSvg extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String? backIconSvgPath;
   final VoidCallback? onBackPressed;
@@ -84,7 +81,7 @@ class CustomAppBarSvg extends StatelessWidget
   Widget build(BuildContext context) {
     return AppBar(
       scrolledUnderElevation: 0,
-      backgroundColor: backgroundColor ?? const Color(0xFF3629B7),
+      backgroundColor: backgroundColor ?? AppColors.white,
       elevation: 0,
       automaticallyImplyLeading: false,
       leading: Padding(
@@ -97,7 +94,7 @@ class CustomAppBarSvg extends StatelessWidget
                   width: 16,
                   height: 16,
                   colorFilter: ColorFilter.mode(
-                    iconColor ?? Colors.white,
+                    iconColor ?? AppColors.black,
                     BlendMode.srcIn,
                   ),
                 )
@@ -106,7 +103,7 @@ class CustomAppBarSvg extends StatelessWidget
                   width: 16,
                   height: 16,
                   colorFilter: ColorFilter.mode(
-                    iconColor ?? Colors.white,
+                    iconColor ?? AppColors.black,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -119,7 +116,7 @@ class CustomAppBarSvg extends StatelessWidget
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: titleColor ?? Colors.white,
+          color: titleColor ?? AppColors.black,
         ),
       ),
       centerTitle: false,

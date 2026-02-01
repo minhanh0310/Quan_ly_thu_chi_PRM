@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 
 // TODO: update Design Screen Width
-const double _designScreenWidth = 1;
+const double _designScreenWidth = 375;
 // TODO: update Design Screen Height
-const double _designScreenHeight = 1;
+const double _designScreenHeight = 812;
 
 extension MediaQueryExt on BuildContext {
   BuildContext get root => findAncestorStateOfType<State<WidgetsApp>>()!.context;

@@ -11,7 +11,7 @@ class AppColors {
 
   static const Color rustyRed = Color(0xFFDC3545);
 
-  static const Color gray = Color(0xFF808080);
+  static const Color gray = Color(0xFF979797);
 
   static const Color auroMetalAaurus = Color(0xFF6C757d);
 

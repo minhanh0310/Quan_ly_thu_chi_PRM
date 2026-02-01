@@ -62,6 +62,7 @@ class _SignUpFormState extends State<SignUpForm> {
           hintText: widget.password,
           keyboardType: TextInputType.visiblePassword,
           obscureText: true,
+          isPassword: true,
         ),
 
         AppGap.h12,
@@ -91,7 +92,7 @@ class _SignUpFormState extends State<SignUpForm> {
             Expanded(
               child: RichText(
                 text: TextSpan(
-                  style: AppTextStyle.s12.copyWith(
+                  style: AppTextStyle.s14.copyWith(
                     color: AppColors.black,
                     height: 1.5,
                   ),
@@ -99,7 +100,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     TextSpan(text: 'By creating an account you agree to our '),
                     TextSpan(
                       text: 'Term and Conditions',
-                      style: AppTextStyle.s12.copyWith(
+                      style: AppTextStyle.s14.copyWith(
                         color: AppColors.mainColor,
                         fontWeight: FontWeight.w600,
                         decoration: TextDecoration.underline,

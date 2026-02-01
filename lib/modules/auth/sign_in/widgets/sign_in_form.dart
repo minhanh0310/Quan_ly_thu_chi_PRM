@@ -43,6 +43,7 @@ class SignInForm extends StatelessWidget {
           hintText: password,
           keyboardType: TextInputType.visiblePassword,
           obscureText: true,
+          isPassword: true,
         ),
 
         AppGap.h12,
