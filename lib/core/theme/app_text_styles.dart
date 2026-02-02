@@ -8,6 +8,7 @@ class AppTextStyle {
   static const String fontFamily = AppConst.poppinsFont;
   static const TextStyle s12 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 12, height: 18/12, fontWeight: FontWeight.w500);
   static const TextStyle s14 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 14, height: 21/14, fontWeight: FontWeight.w500);
+  static const TextStyle s16 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 16, height: 24/16, fontWeight: FontWeight.w500);
   static const TextStyle s20 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 20, height: 30/20, fontWeight: FontWeight.w500);
   static const TextStyle s24 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 24, height: 36/24, fontWeight: FontWeight.w500);
   static const TextStyle s28 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 28, height: 42/28, fontWeight: FontWeight.w500);

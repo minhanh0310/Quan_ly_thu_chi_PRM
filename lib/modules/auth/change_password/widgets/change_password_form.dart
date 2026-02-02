@@ -43,7 +43,42 @@ class ChangePasswordForm extends StatelessWidget {
         PrimaryButton(
           text: 'Change Password',
           onClick: () {
-            //TODO: Submit form
+            // Validation
+            final newPassword = newPwController.text.trim();
+            final confirmPassword = confirmPwController.text.trim();
+
+            // Kiểm tra password không được để trống
+            if (newPassword.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Please enter new password'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+
+            // Kiểm tra confirm password không được để trống
+            if (confirmPassword.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Please confirm your password'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+
+            if (newPassword != confirmPassword) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Passwords do not match'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+            Navigator.pushNamed(context, AppRoutes.changePwSuccess);
           },
         ),
       ],

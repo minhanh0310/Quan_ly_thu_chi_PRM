@@ -12,6 +12,7 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: isDark ? AppColors.blackBackground : AppColors.mainColor,
       body: SafeArea(
+        top: false,
         child: SizedBox(
           width: double.infinity,
           child: Column(
