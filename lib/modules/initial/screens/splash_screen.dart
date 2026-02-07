@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
-import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_in/screen/sign_in_screen.dart';
+// import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_in/screen/sign_in_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/initial/screens/get_started_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -56,7 +57,7 @@ class SplashScreen extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (context) => const SignInScreen(),
+                      builder: (context) => const GetStartedScreen(),
                     ),
                   );
                 },

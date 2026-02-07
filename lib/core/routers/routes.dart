@@ -6,6 +6,8 @@ import 'package:Quan_ly_thu_chi_PRM/modules/auth/forgot_password/screens/forgot_
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/forgot_password/screens/verify_forgot_password_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/change_password/screens/change_password_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/change_password/screens/change_pw_successfully_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/home/home_view.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/initial/screens/onboarding_currency_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -15,6 +17,8 @@ class AppRoutes {
   static const String verifyForgotPw = '/verify-forgot-password';
   static const String changePw = '/change-password';
   static const String changePwSuccess = "/changePwSuccess";
+  static const String homeView = "/homeView";
+  static const String onboardingCurrency = "/onboardingCurrency";
 
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
@@ -23,6 +27,8 @@ class AppRoutes {
     forgotPw: (context) => const ForgotPasswordScreen(),
     verifyForgotPw: (context) => const VerifyForgotPasswordScreen(),
     changePw: (context) => const ChangePasswordScreen(),
-    changePwSuccess: (context) => const ChangePwSuccessfullyScreen()
+    changePwSuccess: (context) => const ChangePwSuccessfullyScreen(),
+    homeView: (context) => const HomeView(),
+    onboardingCurrency: (context) => const OnboardingCurrencyScreen(),
   };
 }

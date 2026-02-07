@@ -47,6 +47,7 @@ class ChangePwSuccessfullyScreen extends StatelessWidget {
                   text: 'Ok',
                   onClick: () {
                     // TODO: Save data and navigate to home screen
+                    Navigator.pushNamed(context, AppRoutes.homeView);
                   },
                 ),
               ),
