@@ -15,7 +15,7 @@ class VerifyForgotPasswordForm extends StatelessWidget {
         Text(
           'Type a code',
           style: AppTextStyle.s12.copyWith(
-            color: AppColors.gray,
+            color: AppColors.grey,
             fontWeight: FontWeight.w600,
           ),
         ),

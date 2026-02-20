@@ -18,7 +18,7 @@ class ChangePasswordForm extends StatelessWidget {
         Text(
           'Type your new password',
           style: AppTextStyle.s12.copyWith(
-            color: AppColors.gray,
+            color: AppColors.grey,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -30,7 +30,7 @@ class ChangePasswordForm extends StatelessWidget {
         Text(
           'Confirm password',
           style: AppTextStyle.s12.copyWith(
-            color: AppColors.gray,
+            color: AppColors.grey,
             fontWeight: FontWeight.w400,
           ),
         ),

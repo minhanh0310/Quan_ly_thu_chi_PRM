@@ -90,7 +90,7 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
             Text(
               'Important: This primary currency cannot be changed later.',
               style: AppTextStyle.s12.copyWith(
-                color: AppColors.gray,
+                color: AppColors.grey,
                 height: 1.5,
               ),
             ),
@@ -177,7 +177,7 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
                   ),
                   Text(
                     currency.name,
-                    style: AppTextStyle.s12.copyWith(color: AppColors.gray),
+                    style: AppTextStyle.s12.copyWith(color: AppColors.grey),
                   ),
                 ],
               ),

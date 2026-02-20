@@ -154,7 +154,7 @@ class GetStartedScreen extends StatelessWidget {
 
           Text(
             subtitle,
-            style: AppTextStyle.s12.copyWith(color: AppColors.gray),
+            style: AppTextStyle.s12.copyWith(color: AppColors.grey),
           ),
         ],
       ),

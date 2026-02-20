@@ -26,7 +26,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         top: false,
         child: Scaffold(
           backgroundColor: AppColors.white,
-          appBar: CustomAppBar(title: 'Forgot Password'),
+          appBar: AuthAppBar(title: 'Forgot Password'),
           body: Column(
             children: [
               Expanded(

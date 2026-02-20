@@ -35,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         top: false,
         child: Scaffold(
           backgroundColor: isDark ? AppColors.blackBackground : AppColors.white,
-          appBar: CustomAppBar(
+          appBar: AuthAppBar(
             title: 'Sign In',
             backgroundColor: AppColors.mainColor,
             iconColor: AppColors.white,

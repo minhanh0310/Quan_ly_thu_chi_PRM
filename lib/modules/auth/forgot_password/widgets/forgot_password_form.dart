@@ -15,7 +15,7 @@ class ForgotPasswordForm extends StatelessWidget {
         Text( 
           'Type your phone number',
           style: AppTextStyle.s12.copyWith(
-            color: AppColors.gray,
+            color: AppColors.grey,
             fontWeight: FontWeight.w600,
           ),
         ),
