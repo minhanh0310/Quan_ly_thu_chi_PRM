@@ -1,16 +1,19 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 
+/// Recent Activity Widget - Sử dụng theme constants và SliverList
 class SliverRecentActivityWidget extends StatelessWidget {
   const SliverRecentActivityWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Replace với data thật từ BLoC/Provider
+    // TODO: Replace với data từ BLoC/Provider
     final mockActivities = [
       {
         'icon': Icons.arrow_downward,
         'iconColor': const Color(0xFF00D09E),
+        // TODO: AppColors.incomeGreen
         'backgroundColor': const Color(0xFFE8F8F4),
+        // TODO: AppColors.incomeLightGreen
         'title': 'Salary',
         'date': '2024-02-01',
         'amount': '+\$5,000',
@@ -19,7 +22,9 @@ class SliverRecentActivityWidget extends StatelessWidget {
       {
         'icon': Icons.arrow_upward,
         'iconColor': const Color(0xFFFF6B93),
+        // TODO: AppColors.expenseRed
         'backgroundColor': const Color(0xFFFFE8EE),
+        // TODO: AppColors.expenseLightRed
         'title': 'Rent',
         'date': '2024-02-02',
         'amount': '-\$1,200',
@@ -46,26 +51,25 @@ class SliverRecentActivityWidget extends StatelessWidget {
     ];
 
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: AppPad.h20,
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            // Header ở index 0
             if (index == 0) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
+                padding: AppPad.a16,
                 child: Text(
                   'Recent Activity',
-                  style: TextStyle(
+                  style: AppTextStyle.s16in.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: AppColors.text,
                   ),
                 ),
               );
             }
 
-            // Activity items từ index 1 trở đi
+            // Activity items từ index 1
             final activityIndex = index - 1;
             if (activityIndex >= mockActivities.length) {
               return null;
@@ -74,7 +78,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
             final activity = mockActivities[activityIndex];
 
             return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: AppPad.a12,
               child: _ActivityItem(
                 icon: activity['icon'] as IconData,
                 iconColor: activity['iconColor'] as Color,
@@ -86,13 +90,14 @@ class SliverRecentActivityWidget extends StatelessWidget {
               ),
             );
           },
-          childCount: mockActivities.length + 1, // +1 for header
+          childCount: mockActivities.length + 1,
         ),
       ),
     );
   }
 }
 
+/// Activity Item Component
 class _ActivityItem extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -115,13 +120,13 @@ class _ActivityItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppPad.a16,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.white,
+        borderRadius: AppBorderRadius.a12,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppColors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -129,36 +134,36 @@ class _ActivityItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Icon Container
+          // Icon container
           Container(
             width: 48,
             height: 48,
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: AppBorderRadius.a12,
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
 
-          const SizedBox(width: 12),
+          AppGap.w12,
 
-          // Activity Info
+          // Activity info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: AppTextStyle.s14in.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.text,
                   ),
                 ),
-                const SizedBox(height: 4),
+                AppGap.h4,
                 Text(
                   date,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: AppTextStyle.s12in.copyWith(color: AppColors.grey),
                 ),
               ],
             ),
@@ -167,12 +172,9 @@ class _ActivityItem extends StatelessWidget {
           // Amount
           Text(
             amount,
-            style: TextStyle(
-              fontSize: 16,
+            style: AppTextStyle.s16in.copyWith(
               fontWeight: FontWeight.bold,
-              color: isIncome
-                  ? const Color(0xFF00D09E)
-                  : const Color(0xFFFF6B93),
+              color: iconColor,
             ),
           ),
         ],

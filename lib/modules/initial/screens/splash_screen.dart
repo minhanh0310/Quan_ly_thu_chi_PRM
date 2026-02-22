@@ -23,18 +23,18 @@ class SplashScreen extends StatelessWidget {
             children: [
               Image.asset(
                 Images.splashLogo,
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
                 fit: BoxFit.contain,
                 color: AppColors.white,
               ),
 
               AppGap.h15,
 
-              Text('E-Money',
+              Text('JarsFlow',
                 style: TextStyle(
                   fontFamily: AppTextStyle.fontFamily,
-                  fontSize: 50,
+                  fontSize: 30,
                   fontWeight: FontWeight.w500,
                   color: AppColors.white,
                 ),
@@ -45,7 +45,7 @@ class SplashScreen extends StatelessWidget {
               Text('Manage Your Expense',
                 style: TextStyle(
                   fontFamily: AppTextStyle.fontFamily,
-                  fontSize: 30,
+                  fontSize: 15,
                   fontWeight: FontWeight.w400,
                   color: AppColors.white,
                 ),

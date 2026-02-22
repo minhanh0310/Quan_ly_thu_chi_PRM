@@ -1,33 +1,21 @@
-import 'package:flutter/material.dart';
-// TODO: Import constants từ project
-// import 'package:Quan_ly_thu_chi_PRM/core/constants/app_pad.dart';
-
-/// Custom AppBar linh hoạt cho tất cả các tabs
-/// Support: Home, Ledger, Plans, Stats
+import 'package:Quan_ly_thu_chi_PRM/init.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int currentTabIndex;
-  final VoidCallback? onMenuPressed;
   final VoidCallback? onNotificationPressed;
   final VoidCallback? onAvatarPressed;
 
-  // Optional: Custom title cho từng tab
   final String? customTitle;
   final String? customSubtitle;
-
-  // Optional: Show/hide các elements
-  final bool showMenu;
   final bool showNotification;
   final bool showAvatar;
 
   const CustomAppBar({
     super.key,
     required this.currentTabIndex,
-    this.onMenuPressed,
     this.onNotificationPressed,
     this.onAvatarPressed,
     this.customTitle,
     this.customSubtitle,
-    this.showMenu = true,
     this.showNotification = true,
     this.showAvatar = true,
   });
@@ -35,53 +23,37 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white, // TODO: Thay bằng theme color
+      backgroundColor: AppColors.white,
       elevation: 0,
       toolbarHeight: 70,
-      automaticallyImplyLeading: false, // Tắt leading mặc định
+      automaticallyImplyLeading: false,
       titleSpacing: 0,
-
-      // Leading: Menu icon (chỉ hiện ở Home)
-      leading: showMenu && currentTabIndex == 0
-          ? Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black87, size: 24),
-                onPressed:
-                    onMenuPressed ??
-                    () {
-                      // TODO: Open drawer
-                      Scaffold.of(context).openDrawer();
-                    },
-              ),
-            )
-          : null,
 
       // Title: App name + subtitle
       title: Padding(
-        padding: EdgeInsets.only(
-          left: (showMenu && currentTabIndex == 0) ? 0 : 20,
-        ),
+        padding: AppPad.l20,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               customTitle ?? _getTabTitle(currentTabIndex),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5B4CFE),
-                letterSpacing: -0.5,
+              style: AppTextStyle.s20in.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary
               ),
+              // style: const TextStyle(
+              //   fontSize: 20,
+              //   fontWeight: FontWeight.bold,
+              //   color: Color(0xFF5B4CFE),
+              //   letterSpacing: -0.5,
+              // ),
             ),
-            const SizedBox(height: 2),
+            AppGap.h5,
             Text(
               customSubtitle ?? _getTabSubtitle(currentTabIndex),
-              style: TextStyle(
-                fontSize: 11,
+              style: AppTextStyle.s12in.copyWith(
                 color: Colors.grey[600],
-                fontWeight: FontWeight.w400,
                 letterSpacing: 1.2,
               ),
             ),
@@ -94,7 +66,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         // Notification Icon
         if (showNotification)
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: AppPad.r10,
             child: Stack(
               children: [
                 IconButton(
@@ -199,19 +171,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(70);
 }
 
-
 class CustomAppBarWithSettings extends StatelessWidget
     implements PreferredSizeWidget {
-  final int currentTabIndex;
-  final VoidCallback? onMenuPressed;
   final VoidCallback? onSettingsPressed;
 
-  const CustomAppBarWithSettings({
-    super.key,
-    required this.currentTabIndex,
-    this.onMenuPressed,
-    this.onSettingsPressed,
-  });
+  const CustomAppBarWithSettings({super.key, this.onSettingsPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -222,22 +186,8 @@ class CustomAppBarWithSettings extends StatelessWidget
       automaticallyImplyLeading: false,
       titleSpacing: 0,
 
-      leading: currentTabIndex == 0
-          ? Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black87, size: 24),
-                onPressed:
-                    onMenuPressed ??
-                    () {
-                      Scaffold.of(context).openDrawer();
-                    },
-              ),
-            )
-          : null,
-
       title: Padding(
-        padding: EdgeInsets.only(left: currentTabIndex == 0 ? 0 : 20),
+        padding: const EdgeInsets.only(left: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/home/widget/sliver_balance_card_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/home/widget/sliver_quick_actions_widget.dart';
@@ -10,30 +9,34 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Scaffold(appBar: CustomAppBar(currentTabIndex: 0), body: _Body()),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        // Balance Card
         SliverToBoxAdapter(child: SliverBalanceCardWidget()),
 
         const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-        // Quick Actions Section
-        const SliverQuickActionsWidget(),
+        SliverQuickActionsWidget(),
 
-        // Gap
         const SliverToBoxAdapter(child: SizedBox(height: 30)),
 
-        // Active Plans Section
-        const SliverActivePlansWidget(),
+        SliverActivePlansWidget(),
 
-        // Gap
         const SliverToBoxAdapter(child: SizedBox(height: 30)),
 
-        // Recent Activity Section
-        const SliverRecentActivityWidget(),
+        SliverRecentActivityWidget(),
 
-        // Bottom spacing
         const SliverToBoxAdapter(child: SizedBox(height: 20)),
       ],
     );

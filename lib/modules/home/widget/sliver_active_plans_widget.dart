@@ -27,11 +27,10 @@ class SliverActivePlansWidget extends StatelessWidget {
                     // TODO: Navigate to all plans
                     print('====> View All Plans');
                   },
-                  child: const Text(
+                  child: Text(
                     'View All',
-                    style: TextStyle(
-                      color: Color(0xFF6C5CE7),
-                      fontSize: 14,
+                    style: AppTextStyle.s12in.copyWith(
+                      color: AppColors.grey,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -40,7 +39,7 @@ class SliverActivePlansWidget extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 12),
+          AppGap.h12,
 
           // Plans List - Horizontal Scrollable
           SizedBox(
@@ -49,7 +48,7 @@ class SliverActivePlansWidget extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: 2, // TODO: Replace với plans.length từ state
-              separatorBuilder: (context, index) => AppGap.h16,
+              separatorBuilder: (context, index) => AppGap.w16,
               itemBuilder: (context, index) {
                 // TODO: Replace với data thật
                 if (index == 0) {
@@ -58,7 +57,7 @@ class SliverActivePlansWidget extends StatelessWidget {
                     current: '\$125,000',
                     target: '\$500,000',
                     progress: 0.25,
-                    imageUrl: 'assets/images/house.jpg',
+                    imageUrl: Images.house,
                     color: const Color(0xFF6C5CE7),
                   );
                 } else {
@@ -67,7 +66,7 @@ class SliverActivePlansWidget extends StatelessWidget {
                     current: '\$15,000',
                     target: '\$60,000',
                     progress: 0.25,
-                    imageUrl: 'assets/images/tesla.jpg',
+                    imageUrl: Images.tesla,
                     color: const Color(0xFFFF6B93),
                   );
                 }
@@ -101,13 +100,13 @@ class _PlanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 280,
-      padding: const EdgeInsets.all(16),
+      padding: AppPad.a16,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.white,
+        borderRadius: AppBorderRadius.a16,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -117,17 +116,16 @@ class _PlanCard extends StatelessWidget {
         children: [
           // Image Placeholder
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: AppBorderRadius.a12,
             child: Container(
               width: 68,
               height: 68,
               color: Colors.grey[200],
-              // TODO: Replace với Image.asset(imageUrl) hoặc CachedNetworkImage
-              child: Icon(Icons.image, color: Colors.grey[400], size: 32),
+              child: Image.asset(imageUrl, fit: BoxFit.cover),
             ),
           ),
 
-          const SizedBox(width: 12),
+          AppGap.w16,
 
           // Plan Info
           Expanded(
@@ -137,25 +135,27 @@ class _PlanCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style: AppTextStyle.s14in.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.black,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                AppGap.h4,
                 Text(
                   '$current / $target',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: AppTextStyle.s12in.copyWith(
+                    fontSize: 11,
+                    color: AppColors.grey,
+                  ),
                 ),
-                const SizedBox(height: 8),
+                AppGap.h8,
                 Row(
                   children: [
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: AppBorderRadius.a4,
                         child: LinearProgressIndicator(
                           value: progress,
                           backgroundColor: Colors.grey[200],
@@ -164,11 +164,10 @@ class _PlanCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    AppGap.w8,
                     Text(
                       '${(progress * 100).toInt()}%',
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: AppTextStyle.s12in.copyWith(
                         fontWeight: FontWeight.w600,
                         color: color,
                       ),

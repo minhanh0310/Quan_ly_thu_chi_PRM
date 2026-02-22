@@ -4,7 +4,8 @@ class SliverBalanceCardWidget extends StatefulWidget {
   const SliverBalanceCardWidget({super.key});
 
   @override
-  State<SliverBalanceCardWidget> createState() => _SliverBalanceCardWidgetState();
+  State<SliverBalanceCardWidget> createState() =>
+      _SliverBalanceCardWidgetState();
 }
 
 class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
@@ -20,14 +21,14 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF6C5CE7), // Purple
-            Color(0xFF5F4FD1),
+            AppColors.primaryPurple,
+            AppColors.primaryPurpleDark,
           ],
         ),
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: AppBorderRadius.a28,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6C5CE7).withAlpha(77),
+            color: AppColors.primaryPurple.withAlpha(77),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -36,48 +37,40 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                'Total Balance',
-                style: AppTextStyle.s14in.copyWith(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          // Header
+          Text(
+            'Total Balance',
+            style: AppTextStyle.s14in.copyWith(
+              color: AppColors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
 
           AppGap.h10,
 
-          // Balance Amount
+          // Balance Amount với visibility toggle
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _isBalanceVisible
-                    ? '\$53,500'
-                    : '••••••', // TODO: Bind với data thật
+                _isBalanceVisible ? '\$53,500' : '••••••',
+                // TODO: Bind với data từ BLoC/Provider
                 style: AppTextStyle.s28in.copyWith(
                   color: AppColors.white,
                   letterSpacing: -0.5,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               IconButton(
                 icon: Icon(
                   _isBalanceVisible
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: Colors.white70,
+                  color: AppColors.white.withValues(alpha: 0.7),
                   size: 20,
                 ),
                 onPressed: () {
-                  setState(() {
-                    _isBalanceVisible = !_isBalanceVisible;
-                  });
+                  setState(() => _isBalanceVisible = !_isBalanceVisible);
                 },
               ),
             ],
@@ -85,42 +78,43 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
 
           AppGap.h10,
 
-          // Subtitle
+          // Subtitle link
           Text(
-            'See the 6 jars structure >', // TODO: Thay bằng text phù hợp hoặc localization
+            'See the 6 jars structure >',
+            // TODO: Thay bằng localization
             style: AppTextStyle.s12in.copyWith(
-              color: Colors.white.withValues(alpha: 0.7),
+              color: AppColors.white.withValues(alpha: 0.7),
             ),
           ),
 
           AppGap.h24,
 
-          // Income & Expense Cards
+          // Income & Expense Mini Cards
           Row(
             children: [
-              // Income Card
               Expanded(
                 child: _MiniStatCard(
                   icon: Icons.arrow_downward,
                   iconColor: const Color(0xFF00D09E),
                   label: 'INCOME',
                   amount: '\$5,000',
-                  backgroundColor: Colors.white.withAlpha(38),
-                  progressValue: 1.0, // TODO: Tính toán từ data
+                  // TODO: Bind data
+                  backgroundColor: AppColors.white.withAlpha(38),
+                  progressValue: 1.0,
+                  // TODO: Calculate from data
                 ),
               ),
-
               AppGap.w12,
-
-              // Expense Card
               Expanded(
                 child: _MiniStatCard(
                   icon: Icons.arrow_upward,
                   iconColor: const Color(0xFFFF6B93),
                   label: 'EXPENSE',
                   amount: '\$1,250',
-                  backgroundColor: Colors.white.withAlpha(38),
-                  progressValue: 0.25, // TODO: Tính toán từ data
+                  // TODO: Bind data
+                  backgroundColor: AppColors.white.withAlpha(38),
+                  progressValue: 0.25,
+                  // TODO: Calculate from data
                 ),
               ),
             ],
@@ -131,7 +125,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
   }
 }
 
-// Mini Stat Card Component
+/// Mini Stat Card
 class _MiniStatCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -155,11 +149,12 @@ class _MiniStatCard extends StatelessWidget {
       padding: AppPad.a16,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppBorderRadius.a16,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Icon + Label
           Row(
             children: [
               Icon(icon, color: iconColor, size: 16),
@@ -167,9 +162,9 @@ class _MiniStatCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: TextStyle(
-                    color: iconColor,
+                  style: AppTextStyle.s12in.copyWith(
                     fontSize: 10,
+                    color: iconColor,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.5,
                   ),
@@ -178,22 +173,27 @@ class _MiniStatCard extends StatelessWidget {
               ),
             ],
           ),
+
           AppGap.h8,
 
+          // Amount
           Text(
             amount,
-            style: const TextStyle(
-              color: Colors.white,
+            style: AppTextStyle.s16in.copyWith(
               fontSize: 18,
+              color: AppColors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
+
           AppGap.h8,
+
+          // Progress bar
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: AppBorderRadius.a4,
             child: LinearProgressIndicator(
               value: progressValue,
-              backgroundColor: Colors.white.withValues(alpha: 0.2),
+              backgroundColor: AppColors.white.withValues(alpha: 0.2),
               valueColor: AlwaysStoppedAnimation<Color>(iconColor),
               minHeight: 4,
             ),

@@ -3,6 +3,32 @@ import 'dart:ui';
 
 class AppColors {
 
+    // Primary Purple Palette
+  static const Color primaryPurple = Color(0xFF6C5CE7);
+  static const Color primaryPurpleDark = Color(0xFF5F4FD1);
+  static const Color primaryPurpleLight = Color(0xFFF0EDFF);
+  
+  // Income Colors (Green)
+  static const Color incomeGreen = Color(0xFF00D09E);
+  static const Color incomeLightGreen = Color(0xFFE8F8F4);
+  
+  // Expense Colors (Red/Pink)
+  static const Color expenseRed = Color(0xFFFF6B93);
+  static const Color expenseLightRed = Color(0xFFFFE8EE);
+  
+  // Accent Colors
+  static const Color accentPink = Color(0xFFFF6B9D);
+  static const Color accentYellow = Color(0xFFFFC94D);
+  
+  // Background
+  static const Color backgroundLight = Color(0xFFF8F9FD);
+  
+  // Text Colors (Extended)
+  static const Color textPrimary = Color(0xFF1A1A1A);
+  static const Color textSecondary = Color(0xFF6A6A6A);
+  static const Color textTertiary = Color(0xFF9E9E9E);
+
+
   static const Color mainColor = Color(0xff3629B7);
 
   static const Color electricBlue = Color(0xFF04589C);
