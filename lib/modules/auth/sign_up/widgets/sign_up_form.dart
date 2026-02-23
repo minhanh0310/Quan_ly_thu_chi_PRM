@@ -88,7 +88,7 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
             ),
             AppGap.w12,
-            
+
             Expanded(
               child: RichText(
                 text: TextSpan(
@@ -129,7 +129,11 @@ class _SignUpFormState extends State<SignUpForm> {
               );
               return;
             }
-            // Navigator.pushNamed(context, AppRoutes.home);
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.home,
+              (route) => false,
+            );
           },
         ),
       ],

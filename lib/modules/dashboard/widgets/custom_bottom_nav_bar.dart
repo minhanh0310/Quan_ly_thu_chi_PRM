@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/dashboard/model/bottom_nav_item.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
@@ -66,11 +65,10 @@ class CustomBottomNavBar extends StatelessWidget {
       icon: isSelected
           ? Text(
               label,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Color(0xff9775FA),
-                fontWeight: FontWeight.w500,
-              ), // TODO: Thay bằng AppTextStyle.s11 từ theme
+              style: AppTextStyle.s12in.copyWith(
+                color: AppColors.mainColor,
+                fontWeight: FontWeight.w600,
+              ),
             )
           : SvgPicture.asset(
               iconPath,

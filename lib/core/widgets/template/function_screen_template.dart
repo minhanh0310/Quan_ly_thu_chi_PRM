@@ -1,139 +1,130 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/widgets/opacity_widget.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/widgets/template/button_widget.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/widgets/will_unfocus_form_scope.dart';
 
+class FunctionScreenTemplate extends StatefulWidget {
+  final Widget? screen;
+  final String? title;
+  final String? subtitle;
+  final bool isShowAppBar;
+  final bool isShowBottomButton;
+  final String? titleButtonBottom;
+  final VoidCallback? onClickBottomButton;
+  final Widget? customBottomNavigationBar;
+  final Widget? floatingActionButton;
+  final Widget? background;
+  final Color? backgroundColor;
+  final bool resizeToAvoidBottomInset;
 
-class FunctionScreenTemplate extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final String subtitle;
-  final bool showMenuIcon; // true = menu, false = back
-  final bool showNotification;
-  final bool showAvatar;
-  final VoidCallback? onMenuPressed;
-  final VoidCallback? onBackPressed;
-  final VoidCallback? onNotificationPressed;
-  final VoidCallback? onAvatarPressed;
+  final VoidCallback? onOpenDrawer;
 
   const FunctionScreenTemplate({
     super.key,
-    this.title = 'JarsFlow',
-    this.subtitle = 'MODERN WEALTH',
-    this.showMenuIcon = false,
-    this.showNotification = true,
-    this.showAvatar = true,
-    this.onMenuPressed,
-    this.onBackPressed,
-    this.onNotificationPressed,
-    this.onAvatarPressed,
+    this.screen,
+    this.title,
+    this.subtitle,
+    this.isShowAppBar = true,
+    this.isShowBottomButton = false,
+    this.titleButtonBottom,
+    this.onClickBottomButton,
+    this.customBottomNavigationBar,
+    this.floatingActionButton,
+    this.background,
+    this.backgroundColor,
+    this.resizeToAvoidBottomInset = true,
+    this.onOpenDrawer,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white, // TODO: Thay bằng theme color
-      elevation: 0,
-      toolbarHeight: 70,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
+  State<FunctionScreenTemplate> createState() => _FunctionScreenTemplateState();
+}
 
-      // Leading: Menu hoặc Back
-      leading: showMenuIcon
-          ? Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black87, size: 24),
-                onPressed:
-                    onMenuPressed ??
-                    () {
-                      Scaffold.of(context).openDrawer();
-                    },
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black87,
-                  size: 24,
-                ),
-                onPressed:
-                    onBackPressed ??
-                    () {
-                      Navigator.of(context).maybePop();
-                    },
-              ),
-            ),
+class _FunctionScreenTemplateState extends State<FunctionScreenTemplate>
+    with WidgetsBindingObserver {
+  bool isOpacity = false;
 
-      // Title
-      title: Padding(
-        padding: const EdgeInsets.only(left: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5B4CFE),
-                letterSpacing: -0.5,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w400,
-                letterSpacing: 1.2,
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      // Actions
-      actions: [
-        // Notification
-        if (showNotification)
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-              icon: const Icon(
-                Icons.notifications_outlined,
-                color: Colors.black87,
-                size: 24,
-              ),
-              onPressed:
-                  onNotificationPressed ??
-                  () {
-                    print('====> Notification pressed');
-                  },
-            ),
-          ),
-
-        // Avatar
-        if (showAvatar)
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: GestureDetector(
-              onTap:
-                  onAvatarPressed ??
-                  () {
-                    print('====> Avatar pressed');
-                  },
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey[300],
-                child: Icon(Icons.person, color: Colors.grey[600], size: 24),
-              ),
-            ),
-          ),
-      ],
-    );
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    try {
+      if (state == AppLifecycleState.paused ||
+          state == AppLifecycleState.inactive) {
+        setState(() => isOpacity = true);
+      } else if (state == AppLifecycleState.resumed) {
+        setState(() => isOpacity = false);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillUnfocusFormScope(
+      child: Stack(
+        children: [
+          if (widget.background != null)
+            Positioned.fill(child: widget.background!),
+          _buildScaffold(
+            body: widget.screen ?? const SizedBox(),
+            showAppBar: widget.isShowAppBar,
+          ),
+          if (isOpacity) const OpacityWidget(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScaffold({required Widget body, required bool showAppBar}) {
+    return WillUnfocusFormScope(
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          extendBodyBehindAppBar: widget.background != null,
+          resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+          backgroundColor: widget.background != null
+              ? Colors.transparent
+              : widget.backgroundColor ?? AppColors.white,
+          appBar: showAppBar
+              ? CustomAppBar(
+                  title: widget.title,
+                  subtitle: widget.subtitle,
+                  onOpenDrawer: widget.onOpenDrawer,
+                )
+              : null,
+
+          body: SafeArea(child: body),
+
+          bottomNavigationBar: widget.isShowBottomButton
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    widget.customBottomNavigationBar ??
+                        ButtonWidget(
+                          title: widget.titleButtonBottom ?? 'Continue',
+                          padding: AppPad.v24,
+                          onPressed: widget.onClickBottomButton ?? () {},
+                        ),
+                  ],
+                )
+              : null,
+
+          floatingActionButton: widget.floatingActionButton,
+        ),
+      ),
+    );
+  }
 }
