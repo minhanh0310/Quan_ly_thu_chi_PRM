@@ -73,7 +73,7 @@ class SignInForm extends StatelessWidget {
           text: 'Sign In',
           color: AppColors.mainColor,
           onClick: () {
-            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboard, (route) => false);
           },
         ),
       ],

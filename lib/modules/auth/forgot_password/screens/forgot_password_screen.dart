@@ -77,7 +77,8 @@ class _Body extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Please enter your phone number'),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                   return;

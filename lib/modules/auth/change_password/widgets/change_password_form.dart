@@ -47,23 +47,22 @@ class ChangePasswordForm extends StatelessWidget {
             final newPassword = newPwController.text.trim();
             final confirmPassword = confirmPwController.text.trim();
 
-            // Kiểm tra password không được để trống
             if (newPassword.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Please enter new password'),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.error,
                 ),
               );
               return;
             }
 
-            // Kiểm tra confirm password không được để trống
             if (confirmPassword.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Please confirm your password'),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.error,
+                  duration: const Duration(seconds: 2),
                 ),
               );
               return;
@@ -73,7 +72,8 @@ class ChangePasswordForm extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Passwords do not match'),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.error,
+                  duration: const Duration(seconds: 2),
                 ),
               );
               return;

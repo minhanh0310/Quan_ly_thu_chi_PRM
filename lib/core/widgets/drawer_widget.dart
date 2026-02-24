@@ -64,31 +64,31 @@ class _DrawerWidgetState extends State<DrawerWidget>
                       child: ListView(
                         padding: EdgeInsets.zero,
                         children: <Widget>[
-                          AppGap.h40,
+                          // AppGap.h40,
 
-                          // Close button
-                          Padding(
-                            padding: AppPad.h20,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: GestureDetector(
-                                onTap: () => Navigator.pop(context),
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xffF5F6FA),
-                                  ),
-                                  child: const Icon(
-                                    Icons.close,
-                                    color: AppColors.grey,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // // Close button
+                          // Padding(
+                          //   padding: AppPad.h20,
+                          //   child: Align(
+                          //     alignment: Alignment.centerLeft,
+                          //     child: GestureDetector(
+                          //       onTap: () => Navigator.pop(context),
+                          //       child: Container(
+                          //         width: 40,
+                          //         height: 40,
+                          //         decoration: const BoxDecoration(
+                          //           shape: BoxShape.circle,
+                          //           color: Color(0xffF5F6FA),
+                          //         ),
+                          //         child: const Icon(
+                          //           Icons.close,
+                          //           color: AppColors.grey,
+                          //           size: 20,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
 
                           AppGap.h20,
 

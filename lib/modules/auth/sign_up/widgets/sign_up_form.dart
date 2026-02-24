@@ -124,14 +124,15 @@ class _SignUpFormState extends State<SignUpForm> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Please agree to Terms and Conditions'),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.error,
+                  duration: const Duration(seconds: 2),
                 ),
               );
               return;
             }
             Navigator.pushNamedAndRemoveUntil(
               context,
-              AppRoutes.home,
+              AppRoutes.dashboard,
               (route) => false,
             );
           },

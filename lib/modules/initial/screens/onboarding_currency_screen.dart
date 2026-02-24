@@ -218,19 +218,11 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
       SnackBar(
         content: Text(
           message,
-          textAlign: TextAlign.start,
-          style: AppTextStyle.s16.copyWith(
-            fontSize: 16,
-            height: 18 / 16,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
         ),
         backgroundColor: AppColors.rustyRed,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 120),
-        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 110),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

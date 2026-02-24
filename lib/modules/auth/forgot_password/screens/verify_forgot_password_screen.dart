@@ -118,7 +118,8 @@ class _Body extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Please enter verification code'),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                   return;
