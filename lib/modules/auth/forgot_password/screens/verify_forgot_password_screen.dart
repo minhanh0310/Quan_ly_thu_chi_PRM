@@ -40,7 +40,7 @@ class _VerifyForgotPasswordScreenState
                   Navigator.pushNamed(context, AppRoutes.forgotPw);
                 },
                 child: Text(
-                  'Change your phone number',
+                  'Change your email',
                   style: AppTextStyle.s12.copyWith(
                     color: AppColors.mainColor,
                     fontWeight: FontWeight.w600,

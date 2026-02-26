@@ -12,12 +12,12 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _phoneNumberController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -43,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             backgroundColor: AppColors.mainColor,
             elevation: 0,
-            iconTheme: IconThemeData( 
+            iconTheme: IconThemeData(
               color: isDark ? AppColors.white : AppColors.black,
             ),
           ),
@@ -51,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
             children: [
               Expanded(
                 child: Body(
-                  phoneNumberController: _phoneNumberController,
+                  emailController: _emailController,
                   passwordController: _passwordController,
                 ),
               ),
@@ -72,12 +72,12 @@ class _SignInScreenState extends State<SignInScreen> {
 }
 
 class Body extends StatelessWidget {
-  final TextEditingController phoneNumberController;
+  final TextEditingController emailController;
   final TextEditingController passwordController;
 
   const Body({
     super.key,
-    required this.phoneNumberController,
+    required this.emailController,
     required this.passwordController,
   });
 
@@ -98,9 +98,9 @@ class Body extends StatelessWidget {
           AppGap.h32,
 
           SignInForm(
-            phoneNumber: 'Enter your phone number',
+            email: 'Enter your email',
             password: 'Enter your password',
-            phoneNumberController: phoneNumberController,
+            emailController: emailController,
             passwordController: passwordController,
           ),
         ],

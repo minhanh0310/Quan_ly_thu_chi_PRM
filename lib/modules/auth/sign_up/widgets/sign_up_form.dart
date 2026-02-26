@@ -261,7 +261,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
         // Sign Up Button
         PrimaryButton(
-          text: 'Sign up',
+          text: 'Sign Up',
           color: AppColors.mainColor,
           onClick: _validateForm,
         ),

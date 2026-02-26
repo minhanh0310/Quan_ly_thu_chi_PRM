@@ -1,6 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_redirect_text.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/forgot_password/widgets/forgot_password_form.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -10,11 +11,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
 
   @override
   void dispose() {
-    _phoneNumberController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -29,9 +30,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           appBar: AuthAppBar(title: 'Forgot Password'),
           body: Column(
             children: [
-              Expanded(
-                child: _Body(phoneNumberController: _phoneNumberController),
-              ),
+              Expanded(child: _Body(emailController: _emailController)),
 
               AuthRedirectText(
                 text: 'Remembered your password?',
@@ -49,9 +48,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 }
 
 class _Body extends StatelessWidget {
-  final TextEditingController phoneNumberController;
+  final TextEditingController emailController;
 
-  const _Body({required this.phoneNumberController});
+  const _Body({required this.emailController});
 
   @override
   Widget build(BuildContext context) {
@@ -64,19 +63,21 @@ class _Body extends StatelessWidget {
           children: [
             AppGap.h40,
 
-            ForgotPasswordForm(phoneNumberController: phoneNumberController),
+            ForgotPasswordForm(emailController: emailController),
 
             AppGap.h40,
 
             PrimaryButton(
               text: 'Send',
               onClick: () {
-                // Validate phone number
-                final phoneNumber = phoneNumberController.text;
-                if (phoneNumber.isEmpty) {
+                // Validate email
+                final email = emailController.text;
+                final emailError = FormValidators.validateEmail(email);
+
+                if (emailError != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Please enter your phone number'),
+                      content: Text(emailError),
                       backgroundColor: AppColors.error,
                       duration: const Duration(seconds: 2),
                     ),

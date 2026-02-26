@@ -1,18 +1,67 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
 
-class SignInForm extends StatelessWidget {
-  final String phoneNumber;
+class SignInForm extends StatefulWidget {
+  final String email;
   final String password;
-  final TextEditingController phoneNumberController;
+  final TextEditingController emailController;
   final TextEditingController passwordController;
 
   const SignInForm({
     super.key,
-    required this.phoneNumber,
+    required this.email,
     required this.password,
-    required this.phoneNumberController,
+    required this.emailController,
     required this.passwordController,
   });
+
+  @override
+  State<SignInForm> createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<SignInForm> {
+  bool _showPassword = false;
+  bool _rememberAccount = true;
+
+  // Error state for each field
+  String? _emailError;
+  String? _passwordError;
+
+  void _validateForm() {
+    setState(() {
+      // Validate each field
+      _emailError = FormValidators.validateEmail(widget.emailController.text);
+      _passwordError = FormValidators.validatePassword(
+        widget.passwordController.text,
+      );
+    });
+
+    // Check if all fields are valid
+    final isFormValid = _emailError == null && _passwordError == null;
+
+    if (isFormValid) {
+      // All validations passed, proceed to login
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.dashboard,
+        (route) => false,
+      );
+    }
+  }
+
+  // Real-time validation for email field
+  void _validateEmailRealTime(String value) {
+    setState(() {
+      _emailError = FormValidators.validateEmail(value);
+    });
+  }
+
+  // Real-time validation for password field
+  void _validatePasswordRealTime(String value) {
+    setState(() {
+      _passwordError = FormValidators.validatePassword(value);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +80,79 @@ class SignInForm extends StatelessWidget {
 
         AppGap.h32,
 
+        // Email field
         CustomTextField(
-          controller: phoneNumberController,
-          hintText: phoneNumber,
+          controller: widget.emailController,
+          hintText: widget.email,
+          keyboardType: TextInputType.emailAddress,
+          errorText: _emailError,
+          onChanged: _validateEmailRealTime,
+          onBlur: () => _validateEmailRealTime(widget.emailController.text),
         ),
 
         AppGap.h20,
 
+        // Password field
         CustomTextField(
-          controller: passwordController,
-          hintText: password,
+          controller: widget.passwordController,
+          hintText: widget.password,
           keyboardType: TextInputType.visiblePassword,
-          obscureText: true,
-          isPassword: true,
+          obscureText: !_showPassword,
+          isPassword: false,
+          errorText: _passwordError,
+          onChanged: _validatePasswordRealTime,
+          onBlur: () =>
+              _validatePasswordRealTime(widget.passwordController.text),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _showPassword ? Icons.visibility : Icons.visibility_off,
+              color: AppColors.lightGray,
+              size: 20,
+            ),
+            onPressed: () {
+              setState(() {
+                _showPassword = !_showPassword;
+              });
+            },
+          ),
         ),
 
         AppGap.h12,
 
+        // Remember Account Checkbox & Forgot Password Row
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Remember Account Checkbox
+            Row(
+              children: [
+                SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Checkbox(
+                    value: _rememberAccount,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _rememberAccount = value ?? false;
+                      });
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    side: BorderSide(color: AppColors.lightGray, width: 1.5),
+                  ),
+                ),
+                AppGap.w12,
+                Text(
+                  'Remember account',
+                  style: AppTextStyle.s14.copyWith(
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            // Forgot Password Link
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.forgotPw);
@@ -72,9 +174,7 @@ class SignInForm extends StatelessWidget {
         PrimaryButton(
           text: 'Sign In',
           color: AppColors.mainColor,
-          onClick: () {
-            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboard, (route) => false);
-          },
+          onClick: _validateForm,
         ),
       ],
     );
