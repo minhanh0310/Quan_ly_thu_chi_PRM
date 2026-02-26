@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "279622842154",
+    "project_id": "quanlythuchiprm",
+    "storage_bucket": "quanlythuchiprm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279622842154:android:985a49d6b5b509fa9cd053",
+        "android_client_info": {
+          "package_name": "com.example.personal_finance_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCerhfTKm_yd3WyQCCfqFAhPLyBzp4Cbto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

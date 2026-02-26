@@ -1,12 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/theme/theme_provider.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/routers/routes.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
   // khoi tao truoc khi chay app
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     ChangeNotifierProvider(
