@@ -7,23 +7,36 @@ abstract class AppInputDecoration {
     contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: BorderSide(
-        color: Color(0xFFCBCBCB),
-        width: 1,
-      ),
+      borderSide: BorderSide(color: Color(0xFFCBCBCB), width: 1),
     ),
     // Border khi focus
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: BorderSide(
-        color: Color(0xFF5B4CCC),
-        width: 1.5,
-      ),
+      borderSide: BorderSide(color: Color(0xFF5B4CCC), width: 1.5),
     ),
     // Border mac dinh
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
       borderSide: BorderSide(color: Color(0xFFCBCBCB), width: 1),
+    ),
+  );
+
+  // Error border style
+  static InputDecoration roundBorderError = InputDecoration(
+    filled: true,
+    fillColor: Color(0xffFEFEFE),
+    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: BorderSide(color: Color(0xFFE74C3C), width: 1.5),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: BorderSide(color: Color(0xFFE74C3C), width: 1.5),
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: BorderSide(color: Color(0xFFE74C3C), width: 1.5),
     ),
   );
 }

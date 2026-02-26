@@ -13,14 +13,16 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _usernameController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
     _usernameController.dispose();
-    _phoneNumberController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -36,7 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Scaffold(
           backgroundColor: isDark ? AppColors.blackBackground : AppColors.white,
           appBar: AuthAppBar(
-            title: 'Sign In',
+            title: 'Sign Up',
             backgroundColor: AppColors.mainColor,
             iconColor: AppColors.white,
             titleColor: AppColors.white,
@@ -46,8 +48,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Expanded(
                 child: Body(
                   usernameController: _usernameController,
-                  phoneNumberController: _phoneNumberController,
+                  emailController: _emailController,
                   passwordController: _passwordController,
+                  confirmPasswordController: _confirmPasswordController,
                 ),
               ),
 
@@ -68,14 +71,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 class Body extends StatelessWidget {
   final TextEditingController usernameController;
-  final TextEditingController phoneNumberController;
+  final TextEditingController emailController;
   final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
 
   const Body({
     super.key,
     required this.usernameController,
-    required this.phoneNumberController,
+    required this.emailController,
     required this.passwordController,
+    required this.confirmPasswordController,
   });
 
   @override
@@ -88,19 +93,20 @@ class Body extends StatelessWidget {
           AppGap.h32,
 
           AuthHeader(
-            title: 'Welcome to us,',
-            subtitle: 'Hello there, create New account',
+            title: 'Welcome to us',
+            subtitle: 'Hello there, create new account',
           ),
 
           AppGap.h32,
 
           SignUpForm(
             username: 'Name',
-            phoneNumber: 'Phone Number',
+            email: 'Email',
             password: 'Password',
             usernameController: usernameController,
-            phoneNumberController: phoneNumberController,
+            emailController: emailController,
             passwordController: passwordController,
+            confirmPasswordController: confirmPasswordController,
           ),
         ],
       ),
