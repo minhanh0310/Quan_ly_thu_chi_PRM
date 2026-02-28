@@ -30,10 +30,10 @@ class _SignInFormState extends State<SignInForm> {
   void _validateForm() {
     setState(() {
       // Validate each field
-      _emailError = FormValidators.validateEmail(widget.emailController.text);
-      _passwordError = FormValidators.validatePassword(
-        widget.passwordController.text,
-      );
+      // _emailError = FormValidators.validateEmail(widget.emailController.text);
+      // _passwordError = FormValidators.validatePassword(
+      //   widget.passwordController.text,
+      // );
     });
 
     // Check if all fields are valid

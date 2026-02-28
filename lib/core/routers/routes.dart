@@ -9,9 +9,11 @@ import 'package:Quan_ly_thu_chi_PRM/modules/auth/change_password/screens/change_
 import 'package:Quan_ly_thu_chi_PRM/modules/home/screen/home_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/initial/screens/onboarding_currency_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/dashboard/screen/dashboard_screen.dart';
-// import 'package:Quan_ly_thu_chi_PRM/modules/ledger/screen/ledger_screen.dart';
-// import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plans_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/ledger/screen/ledger_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plans_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/stats/screen/stats_screen.dart';
 // import 'package:Quan_ly_thu_chi_PRM/modules/stats/screen/stats_screen.dart';
+
 
 class AppRoutes {
   static const String splash = '/';
@@ -39,8 +41,8 @@ class AppRoutes {
     home: (context) => const HomeScreen(),
     onboardingCurrency: (context) => const OnboardingCurrencyScreen(),
     dashboard: (context) => const DashboardScreen(),
-    // ledger: (context) => const LedgerScreen(),
-    // plans: (context) => const PlansScreen(),
-    // stats: (context) => const StatsScreen(),
+    ledger: (context) => const LedgerScreen(),
+    plans: (context) => const PlansScreen(),
+    stats: (context) => const StatsScreen(),
   };
 }

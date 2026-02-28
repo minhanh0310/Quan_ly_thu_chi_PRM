@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/jar/screen/jars_detail_screen.dart';
 
 class SliverBalanceCardWidget extends StatefulWidget {
   const SliverBalanceCardWidget({super.key});
@@ -11,6 +12,14 @@ class SliverBalanceCardWidget extends StatefulWidget {
 class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
   bool _isBalanceVisible = true;
 
+  void _openJarsDetail(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const JarsDetailScreen(totalBalance: 53500),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,10 +29,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppColors.primaryPurple,
-            AppColors.primaryPurpleDark,
-          ],
+          colors: [AppColors.primaryPurple, AppColors.primaryPurpleDark],
         ),
         borderRadius: AppBorderRadius.a28,
         boxShadow: [
@@ -37,7 +43,6 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Text(
             'Total Balance',
             style: AppTextStyle.s14in.copyWith(
@@ -48,7 +53,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
 
           AppGap.h10,
 
-          // Balance Amount với visibility toggle
+          // Balance Amount + visibility toggle
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -69,27 +74,40 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                   color: AppColors.white.withValues(alpha: 0.7),
                   size: 20,
                 ),
-                onPressed: () {
-                  setState(() => _isBalanceVisible = !_isBalanceVisible);
-                },
+                onPressed: () =>
+                    setState(() => _isBalanceVisible = !_isBalanceVisible),
               ),
             ],
           ),
 
           AppGap.h10,
 
-          // Subtitle link
-          Text(
-            'See the 6 jars structure >',
-            // TODO: Thay bằng localization
-            style: AppTextStyle.s12in.copyWith(
-              color: AppColors.white.withValues(alpha: 0.7),
+          GestureDetector(
+            onTap: () => _openJarsDetail(context),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'View the 6 Jars structure',
+                  style: AppTextStyle.s12in.copyWith(
+                    color: AppColors.white.withValues(alpha: 0.85),
+                    decoration: TextDecoration.underline,
+                    decorationColor: AppColors.white.withValues(alpha: 0.5),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: AppColors.white.withValues(alpha: 0.7),
+                  size: 11,
+                ),
+              ],
             ),
           ),
 
           AppGap.h24,
 
-          // Income & Expense Mini Cards
+          // ── Income & Expense Mini Cards ──
           Row(
             children: [
               Expanded(
@@ -125,7 +143,6 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
   }
 }
 
-/// Mini Stat Card
 class _MiniStatCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;

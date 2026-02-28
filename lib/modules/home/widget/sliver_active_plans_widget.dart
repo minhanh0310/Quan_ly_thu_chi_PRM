@@ -3,6 +3,21 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 class SliverActivePlansWidget extends StatelessWidget {
   const SliverActivePlansWidget({super.key});
 
+  static const List<Color> planColors = [
+    Color(0xFF6C5CE7), // Purple
+    Color(0xFFFF6B93), // Pink
+    Color(0xFF00D09E), // Green
+    Color(0xFFFFC94D), // Yellow
+    Color(0xFF5B4EFF), // Blue
+    Color(0xFFFF6B6B), // Red
+    Color(0xFF4ECDC4), // Teal
+    Color(0xFFFFBE0B), // Orange
+  ];
+
+  static Color getColorByIndex(int index) {
+    return planColors[index % planColors.length];
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -41,35 +56,27 @@ class SliverActivePlansWidget extends StatelessWidget {
 
           AppGap.h12,
 
-          // Plans List - Horizontal Scrollable
+          // Plans List
           SizedBox(
-            height: 100,
+            height: 200,
             child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: 2, // TODO: Replace với plans.length từ state
+              scrollDirection: Axis.vertical,
+              padding: AppPad.h20,
+              itemCount: mockPlans.length,
               separatorBuilder: (context, index) => AppGap.w16,
               itemBuilder: (context, index) {
-                // TODO: Replace với data thật
-                if (index == 0) {
-                  return _PlanCard(
-                    title: 'Buy a House',
-                    current: '\$125,000',
-                    target: '\$500,000',
-                    progress: 0.25,
-                    imageUrl: Images.house,
-                    color: const Color(0xFF6C5CE7),
-                  );
-                } else {
-                  return _PlanCard(
-                    title: 'Buy a Tesla',
-                    current: '\$15,000',
-                    target: '\$60,000',
-                    progress: 0.25,
-                    imageUrl: Images.tesla,
-                    color: const Color(0xFFFF6B93),
-                  );
-                }
+                final plan = mockPlans[index];
+
+                final color = getColorByIndex(index);
+
+                return _PlanCard(
+                  title: plan['title'],
+                  current: plan['current'],
+                  target: plan['target'],
+                  progress: plan['progress'],
+                  imageUrl: plan['imageUrl'],
+                  color: color,
+                );
               },
             ),
           ),
@@ -77,6 +84,33 @@ class SliverActivePlansWidget extends StatelessWidget {
       ),
     );
   }
+
+  static final List<Map<String, dynamic>> mockPlans = [
+    {
+      'title': 'Buy a House',
+      'current': '\$125,000',
+      'target': '\$500,000',
+      'progress': 0.25, //TODO: Calculate progress based on actual values (ex: current/target)
+      'imageUrl': Images.house,
+      'category': 'property',
+    },
+    {
+      'title': 'Buy a Tesla',
+      'current': '\$15,000',
+      'target': '\$60,000',
+      'progress': 0.25,
+      'imageUrl': Images.tesla,
+      'category': 'vehicle',
+    },
+    {
+      'title': 'Travel Fund',
+      'current': '\$8,000',
+      'target': '\$20,000',
+      'progress': 0.4,
+      'imageUrl': Images.house, // TODO: Add travel image
+      'category': 'travel',
+    },
+  ];
 }
 
 class _PlanCard extends StatelessWidget {
@@ -114,14 +148,20 @@ class _PlanCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Image Placeholder
+          // Image
           ClipRRect(
             borderRadius: AppBorderRadius.a12,
             child: Container(
               width: 68,
               height: 68,
               color: Colors.grey[200],
-              child: Image.asset(imageUrl, fit: BoxFit.cover),
+              child: Image.asset(
+                imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.image, color: AppColors.grey, size: 32);
+                },
+              ),
             ),
           ),
 
