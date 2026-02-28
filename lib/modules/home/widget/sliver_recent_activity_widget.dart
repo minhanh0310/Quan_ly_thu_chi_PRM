@@ -9,40 +9,36 @@ class SliverRecentActivityWidget extends StatelessWidget {
     // TODO: Replace với data từ BLoC/Provider
     final mockActivities = [
       {
-        'icon': Icons.arrow_downward,
-        'iconColor': const Color(0xFF00D09E),
-        // TODO: AppColors.incomeGreen
-        'backgroundColor': const Color(0xFFE8F8F4),
-        // TODO: AppColors.incomeLightGreen
+        'icon': IconPath.arrowDownLeft,
+        'iconColor': AppColors.incomeGreen,
+        'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Salary',
         'date': '2024-02-01',
         'amount': '+\$5,000',
         'isIncome': true,
       },
       {
-        'icon': Icons.arrow_upward,
-        'iconColor': const Color(0xFFFF6B93),
-        // TODO: AppColors.expenseRed
-        'backgroundColor': const Color(0xFFFFE8EE),
-        // TODO: AppColors.expenseLightRed
+        'icon': IconPath.arrowUpRight,
+        'iconColor': AppColors.expenseRed,
+        'backgroundColor': AppColors.expenseLightRed,
         'title': 'Rent',
         'date': '2024-02-02',
         'amount': '-\$1,200',
         'isIncome': false,
       },
       {
-        'icon': Icons.arrow_upward,
-        'iconColor': const Color(0xFFFF6B93),
-        'backgroundColor': const Color(0xFFFFE8EE),
+        'icon': IconPath.arrowUpRight,
+        'iconColor': AppColors.expenseRed,
+        'backgroundColor': AppColors.expenseLightRed,
         'title': 'Groceries',
         'date': '2024-02-03',
         'amount': '-\$450',
         'isIncome': false,
       },
       {
-        'icon': Icons.arrow_downward,
-        'iconColor': const Color(0xFF00D09E),
-        'backgroundColor': const Color(0xFFE8F8F4),
+        'icon': IconPath.arrowDownLeft,
+        'iconColor': AppColors.incomeGreen,
+        'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Freelance',
         'date': '2024-02-04',
         'amount': '+\$2,300',
@@ -53,45 +49,36 @@ class SliverRecentActivityWidget extends StatelessWidget {
     return SliverPadding(
       padding: AppPad.h20,
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            if (index == 0) {
-              return Padding(
-                padding: AppPad.a16,
-                child: Text(
-                  'Recent Activity',
-                  style: AppTextStyle.s16in.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.text,
-                  ),
-                ),
-              );
-            }
-
-            // Activity items từ index 1
-            final activityIndex = index - 1;
-            if (activityIndex >= mockActivities.length) {
-              return null;
-            }
-
-            final activity = mockActivities[activityIndex];
-
-            return Padding(
-              padding: AppPad.a12,
-              child: _ActivityItem(
-                icon: activity['icon'] as IconData,
-                iconColor: activity['iconColor'] as Color,
-                backgroundColor: activity['backgroundColor'] as Color,
-                title: activity['title'] as String,
-                date: activity['date'] as String,
-                amount: activity['amount'] as String,
-                isIncome: activity['isIncome'] as bool,
+        delegate: SliverChildBuilderDelegate((context, index) {
+          if (index == 0) {
+            return Text(
+              'Recent Activity',
+              style: AppTextStyle.s16in.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.text,
               ),
             );
-          },
-          childCount: mockActivities.length + 1,
-        ),
+          }
+
+          // Activity items từ index 1
+          final activityIndex = index - 1;
+          if (activityIndex >= mockActivities.length) {
+            return null;
+          }
+
+          final activity = mockActivities[activityIndex];
+
+          return _ActivityItem(
+            icon: activity['icon'] as String,
+            iconColor: activity['iconColor'] as Color,
+            backgroundColor: activity['backgroundColor'] as Color,
+            title: activity['title'] as String,
+            date: activity['date'] as String,
+            amount: activity['amount'] as String,
+            isIncome: activity['isIncome'] as bool,
+          );
+        }, childCount: mockActivities.length + 1),
       ),
     );
   }
@@ -99,7 +86,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
 
 /// Activity Item Component
 class _ActivityItem extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final Color iconColor;
   final Color backgroundColor;
   final String title;
@@ -120,9 +107,10 @@ class _ActivityItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: AppPad.a16,
+      margin: AppPad.b10,
+      padding: AppPad.a8,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.lightGrayBackground,
         borderRadius: AppBorderRadius.a12,
         boxShadow: [
           BoxShadow(
@@ -136,13 +124,17 @@ class _ActivityItem extends StatelessWidget {
         children: [
           // Icon container
           Container(
-            width: 48,
-            height: 48,
+            padding: AppPad.a18,
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: AppBorderRadius.a12,
             ),
-            child: Icon(icon, color: iconColor, size: 24),
+            child: SvgPicture.asset(
+              icon,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              height: 15,
+              width: 15,
+            ),
           ),
 
           AppGap.w12,
@@ -155,7 +147,6 @@ class _ActivityItem extends StatelessWidget {
                 Text(
                   title,
                   style: AppTextStyle.s14in.copyWith(
-                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppColors.text,
                   ),

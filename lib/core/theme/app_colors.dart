@@ -58,6 +58,9 @@ class AppColors {
 
   static const Color lightGray = Color(0xffCACACA);
 
+  static const Color lightGrayBackground = Color(0xFFF4F1F1);
+
+
   //
 
   static const Color brand = electricBlue;

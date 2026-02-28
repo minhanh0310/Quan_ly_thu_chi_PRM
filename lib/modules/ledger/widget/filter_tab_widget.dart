@@ -24,6 +24,7 @@ class _FilterTabWidgetState extends State<FilterTabWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: List.generate(tabs.length, (index) {
         final isSelected = selectedIndex == index;
         return Padding(
@@ -51,7 +52,7 @@ class _FilterTabWidgetState extends State<FilterTabWidget> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: AppPad.h20v10,
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFFE8E7FF) // Light purple
@@ -59,18 +60,20 @@ class _FilterTabWidgetState extends State<FilterTabWidget> {
           borderRadius: AppBorderRadius.a20,
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF6C5CE7) // Purple
-                : const Color(0xFFE0E0E0), // Light gray
+                ? AppColors.primaryPurple
+                : AppColors.lightGray,
             width: 1,
           ),
         ),
-        child: Text(
-          label,
-          style: AppTextStyle.s14in.copyWith(
-            fontWeight: FontWeight.w600,
-            color: isSelected
-                ? const Color(0xFF6C5CE7) // Purple
-                : AppColors.grey,
+        child: Center(
+          child: Text(
+            label,
+            style: AppTextStyle.s14in.copyWith(
+              fontWeight: FontWeight.w600,
+              color: isSelected
+                  ? const Color(0xFF6C5CE7)
+                  : AppColors.grey,
+            ),
           ),
         ),
       ),
