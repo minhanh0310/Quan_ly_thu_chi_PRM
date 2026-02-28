@@ -52,6 +52,7 @@ abstract final class AppPad {
   static const EdgeInsets v11 = EdgeInsets.symmetric(vertical: 11);
   static const EdgeInsets v12 = EdgeInsets.symmetric(vertical: 12);
   static const EdgeInsets v14 = EdgeInsets.symmetric(vertical: 14);
+  static const EdgeInsets v16 = EdgeInsets.symmetric(vertical: 16);
   static const EdgeInsets v20 = EdgeInsets.symmetric(vertical: 20);
   static const EdgeInsets v24 = EdgeInsets.symmetric(vertical: 24);
   static const EdgeInsets v40 = EdgeInsets.symmetric(vertical: 40);

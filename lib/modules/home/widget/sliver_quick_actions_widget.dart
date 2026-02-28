@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/home/widget/transaction_bottom_sheet.dart';
 
 class SliverQuickActionsWidget extends StatelessWidget {
   const SliverQuickActionsWidget({super.key});
@@ -32,10 +33,7 @@ class SliverQuickActionsWidget extends StatelessWidget {
                   label: 'INCOME',
                   color: const Color(0xFF00D09E),
                   backgroundColor: const Color(0xFFE8F8F4),
-                  onTap: () {
-                    // TODO: Navigate to add income screen
-                    print('====> Add Income');
-                  },
+                  onTap: () => showAddTransactionBottomSheet(context, isIncome: true),
                 ),
                 _ActionButton(
                   icon: IconPath.arrowDownLeft,
@@ -43,10 +41,7 @@ class SliverQuickActionsWidget extends StatelessWidget {
                   color: const Color(0xFFFF6B93),
                   // TODO: Move to AppColors.expenseRed
                   backgroundColor: const Color(0xFFFFE8EE),
-                  onTap: () {
-                    // TODO: Navigate to add expense screen
-                    print('====> Add Expense');
-                  },
+                  onTap: () => showAddTransactionBottomSheet(context, isIncome: false),
                 ),
                 _ActionButton(
                   icon: IconPath.plus,
@@ -119,3 +114,4 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
+
