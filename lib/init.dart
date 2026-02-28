@@ -28,3 +28,5 @@ export 'core/routers/routes.dart';
 
 // Responsive
 export 'package:responsive_framework/responsive_framework.dart';
+
+export 'package:flutter_svg/flutter_svg.dart';
