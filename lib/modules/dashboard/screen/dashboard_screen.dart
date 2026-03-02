@@ -51,7 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       iconPath: IconPath.plans,
     ),
     BottomNavItem(
-      screen: StatsScreen(),
+      screen: StatsScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.stats,
       label: 'Stats',
       iconPath: IconPath.stats,
