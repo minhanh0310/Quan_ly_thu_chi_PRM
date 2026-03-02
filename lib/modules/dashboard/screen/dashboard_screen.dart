@@ -45,7 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       iconPath: IconPath.ledger,
     ),
     BottomNavItem(
-      screen: PlansScreen(),
+      screen: PlansScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.plans,
       label: 'Plans',
       iconPath: IconPath.plans,
