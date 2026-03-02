@@ -21,11 +21,11 @@ class TransactionItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: AppPad.b15,
+      margin: AppPad.b10,
       // margin: const EdgeInsets.only(bottom: 15),
-      padding: AppPad.a16,
+      padding: AppPad.a10,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.lightGrayBackground,
         borderRadius: AppBorderRadius.a16,
         boxShadow: [
           BoxShadow(
@@ -38,27 +38,24 @@ class TransactionItemWidget extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 48,
-            height: 48,
+            padding: AppPad.a18,
             decoration: BoxDecoration(
               color: isIncome
                   ? const Color(0xFFE8F8F4)
                   : const Color(0xFFFFE8EE),
               borderRadius: AppBorderRadius.a12,
             ),
-            child: Icon(
-              isIncome
-                  ? Icons
-                        .arrow_downward
-                  : Icons.arrow_upward,
-              color: isIncome
-                  ? const Color(0xFF00D09E)
-                  : const Color(0xFFFF6B93),
-              size: 24,
+            child: SvgPicture.asset(
+              isIncome ? IconPath.arrowDownLeft : IconPath.arrowUpRight,
+              colorFilter: isIncome
+                  ? const ColorFilter.mode(Color(0xFF00D09E), BlendMode.srcIn)
+                  : const ColorFilter.mode(Color(0xFFFF6B93), BlendMode.srcIn),
+              height: 15,
+              width: 15,
             ),
           ),
 
-          const SizedBox(width: 12),
+          AppGap.w12,
 
           // Transaction info
           Expanded(
@@ -74,7 +71,7 @@ class TransactionItemWidget extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 4),
+                AppGap.h4,
 
                 // Date, category, tag row
                 Wrap(

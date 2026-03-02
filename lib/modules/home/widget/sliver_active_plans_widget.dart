@@ -133,10 +133,10 @@ class _PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
-      padding: AppPad.a16,
+      margin: AppPad.b10,
+      padding: AppPad.a12,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.lightGrayBackground,
         borderRadius: AppBorderRadius.a16,
         boxShadow: [
           BoxShadow(

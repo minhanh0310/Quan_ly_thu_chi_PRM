@@ -1,6 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/template/function_screen_template.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
-import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/header_widget.dart';
+// import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/header_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/search_bar_with_filter_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/data/mock_transaction.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/filter_tab_widget.dart';
@@ -19,13 +19,14 @@ class _LedgerScreenState extends State<LedgerScreen> {
   Widget build(BuildContext context) {
     return FunctionScreenTemplate(
       onOpenDrawer: widget.onOpenDrawer,
-      screen: const _Body(),
+      screen: _Body(onOpenDrawer: widget.onOpenDrawer),
     );
   }
 }
 
 class _Body extends StatefulWidget {
-  const _Body();
+  final VoidCallback? onOpenDrawer;
+  const _Body({this.onOpenDrawer});
 
   @override
   State<_Body> createState() => _BodyState();
@@ -57,37 +58,38 @@ class _BodyState extends State<_Body> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AppGap.h20,
-                    
-        // Header
-        HeaderWidget(
-          title: 'Ledger',
-          subtitle: 'View detailed ledger',
+        Padding(
+          padding: AppPad.h20,
+          child: Column(
+            children: [
+              AppGap.h20,
+
+              // HeaderWidget(title: 'Ledger', subtitle: 'Ledger Detail'),
+
+              // AppGap.h20,
+
+              SearchBarWithFilterWidget(
+                controller: _searchController,
+                onFilterTap: () {
+                  print('====> Open filter modal');
+                  // TODO: Show filter bottom sheet
+                },
+              ),
+
+              AppGap.h15,
+
+              FilterTabWidget(
+                onTabChanged: (index) {
+                  setState(() {
+                    selectedFilterIndex = index;
+                  });
+                },
+              ),
+
+              AppGap.h20,
+            ],
+          ),
         ),
-                    
-        AppGap.h20,
-                    
-        // Search bar with filter
-        SearchBarWithFilterWidget(
-          controller: _searchController,
-          onFilterTap: () {
-            print('====> Open filter modal');
-            // TODO: Show filter bottom sheet
-          },
-        ),
-                    
-        AppGap.h15,
-                    
-        // Filter tabs
-        FilterTabWidget(
-          onTabChanged: (index) {
-            setState(() {
-              selectedFilterIndex = index;
-            });
-          },
-        ),
-                    
-        AppGap.h20,
 
         Expanded(
           child: filteredTransactions.isEmpty

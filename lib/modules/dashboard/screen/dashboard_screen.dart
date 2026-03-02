@@ -39,7 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       iconPath: IconPath.home,
     ),
     BottomNavItem(
-      screen: LedgerScreen(),
+      screen: LedgerScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.ledger,
       label: 'Ledger',
       iconPath: IconPath.ledger,

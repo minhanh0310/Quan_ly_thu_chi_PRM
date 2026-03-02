@@ -90,9 +90,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                 Text(
                   'View the 6 Jars structure',
                   style: AppTextStyle.s12in.copyWith(
-                    color: AppColors.white.withValues(alpha: 0.85),
-                    decoration: TextDecoration.underline,
-                    decorationColor: AppColors.white.withValues(alpha: 0.5),
+                    color: AppColors.lightGray,
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -112,7 +110,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
             children: [
               Expanded(
                 child: _MiniStatCard(
-                  icon: Icons.arrow_downward,
+                  icon: IconPath.arrowUpRight,
                   iconColor: const Color(0xFF00D09E),
                   label: 'INCOME',
                   amount: '\$5,000',
@@ -125,7 +123,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
               AppGap.w12,
               Expanded(
                 child: _MiniStatCard(
-                  icon: Icons.arrow_upward,
+                  icon: IconPath.arrowDownLeft,
                   iconColor: const Color(0xFFFF6B93),
                   label: 'EXPENSE',
                   amount: '\$1,250',
@@ -144,7 +142,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
 }
 
 class _MiniStatCard extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final Color iconColor;
   final String label;
   final String amount;
@@ -174,8 +172,13 @@ class _MiniStatCard extends StatelessWidget {
           // Icon + Label
           Row(
             children: [
-              Icon(icon, color: iconColor, size: 16),
-              AppGap.w4,
+              SvgPicture.asset(
+                icon,
+                width: 10,
+                height: 10,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              ),
+              AppGap.w10,
               Expanded(
                 child: Text(
                   label,

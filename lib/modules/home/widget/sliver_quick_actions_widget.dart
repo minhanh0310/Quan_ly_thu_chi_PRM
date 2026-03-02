@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/home/widget/transaction_bottom_sheet.dart';
 
 class SliverQuickActionsWidget extends StatelessWidget {
   const SliverQuickActionsWidget({super.key});
@@ -28,28 +29,22 @@ class SliverQuickActionsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _ActionButton(
-                  icon: Icons.arrow_downward,
+                  icon: IconPath.arrowUpRight,
                   label: 'INCOME',
                   color: const Color(0xFF00D09E),
                   backgroundColor: const Color(0xFFE8F8F4),
-                  onTap: () {
-                    // TODO: Navigate to add income screen
-                    print('====> Add Income');
-                  },
+                  onTap: () => showAddTransactionBottomSheet(context, isIncome: true),
                 ),
                 _ActionButton(
-                  icon: Icons.arrow_upward,
+                  icon: IconPath.arrowDownLeft,
                   label: 'EXPENSE',
                   color: const Color(0xFFFF6B93),
                   // TODO: Move to AppColors.expenseRed
                   backgroundColor: const Color(0xFFFFE8EE),
-                  onTap: () {
-                    // TODO: Navigate to add expense screen
-                    print('====> Add Expense');
-                  },
+                  onTap: () => showAddTransactionBottomSheet(context, isIncome: false),
                 ),
                 _ActionButton(
-                  icon: Icons.add,
+                  icon: IconPath.plus,
                   label: 'NEW PLAN',
                   color: AppColors.primaryPurple,
                   backgroundColor: const Color(0xFFF0EDFF),
@@ -67,9 +62,8 @@ class SliverQuickActionsWidget extends StatelessWidget {
   }
 }
 
-/// Action Button Component - Fixed size 100x100
 class _ActionButton extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String label;
   final Color color;
   final Color backgroundColor;
@@ -97,13 +91,18 @@ class _ActionButton extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 28),
-            AppGap.h8,
+            SvgPicture.asset(
+              icon,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+              height: 15,
+              width: 15,
+            ),
+            AppGap.h10,
             Text(
               label,
               textAlign: TextAlign.center,
               style: AppTextStyle.s12in.copyWith(
-                fontSize: 11,
+                fontSize: 10,
                 color: color,
                 fontWeight: FontWeight.w600,
                 height: 1.2,
@@ -115,3 +114,4 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
+
