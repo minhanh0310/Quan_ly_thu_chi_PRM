@@ -99,7 +99,7 @@ class _HistoryCard extends StatelessWidget {
 
           // Amount
           Text(
-            '+${_formatAmount(entry.amount)}',
+            '+${_formatAmount(entry.amount)}',  
             style: AppTextStyle.s14in.copyWith(
               color: AppColors.incomeGreen,
               fontWeight: FontWeight.bold,

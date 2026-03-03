@@ -46,7 +46,7 @@ class TransactionItemWidget extends StatelessWidget {
               borderRadius: AppBorderRadius.a12,
             ),
             child: SvgPicture.asset(
-              isIncome ? IconPath.arrowDownLeft : IconPath.arrowUpRight,
+              isIncome ? IconPath.arrowUpRight : IconPath.arrowDownLeft,
               colorFilter: isIncome
                   ? const ColorFilter.mode(Color(0xFF00D09E), BlendMode.srcIn)
                   : const ColorFilter.mode(Color(0xFFFF6B93), BlendMode.srcIn),

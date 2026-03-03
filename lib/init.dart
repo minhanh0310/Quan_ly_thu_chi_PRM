@@ -22,6 +22,7 @@ export 'core/widgets/template/auth_app_bar.dart';
 export 'core/widgets/template/custom_app_bar.dart';
 export 'core/widgets/template/custom_text_field.dart';
 export 'core/widgets/template/primary_button.dart';
+export 'core/widgets/template/custom_text_widget.dart';
 
 // Routers
 export 'core/routers/routes.dart';

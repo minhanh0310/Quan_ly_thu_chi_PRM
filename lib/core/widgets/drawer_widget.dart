@@ -89,7 +89,6 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           //     ),
                           //   ),
                           // ),
-
                           AppGap.h20,
 
                           // Profile Section
@@ -192,6 +191,35 @@ class _DrawerWidgetState extends State<DrawerWidget>
                               Navigator.pop(context);
                               print('====> Wallet');
                             },
+                          ),
+
+                          AppGap.h20,
+                          const Divider(height: 1, color: AppColors.lightGray),
+                          AppGap.h20,
+
+                          Padding(
+                            padding: AppPad.h20,
+                            child: _SectionHeader(title: 'OTHER'),
+                          ),
+                          AppGap.h10,
+
+                          _buildDrawerItem(
+                            icon: Icons.help_outline,
+                            title: 'Terms of service',
+                            onTap: () {
+                              Navigator.pop(context);
+                              //TODO: pop sang bottomsheet terms of service
+                              // Navigator.pushNamed(
+                              //   context,
+                              //   AppRoutes.termsOfService,
+                              // );
+                            },
+                          ),
+
+                          _buildDrawerItemLogout(
+                            icon: Icons.logout,
+                            title: 'Log out',
+                            onTap: () => _showLogoutDialog(context),
                           ),
 
                           AppGap.h40,
@@ -406,6 +434,73 @@ class _DrawerWidgetState extends State<DrawerWidget>
       ),
     );
   }
+}
+
+Widget _buildDrawerItemLogout({
+  required IconData icon,
+  required String title,
+  required VoidCallback onTap,
+}) {
+  return InkWell(
+    onTap: onTap,
+    child: Padding(
+      padding: AppPad.h20v12,
+      child: Row(
+        children: [
+          Icon(icon, size: 22, color: AppColors.rustyRed),
+          AppGap.w12,
+          Expanded(
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyle.s14in.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.rustyRed,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Log out'),
+        content: Text('Are you sure you want to log out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel', style: AppTextStyle.s14in.copyWith(),),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pop(context); // Close drawer
+              // TODO: Clear user data
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.signin,
+                (route) => false,
+              );
+            },
+            child: Text(
+              'Log out',
+              style: AppTextStyle.s14in.copyWith(
+                color: AppColors.rustyRed,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 /// Section Header

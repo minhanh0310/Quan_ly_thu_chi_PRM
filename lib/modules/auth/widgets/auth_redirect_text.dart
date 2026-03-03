@@ -5,24 +5,29 @@ class AuthRedirectText extends StatelessWidget {
   final String btnText;
   final VoidCallback? onPressed;
 
-  const AuthRedirectText({super.key, required this.text, required this.btnText, required this.onPressed});
+  const AuthRedirectText({
+    super.key,
+    required this.text,
+    required this.btnText,
+    required this.onPressed,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          text,
+        CustomTextWidget(
+          text: text,
           style: AppTextStyle.s12.copyWith(
             color: AppColors.black,
             fontWeight: FontWeight.w400,
           ),
         ),
-
+    
         TextButton(
           onPressed: onPressed,
-          child: Text(
-            btnText,
+          child: CustomTextWidget(
+            text: btnText,
             style: AppTextStyle.s12.copyWith(
               color: AppColors.mainColor,
               fontWeight: FontWeight.w600,

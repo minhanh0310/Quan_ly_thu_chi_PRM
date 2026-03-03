@@ -9,7 +9,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
     // TODO: Replace với data từ BLoC/Provider
     final mockActivities = [
       {
-        'icon': IconPath.arrowDownLeft,
+        'icon': IconPath.arrowUpRight,
         'iconColor': AppColors.incomeGreen,
         'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Salary',
@@ -18,7 +18,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'isIncome': true,
       },
       {
-        'icon': IconPath.arrowUpRight,
+        'icon': IconPath.arrowDownLeft,
         'iconColor': AppColors.expenseRed,
         'backgroundColor': AppColors.expenseLightRed,
         'title': 'Rent',
@@ -27,7 +27,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'isIncome': false,
       },
       {
-        'icon': IconPath.arrowUpRight,
+        'icon': IconPath.arrowDownLeft,
         'iconColor': AppColors.expenseRed,
         'backgroundColor': AppColors.expenseLightRed,
         'title': 'Groceries',
@@ -36,7 +36,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'isIncome': false,
       },
       {
-        'icon': IconPath.arrowDownLeft,
+        'icon': IconPath.arrowUpRight,
         'iconColor': AppColors.incomeGreen,
         'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Freelance',
@@ -146,6 +146,8 @@ class _ActivityItem extends StatelessWidget {
               children: [
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.s14in.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppColors.text,
@@ -154,6 +156,8 @@ class _ActivityItem extends StatelessWidget {
                 AppGap.h4,
                 Text(
                   date,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.s12in.copyWith(color: AppColors.grey),
                 ),
               ],

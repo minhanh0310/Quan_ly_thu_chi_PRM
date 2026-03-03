@@ -85,10 +85,10 @@ class _Body extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    text: 'We texted you a code to verify your phone number ',
+                    text: 'We sent you a code to verify your email via ',
                   ),
                   TextSpan(
-                    text: '(+84) 0123456xxx',
+                    text: 'abc@xyz.com',
                     style: AppTextStyle.s14.copyWith(
                       color: AppColors.mainColor,
                       fontWeight: FontWeight.w600,

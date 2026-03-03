@@ -134,9 +134,11 @@ class _JarNameBadges extends StatelessWidget {
         Row(
           children: [
             _PillBadge(label: 'TARGET: $targetPct%', color: color),
-            const SizedBox(width: 8),
+            AppGap.w8,
             Text(
               'Actual: $actualPct%',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: AppTextStyle.s12in.copyWith(
                 color: AppColors.textSecondary,
                 fontSize: 11,
@@ -201,13 +203,14 @@ class _ActivePlansRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        AppGap.w8,
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, AppRoutes.plans);
           },
           child: Text(
             'Nurturing $count active plans',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyle.s12in.copyWith(
               color: AppColors.textSecondary,
               fontSize: 11,
@@ -235,6 +238,8 @@ class _PillBadge extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: AppTextStyle.s12in.copyWith(
           color: color,
           fontWeight: FontWeight.w700,

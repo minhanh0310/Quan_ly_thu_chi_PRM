@@ -121,44 +121,51 @@ class _SignInFormState extends State<SignInForm> {
 
         // Remember Account Checkbox & Forgot Password Row
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Remember Account Checkbox
-            Row(
-              children: [
-                SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: Checkbox(
-                    value: _rememberAccount,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _rememberAccount = value ?? false;
-                      });
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+            Expanded(
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Checkbox(
+                      value: _rememberAccount,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _rememberAccount = value ?? false;
+                        });
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      side: BorderSide(color: AppColors.lightGray, width: 1.5),
                     ),
-                    side: BorderSide(color: AppColors.lightGray, width: 1.5),
                   ),
-                ),
-                AppGap.w12,
-                Text(
-                  'Remember account',
-                  style: AppTextStyle.s14.copyWith(
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w500,
+                  AppGap.w12,
+                  Expanded(
+                    child: Text(
+                      'Remember account',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.s14.copyWith(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            // Forgot Password Link
+
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.forgotPw);
               },
               child: Text(
                 'Forgot your password?',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
                 style: AppTextStyle.s12.copyWith(
                   color: AppColors.lightGray,
                   fontWeight: FontWeight.w500,
