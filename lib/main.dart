@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -10,6 +11,9 @@ void main() async {
   // khoi tao truoc khi chay app
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final db = FirebaseDatabase.instance.ref('test/message');
+  await db.set('Hello, Firebase Realtime Database!');
 
   runApp(
     ChangeNotifierProvider(

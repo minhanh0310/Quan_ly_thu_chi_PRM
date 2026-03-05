@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "279622842154",
+    "firebase_url": "https://quanlythuchiprm-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "quanlythuchiprm",
     "storage_bucket": "quanlythuchiprm.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.personal_finance_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "279622842154-g8eaa3rffvtvo6m25l27lr0039faqenh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.personal_finance_app",
+            "certificate_hash": "1c09a1ba136a9159c1c85ec3e2eb77eaf29bda63"
+          }
+        },
+        {
+          "client_id": "279622842154-kos9e5hphevgrptvvla8pqh1dghicd05.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCerhfTKm_yd3WyQCCfqFAhPLyBzp4Cbto"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279622842154-kos9e5hphevgrptvvla8pqh1dghicd05.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
