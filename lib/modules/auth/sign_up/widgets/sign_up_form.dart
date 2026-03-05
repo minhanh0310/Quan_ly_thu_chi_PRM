@@ -1,4 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -26,7 +28,7 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  bool _isAgreed = false;
+  bool _isAgreed = true;
   bool _showPasswords = false;
 
   // Error state for each field
@@ -60,12 +62,37 @@ class _SignUpFormState extends State<SignUpForm> {
         _isAgreed;
 
     if (isFormValid) {
-      // All validations passed and terms agreed
-      Navigator.pushNamedAndRemoveUntil(
+      // All validations passed and terms agreed -> create account
+      final auth = FirebaseAuthService();
+      final email = widget.emailController.text.trim();
+      final password = widget.passwordController.text;
+      final username = widget.usernameController.text.trim();
+
+      ScaffoldMessenger.of(
         context,
-        AppRoutes.dashboard,
-        (route) => false,
-      );
+      ).showSnackBar(const SnackBar(content: Text('Creating account...')));
+
+      auth
+          .signUpWithEmailPassword(
+            email: email,
+            password: password,
+            displayName: username,
+          )
+          .then((_) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.dashboard,
+              (route) => false,
+            );
+          })
+          .catchError((error) {
+            final msg = error is FirebaseAuthException
+                ? error.message ?? error.code
+                : error.toString();
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Sign up failed: $msg')));
+          });
     } else if (!_isAgreed) {
       // Show snackbar if terms not agreed
       ScaffoldMessenger.of(context).showSnackBar(

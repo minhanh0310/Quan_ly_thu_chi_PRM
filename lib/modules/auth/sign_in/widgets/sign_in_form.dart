@@ -1,4 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
 
 class SignInForm extends StatefulWidget {
@@ -40,12 +42,32 @@ class _SignInFormState extends State<SignInForm> {
     final isFormValid = _emailError == null && _passwordError == null;
 
     if (isFormValid) {
-      // All validations passed, proceed to login
-      Navigator.pushNamedAndRemoveUntil(
+      // Attempt Firebase sign in
+      final auth = FirebaseAuthService();
+      final email = widget.emailController.text.trim();
+      final password = widget.passwordController.text;
+
+      ScaffoldMessenger.of(
         context,
-        AppRoutes.dashboard,
-        (route) => false,
-      );
+      ).showSnackBar(const SnackBar(content: Text('Signing in...')));
+
+      auth
+          .signInWithEmailPassword(email: email, password: password)
+          .then((_) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.dashboard,
+              (route) => false,
+            );
+          })
+          .catchError((error) {
+            final msg = error is FirebaseAuthException
+                ? error.message ?? error.code
+                : error.toString();
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Sign in failed: $msg')));
+          });
     }
   }
 
