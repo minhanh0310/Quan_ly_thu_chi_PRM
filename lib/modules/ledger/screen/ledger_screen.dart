@@ -18,6 +18,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
   @override
   Widget build(BuildContext context) {
     return FunctionScreenTemplate(
+      backgroundColor: context.backgroundColor,
       onOpenDrawer: widget.onOpenDrawer,
       screen: _Body(onOpenDrawer: widget.onOpenDrawer),
     );
@@ -67,7 +68,6 @@ class _BodyState extends State<_Body> {
               // HeaderWidget(title: 'Ledger', subtitle: 'Ledger Detail'),
 
               // AppGap.h20,
-
               SearchBarWithFilterWidget(
                 controller: _searchController,
                 onFilterTap: () {
@@ -122,12 +122,14 @@ class _BodyState extends State<_Body> {
           Icon(
             Icons.receipt_long_outlined,
             size: 64,
-            color: AppColors.grey.withValues(alpha: 0.5),
+            color: context.secondaryTextColor.withValues(alpha: 0.5),
           ),
           AppGap.h16,
           Text(
             'No transactions found',
-            style: AppTextStyle.s16in.copyWith(color: AppColors.grey),
+            style: AppTextStyle.s16in.copyWith(
+              color: context.secondaryTextColor,
+            ),
           ),
         ],
       ),

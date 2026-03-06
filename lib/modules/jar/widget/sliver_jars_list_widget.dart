@@ -41,7 +41,7 @@ class SectionHeader extends StatelessWidget {
           title,
           style: AppTextStyle.s16in.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: context.primaryTextColor,
           ),
         ),
         if (trailing != null) GestureDetector(onTap: onTap, child: trailing!),

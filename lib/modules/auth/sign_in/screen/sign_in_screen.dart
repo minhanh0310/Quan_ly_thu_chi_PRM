@@ -24,15 +24,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDark = themeProvider.isDarkMode;
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor: isDark ? AppColors.blackBackground : AppColors.white,
+          backgroundColor: context.backgroundColor,
           appBar: AppBar(
             title: Text(
               'Sign In',
@@ -44,7 +42,7 @@ class _SignInScreenState extends State<SignInScreen> {
             backgroundColor: AppColors.mainColor,
             elevation: 0,
             iconTheme: IconThemeData(
-              color: isDark ? AppColors.white : AppColors.black,
+              color: context.backgroundColor,
             ),
           ),
           body: Column(

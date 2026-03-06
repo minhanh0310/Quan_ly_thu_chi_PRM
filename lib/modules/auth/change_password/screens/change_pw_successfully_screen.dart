@@ -25,9 +25,9 @@ class ChangePwSuccessfullyScreen extends StatelessWidget {
 
               Text(
                 'Change password successfully!',
-                style: AppTextStyle.s16.copyWith(
+                style: AppTextStyle.s20.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AppColors.mainColor,
+                  color: context.primaryColor,
                 ),
               ),
 
@@ -35,7 +35,7 @@ class ChangePwSuccessfullyScreen extends StatelessWidget {
 
               Text(
                 '''You have successfully changed password.\nPlease use the new password when Sign in''',
-                style: AppTextStyle.s14.copyWith(color: AppColors.black),
+                style: AppTextStyle.s14.copyWith(color: context.primaryTextColor),
                 textAlign: TextAlign.center,
               ),
 

@@ -170,7 +170,7 @@ class _SignInFormState extends State<SignInForm> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.s14.copyWith(
-                        color: AppColors.black,
+                        color: context.primaryTextColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

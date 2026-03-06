@@ -23,7 +23,7 @@ class SliverJarCardWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: AppPad.a16,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.surfaceVariant,
         borderRadius: AppBorderRadius.a16,
         boxShadow: const [
           BoxShadow(
@@ -127,7 +127,7 @@ class _JarNameBadges extends StatelessWidget {
           name,
           style: AppTextStyle.s14in.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: context.primaryTextColor,
           ),
         ),
         AppGap.h3,
@@ -166,7 +166,7 @@ class _JarAmountDetail extends StatelessWidget {
           amount,
           style: AppTextStyle.s14in.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: context.primaryTextColor,
           ),
         ),
       ],

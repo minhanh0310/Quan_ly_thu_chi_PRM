@@ -26,8 +26,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor: AppColors.white,
-          appBar: AuthAppBar(title: 'Forgot Password'),
+          backgroundColor: context.backgroundColor,
+          appBar: AuthAppBar(
+            title: 'Forgot Password',
+            backgroundColor: context.primaryColor,
+            
+          ),
           body: Column(
             children: [
               Expanded(child: _Body(emailController: _emailController)),

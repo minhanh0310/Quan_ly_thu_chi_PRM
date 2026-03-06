@@ -27,8 +27,11 @@ class _VerifyForgotPasswordScreenState
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor: AppColors.white,
-          appBar: AuthAppBar(title: 'Forgot Password'),
+          backgroundColor: context.backgroundColor,
+          appBar: AuthAppBar(
+            title: 'Forgot Password',
+            backgroundColor: context.primaryColor,
+          ),
           body: Column(
             children: [
               Expanded(
@@ -80,7 +83,7 @@ class _Body extends StatelessWidget {
             RichText(
               text: TextSpan(
                 style: AppTextStyle.s14.copyWith(
-                  color: AppColors.grey,
+                  color: context.primaryTextColor,
                   height: 1.5,
                 ),
                 children: [
@@ -104,7 +107,7 @@ class _Body extends StatelessWidget {
 
             Text(
               'This code will expired in 5 minutes after this message.',
-              style: AppTextStyle.s14.copyWith(color: AppColors.grey),
+              style: AppTextStyle.s14.copyWith(color: context.primaryTextColor),
             ),
 
             AppGap.h40,

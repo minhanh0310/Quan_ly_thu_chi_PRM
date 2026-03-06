@@ -18,7 +18,7 @@ class SliverQuickActionsWidget extends StatelessWidget {
               style: AppTextStyle.s16in.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.text,
+                color: context.primaryTextColor,
               ),
             ),
 
@@ -33,23 +33,23 @@ class SliverQuickActionsWidget extends StatelessWidget {
                   label: 'INCOME',
                   color: const Color(0xFF00D09E),
                   backgroundColor: const Color(0xFFE8F8F4),
-                  onTap: () => showAddTransactionBottomSheet(context, isIncome: true),
+                  onTap: () =>
+                      showAddTransactionBottomSheet(context, isIncome: true),
                 ),
                 _ActionButton(
                   icon: IconPath.arrowDownLeft,
                   label: 'EXPENSE',
                   color: const Color(0xFFFF6B93),
-                  // TODO: Move to AppColors.expenseRed
                   backgroundColor: const Color(0xFFFFE8EE),
-                  onTap: () => showAddTransactionBottomSheet(context, isIncome: false),
+                  onTap: () =>
+                      showAddTransactionBottomSheet(context, isIncome: false),
                 ),
                 _ActionButton(
                   icon: IconPath.plus,
                   label: 'NEW PLAN',
-                  color: AppColors.primaryPurple,
-                  backgroundColor: const Color(0xFFF0EDFF),
+                  color: context.primaryColor,
+                  backgroundColor: context.primaryColor.withValues(alpha: 0.1),
                   onTap: () {
-                    // TODO: Navigate to create plan screen
                     print('====> Create Plan');
                   },
                 ),
@@ -114,4 +114,3 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
-

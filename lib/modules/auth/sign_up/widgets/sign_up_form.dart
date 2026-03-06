@@ -264,7 +264,7 @@ class _SignUpFormState extends State<SignUpForm> {
               child: RichText(
                 text: TextSpan(
                   style: AppTextStyle.s14.copyWith(
-                    color: AppColors.black,
+                    color: context.primaryTextColor,
                     height: 1.5,
                   ),
                   children: [

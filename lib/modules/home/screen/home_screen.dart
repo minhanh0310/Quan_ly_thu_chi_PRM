@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FunctionScreenTemplate(
+      backgroundColor: context.backgroundColor,
       onOpenDrawer: onOpenDrawer,
       screen: const _Body(),
     );

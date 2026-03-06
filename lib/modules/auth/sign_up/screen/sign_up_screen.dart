@@ -28,15 +28,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDark = themeProvider.isDarkMode;
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor: isDark ? AppColors.blackBackground : AppColors.white,
+          backgroundColor: context.backgroundColor,
           appBar: AuthAppBar(
             title: 'Sign Up',
             backgroundColor: AppColors.mainColor,

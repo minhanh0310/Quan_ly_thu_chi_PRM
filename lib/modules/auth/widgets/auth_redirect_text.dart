@@ -19,7 +19,7 @@ class AuthRedirectText extends StatelessWidget {
         CustomTextWidget(
           text: text,
           style: AppTextStyle.s12.copyWith(
-            color: AppColors.black,
+            color: context.primaryTextColor,
             fontWeight: FontWeight.w400,
           ),
         ),

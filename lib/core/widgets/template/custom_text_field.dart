@@ -86,32 +86,26 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: TextField(
-            controller: widget.controller,
-            focusNode: _focusNode,
-            keyboardType: widget.keyboardType,
-            obscureText: widget.isPassword ? _obscureText : widget.obscureText,
-            maxLines: widget.maxLines,
-            onChanged: widget.onChanged,
-            style: AppTextStyle.s14.copyWith(color: Color(0xff343434)),
-            decoration:
-                (hasError
-                        ? AppInputDecoration.roundBorderError
-                        : AppInputDecoration.roundBorder)
-                    .copyWith(
-                      hintText: widget.hintText,
-                      hintStyle: AppTextStyle.s14.copyWith(
-                        color: AppColors.lightGray,
-                      ),
-                      suffixIcon: effectiveSuffixIcon,
-                      contentPadding: const EdgeInsets.all(12),
+        TextField(
+          controller: widget.controller,
+          focusNode: _focusNode,
+          keyboardType: widget.keyboardType,
+          obscureText: widget.isPassword ? _obscureText : widget.obscureText,
+          maxLines: widget.maxLines,
+          onChanged: widget.onChanged,
+          style: AppTextStyle.s14.copyWith(color: Color(0xff343434)),
+          decoration:
+              (hasError
+                      ? AppInputDecoration.roundBorderError
+                      : AppInputDecoration.roundBorder)
+                  .copyWith(
+                    hintText: widget.hintText,
+                    hintStyle: AppTextStyle.s14.copyWith(
+                      color: AppColors.lightGray,
                     ),
-          ),
+                    suffixIcon: effectiveSuffixIcon,
+                    contentPadding: const EdgeInsets.all(12),
+                  ),
         ),
         if (hasError) ...[
           AppGap.h4,

@@ -25,7 +25,7 @@ class TransactionItemWidget extends StatelessWidget {
       // margin: const EdgeInsets.only(bottom: 15),
       padding: AppPad.a10,
       decoration: BoxDecoration(
-        color: AppColors.lightGrayBackground,
+        color: context.surfaceVariant,
         borderRadius: AppBorderRadius.a16,
         boxShadow: [
           BoxShadow(
@@ -41,8 +41,8 @@ class TransactionItemWidget extends StatelessWidget {
             padding: AppPad.a18,
             decoration: BoxDecoration(
               color: isIncome
-                  ? const Color(0xFFE8F8F4)
-                  : const Color(0xFFFFE8EE),
+                  ? context.incomeBackgroundColor
+                  : context.expenseBackgroundColor,
               borderRadius: AppBorderRadius.a12,
             ),
             child: SvgPicture.asset(
@@ -67,7 +67,7 @@ class TransactionItemWidget extends StatelessWidget {
                   title,
                   style: AppTextStyle.s16in.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.black,
+                    color: context.primaryTextColor,
                   ),
                 ),
 
@@ -81,7 +81,9 @@ class TransactionItemWidget extends StatelessWidget {
                     // Date
                     Text(
                       date,
-                      style: AppTextStyle.s12in.copyWith(color: AppColors.grey),
+                      style: AppTextStyle.s12in.copyWith(
+                        color: context.secondaryTextColor,
+                      ),
                     ),
 
                     // Category badge (if exists)
@@ -112,7 +114,7 @@ class TransactionItemWidget extends StatelessWidget {
                         '#$tag',
                         style: AppTextStyle.s12in.copyWith(
                           fontSize: 11,
-                          color: AppColors.grey,
+                          color: context.secondaryTextColor,
                         ),
                       ),
                   ],

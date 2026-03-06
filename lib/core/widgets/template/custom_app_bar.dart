@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.white,
+      backgroundColor: context.appBarColor,
       elevation: 0,
       toolbarHeight: 70,
       automaticallyImplyLeading: false,
@@ -19,13 +19,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: Padding(
         padding: AppPad.l16,
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Color(0xffF5F6FA),
+            color: context.surfaceVariant,
           ),
           child: IconButton(
             onPressed: onOpenDrawer,
-            icon: const Icon(Icons.menu, color: Colors.black87, size: 24),
+            icon: Icon(Icons.menu, color: context.primaryTextColor, size: 24),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
@@ -49,7 +49,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Text(
               subtitle ?? 'MODERN WEALTH',
               style: AppTextStyle.s12in.copyWith(
-                color: Colors.grey[600],
+                color: AppColors.grey,
                 letterSpacing: 1.2,
               ),
             ),

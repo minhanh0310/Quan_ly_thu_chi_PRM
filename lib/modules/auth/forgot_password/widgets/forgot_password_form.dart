@@ -46,7 +46,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
         Text(
           'We will send you a reset link to verify your email address',
-          style: AppTextStyle.s14.copyWith(color: AppColors.black),
+          style: AppTextStyle.s14.copyWith(color: context.primaryTextColor),
         ),
       ],
     );

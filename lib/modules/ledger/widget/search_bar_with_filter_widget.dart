@@ -18,35 +18,41 @@ class SearchBarWithFilterWidget extends StatelessWidget {
       children: [
         // Search TextField
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.lightGray,
-              borderRadius: AppBorderRadius.a12,
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-            ),
-            child: TextField(
-              controller: controller,
-              style: AppTextStyle.s14in.copyWith(color: AppColors.black),
-              decoration: InputDecoration(
-                hintText: hintText ?? 'Search category, tags, notes...',
-                hintStyle: AppTextStyle.s14in.copyWith(color: AppColors.grey),
-                prefixIcon: Container(
-                  padding: AppPad.a12,
-                  child: SvgPicture.asset(
-                    IconPath.search,
-                    width: 15,
-                    height: 15,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.grey,
-                      BlendMode.srcIn,
-                    ),
+          child: TextField(
+            controller: controller,
+            style: AppTextStyle.s14in.copyWith(color: context.primaryTextColor),
+            decoration: InputDecoration(
+              hintText: hintText ?? 'Search category, tags, notes...',
+              hintStyle: AppTextStyle.s14in.copyWith(color: context.hintColor),
+              filled: true,
+              fillColor: context.inputFillColor,
+              prefixIcon: Container(
+                padding: AppPad.a12,
+                child: SvgPicture.asset(
+                  IconPath.search,
+                  width: 15,
+                  height: 15,
+                  colorFilter: ColorFilter.mode(
+                    context.secondaryTextColor,
+                    BlendMode.srcIn,
                   ),
                 ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: AppBorderRadius.a12,
+                borderSide: BorderSide(color: context.borderColor, width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: AppBorderRadius.a12,
+                borderSide: BorderSide(color: context.primaryColor, width: 1.5),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: AppBorderRadius.a12,
+                borderSide: BorderSide(color: context.borderColor, width: 1),
               ),
             ),
           ),
@@ -64,17 +70,17 @@ class SearchBarWithFilterWidget extends StatelessWidget {
           child: Container(
             padding: AppPad.a15,
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: context.inputFillColor,
               borderRadius: AppBorderRadius.a12,
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+              border: Border.all(color: context.borderColor, width: 1),
             ),
             alignment: Alignment.center,
             child: SvgPicture.asset(
               IconPath.filter,
               width: 15,
               height: 15,
-              colorFilter: const ColorFilter.mode(
-                AppColors.black,
+              colorFilter: ColorFilter.mode(
+                context.primaryTextColor,
                 BlendMode.srcIn,
               ),
             ),
