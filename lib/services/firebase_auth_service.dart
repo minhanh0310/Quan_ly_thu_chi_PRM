@@ -35,6 +35,26 @@ class FirebaseAuthService {
     return cred;
   }
 
+  Future<void> sendEmailVerification() async {
+    // handleCodeInApp: true + androidPackageName → Firebase generates an
+    // App Link that Android will route directly into this app once the
+    // SHA-256 fingerprint is registered in Firebase Console > Authentication
+    // > Settings > Authorized domains (and App Check is configured).
+    // Falls back to the polling mechanism until App Links are active.
+    final actionCodeSettings = ActionCodeSettings(
+      url: 'https://quanlythuchiprm.firebaseapp.com',
+      handleCodeInApp: true,
+      androidPackageName: 'com.example.personal_finance_app',
+      androidInstallApp: false,
+    );
+    await _auth.currentUser?.sendEmailVerification(actionCodeSettings);
+  }
+
+  Future<bool> reloadAndCheckVerified() async {
+    await _auth.currentUser?.reload();
+    return _auth.currentUser?.emailVerified ?? false;
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
   }

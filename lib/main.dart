@@ -12,8 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  final db = FirebaseDatabase.instance.ref('test/message');
-  await db.set('Hello, Firebase Realtime Database!');
+  // final db = FirebaseDatabase.instance.ref('test/message');
+  // await db.set('Hello, Firebase Realtime Database!');
 
   runApp(
     ChangeNotifierProvider(

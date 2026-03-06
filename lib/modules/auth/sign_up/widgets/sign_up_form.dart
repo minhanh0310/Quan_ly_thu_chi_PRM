@@ -1,5 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/models/user_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
 
@@ -30,6 +32,7 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   bool _isAgreed = true;
   bool _showPasswords = false;
+  bool _isLoading = false;
 
   // Error state for each field
   String? _usernameError;
@@ -37,9 +40,8 @@ class _SignUpFormState extends State<SignUpForm> {
   String? _passwordError;
   String? _confirmPasswordError;
 
-  void _validateForm() {
+  Future<void> _validateForm() async {
     setState(() {
-      // Validate each field
       _usernameError = FormValidators.validateName(
         widget.usernameController.text,
       );
@@ -53,7 +55,6 @@ class _SignUpFormState extends State<SignUpForm> {
       );
     });
 
-    // Check if all fields are valid
     final isFormValid =
         _usernameError == null &&
         _emailError == null &&
@@ -61,47 +62,70 @@ class _SignUpFormState extends State<SignUpForm> {
         _confirmPasswordError == null &&
         _isAgreed;
 
-    if (isFormValid) {
-      // All validations passed and terms agreed -> create account
-      final auth = FirebaseAuthService();
-      final email = widget.emailController.text.trim();
-      final password = widget.passwordController.text;
-      final username = widget.usernameController.text.trim();
+    if (!isFormValid) {
+      if (!_isAgreed) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Please agree to Terms and Conditions'),
+            backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
 
-      ScaffoldMessenger.of(
+    setState(() => _isLoading = true);
+
+    final email = widget.emailController.text.trim();
+    final password = widget.passwordController.text;
+    final username = widget.usernameController.text.trim();
+
+    UserCredential? cred;
+    try {
+      cred = await FirebaseAuthService().signUpWithEmailPassword(
+        email: email,
+        password: password,
+        displayName: username,
+      );
+
+      final uid = cred.user!.uid;
+      final user = UserModel(
+        uid: uid,
+        name: username,
+        email: email,
+        createdAt: DateTime.now().toUtc().toIso8601String(),
+      );
+
+      await UserDatabaseService().createUser(user);
+      await FirebaseAuthService().sendEmailVerification();
+
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Creating account...')));
-
-      auth
-          .signUpWithEmailPassword(
-            email: email,
-            password: password,
-            displayName: username,
-          )
-          .then((_) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRoutes.dashboard,
-              (route) => false,
-            );
-          })
-          .catchError((error) {
-            final msg = error is FirebaseAuthException
-                ? error.message ?? error.code
-                : error.toString();
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Sign up failed: $msg')));
-          });
-    } else if (!_isAgreed) {
-      // Show snackbar if terms not agreed
+        AppRoutes.emailVerification,
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please agree to Terms and Conditions'),
+          content: Text(e.message ?? e.code),
           backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 2),
         ),
       );
+    } catch (e) {
+      // If DB write failed after Auth succeeded, roll back by deleting the Auth user.
+      await cred?.user?.delete();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sign up failed: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -291,6 +315,7 @@ class _SignUpFormState extends State<SignUpForm> {
           text: 'Sign Up',
           color: AppColors.mainColor,
           onClick: _validateForm,
+          isLoading: _isLoading,
         ),
       ],
     );

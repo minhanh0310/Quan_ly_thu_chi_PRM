@@ -24,50 +24,89 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   bool _showPassword = false;
   bool _rememberAccount = true;
+  bool _isLoading = false;
 
   // Error state for each field
   String? _emailError;
   String? _passwordError;
 
-  void _validateForm() {
+  Future<void> _validateForm() async {
     setState(() {
-      // Validate each field
       // _emailError = FormValidators.validateEmail(widget.emailController.text);
       // _passwordError = FormValidators.validatePassword(
       //   widget.passwordController.text,
       // );
     });
 
-    // Check if all fields are valid
     final isFormValid = _emailError == null && _passwordError == null;
+    if (!isFormValid) return;
 
-    if (isFormValid) {
-      // Attempt Firebase sign in
-      final auth = FirebaseAuthService();
-      final email = widget.emailController.text.trim();
-      final password = widget.passwordController.text;
+    setState(() => _isLoading = true);
 
-      ScaffoldMessenger.of(
+    final auth = FirebaseAuthService();
+    final email = widget.emailController.text.trim();
+    final password = widget.passwordController.text;
+
+    try {
+      final cred = await auth.signInWithEmailPassword(
+        email: email,
+        password: password,
+      );
+
+      if (!mounted) return;
+
+      if (cred.user?.emailVerified != true) {
+        // Re-send the verification email while the user is still signed in,
+        // then sign them out and redirect.
+        try {
+          await auth.sendEmailVerification();
+        } catch (_) {
+          // Best-effort — ignore if rate-limited
+        }
+        await auth.signOut();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'A new verification link has been sent to your email.'
+              ' Please verify before signing in.',
+            ),
+            backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRoutes.emailVerification,
+          (route) => false,
+          arguments: email,
+        );
+        return;
+      }
+
+      Navigator.pushNamedAndRemoveUntil(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Signing in...')));
-
-      auth
-          .signInWithEmailPassword(email: email, password: password)
-          .then((_) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRoutes.dashboard,
-              (route) => false,
-            );
-          })
-          .catchError((error) {
-            final msg = error is FirebaseAuthException
-                ? error.message ?? error.code
-                : error.toString();
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Sign in failed: $msg')));
-          });
+        AppRoutes.dashboard,
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? e.code),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sign in failed: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -204,6 +243,7 @@ class _SignInFormState extends State<SignInForm> {
           text: 'Sign In',
           color: AppColors.mainColor,
           onClick: _validateForm,
+          isLoading: _isLoading,
         ),
       ],
     );

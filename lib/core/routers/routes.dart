@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/auth/email_verification/screen/email_verification_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_in/screen/sign_in_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_up/screen/sign_up_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/initial/screens/splash_screen.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String changePw = '/change-password';
   static const String changePwSuccess = "/changePwSuccess";
   static const String home = "/home";
+  static const String emailVerification = "/email-verification";
   static const String onboardingCurrency = "/onboardingCurrency";
   static const String dashboard = "/dashboard";
   static const String ledger = "/ledger";
@@ -39,6 +41,7 @@ class AppRoutes {
     changePw: (context) => const ChangePasswordScreen(),
     changePwSuccess: (context) => const ChangePwSuccessfullyScreen(),
     home: (context) => const HomeScreen(),
+    emailVerification: (context) => const EmailVerificationScreen(),
     onboardingCurrency: (context) => const OnboardingCurrencyScreen(),
     dashboard: (context) => const DashboardScreen(),
     ledger: (context) => const LedgerScreen(),
