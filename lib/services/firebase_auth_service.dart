@@ -58,4 +58,34 @@ class FirebaseAuthService {
   Future<void> signOut() async {
     await _auth.signOut();
   }
+
+  /// Sends a password reset email to the specified email address
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    final actionCodeSettings = ActionCodeSettings(
+      url: 'https://quanlythuchiprm.firebaseapp.com',
+      handleCodeInApp: true,
+      androidPackageName: 'com.example.personal_finance_app',
+      androidInstallApp: false,
+    );
+    await _auth.sendPasswordResetEmail(
+      email: email.trim(),
+      actionCodeSettings: actionCodeSettings,
+    );
+  }
+
+  /// Verifies a password reset code
+  Future<String> verifyPasswordResetCode(String code) async {
+    return await _auth.verifyPasswordResetCode(code);
+  }
+
+  /// Confirms the password reset with the code and new password
+  Future<void> confirmPasswordReset({
+    required String code,
+    required String newPassword,
+  }) async {
+    await _auth.confirmPasswordReset(
+      code: code,
+      newPassword: newPassword,
+    );
+  }
 }

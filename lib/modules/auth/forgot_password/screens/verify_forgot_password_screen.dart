@@ -1,140 +1,54 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
-import 'package:Quan_ly_thu_chi_PRM/modules/auth/forgot_password/widgets/verify_forgot_password_form.dart';
-// import 'package:Quan_ly_thu_chi_PRM/modules/auth/change_password/screens/change_password_screen.dart';
 
+/// Redirect screen for forgot password verification
+/// This screen receives the email and immediately navigates to ResetPasswordScreen
 class VerifyForgotPasswordScreen extends StatefulWidget {
-  const VerifyForgotPasswordScreen({super.key});
+  final String email;
+
+  const VerifyForgotPasswordScreen({super.key, required this.email});
 
   @override
   State<VerifyForgotPasswordScreen> createState() =>
       _VerifyForgotPasswordScreenState();
 }
 
-class _VerifyForgotPasswordScreenState
-    extends State<VerifyForgotPasswordScreen> {
-  final _verifyCodeController = TextEditingController();
+class _VerifyForgotPasswordScreenState extends State<VerifyForgotPasswordScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _redirectToResetPassword();
+  }
 
   @override
-  void dispose() {
-    _verifyCodeController.dispose();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Also check route arguments in case they're passed separately
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    if (arg is String) {
+      _redirectToResetPassword(email: arg);
+    }
+  }
+
+  void _redirectToResetPassword({String? email}) {
+    final emailToUse = email ?? widget.email;
+    if (emailToUse.isNotEmpty && mounted) {
+      Future.microtask(() {
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed(
+            AppRoutes.resetPassword,
+            arguments: emailToUse,
+          );
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: SafeArea(
-        top: false,
-        child: Scaffold(
-          backgroundColor: context.backgroundColor,
-          appBar: AuthAppBar(
-            title: 'Forgot Password',
-            backgroundColor: context.primaryColor,
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: _Body(verifyCodeController: _verifyCodeController),
-              ),
-
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.forgotPw);
-                },
-                child: Text(
-                  'Change your email',
-                  style: AppTextStyle.s12.copyWith(
-                    color: AppColors.mainColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Body extends StatelessWidget {
-  final TextEditingController verifyCodeController;
-
-  const _Body({required this.verifyCodeController});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      child: Padding(
-        padding: AppPad.h40,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            AppGap.h40,
-
-            VerifyForgotPasswordForm(
-              verifyCodeController: verifyCodeController,
-            ),
-
-            AppGap.h24,
-
-            RichText(
-              text: TextSpan(
-                style: AppTextStyle.s14.copyWith(
-                  color: context.primaryTextColor,
-                  height: 1.5,
-                ),
-                children: [
-                  TextSpan(
-                    text: 'We sent you a code to verify your email via ',
-                  ),
-                  TextSpan(
-                    text: 'abc@xyz.com',
-                    style: AppTextStyle.s14.copyWith(
-                      color: AppColors.mainColor,
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.mainColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            AppGap.h16,
-
-            Text(
-              'This code will expired in 5 minutes after this message.',
-              style: AppTextStyle.s14.copyWith(color: context.primaryTextColor),
-            ),
-
-            AppGap.h40,
-
-            PrimaryButton(
-              text: 'Change password',
-              onClick: () {
-                // Validate code
-                final code = verifyCodeController.text;
-                if (code.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please enter verification code'),
-                      backgroundColor: AppColors.error,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                  return;
-                }
-
-                // Navigate to change password screen
-                Navigator.pushNamed(context, AppRoutes.changePw);
-                // TODO: validate code and navigate to change password screen
-              },
-            ),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: context.backgroundColor,
+      body: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

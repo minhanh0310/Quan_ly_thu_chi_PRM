@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/models/user_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
@@ -97,7 +98,14 @@ class _SignUpFormState extends State<SignUpForm> {
         createdAt: DateTime.now().toUtc().toIso8601String(),
       );
 
-      await UserDatabaseService().createUser(user);
+      // firebase_database is not supported on Windows/macOS/Linux desktop
+      final isDesktop = !kIsWeb &&
+          (defaultTargetPlatform == TargetPlatform.windows ||
+           defaultTargetPlatform == TargetPlatform.macOS ||
+           defaultTargetPlatform == TargetPlatform.linux);
+      if (!isDesktop) {
+        await UserDatabaseService().createUser(user);
+      }
       await FirebaseAuthService().sendEmailVerification();
 
       if (!mounted) return;

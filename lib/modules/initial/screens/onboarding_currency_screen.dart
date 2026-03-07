@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:Quan_ly_thu_chi_PRM/common/widgets/images/custom_asset_svg_picture.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/initial/model/currency_item_model.dart';
@@ -245,7 +246,14 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
 
     setState(() => _isLoading = true);
     try {
-      await UserDatabaseService().updateUserCurrency(uid, selectedCurrency!);
+      // firebase_database is not supported on Windows/macOS/Linux desktop
+      final isDesktop = !kIsWeb &&
+          (defaultTargetPlatform == TargetPlatform.windows ||
+           defaultTargetPlatform == TargetPlatform.macOS ||
+           defaultTargetPlatform == TargetPlatform.linux);
+      if (!isDesktop) {
+        await UserDatabaseService().updateUserCurrency(uid, selectedCurrency!);
+      }
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
     } catch (e) {

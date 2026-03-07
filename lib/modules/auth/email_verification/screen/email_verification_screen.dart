@@ -83,9 +83,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       // Full Firebase action URL received — apply the code in-app.
       try {
         await FirebaseAuth.instance.applyActionCode(oobCode);
+        // Small delay to ensure backend updates propagate
+        await Future.delayed(const Duration(milliseconds: 500));
         await _advanceIfVerified();
       } catch (_) {
         // Code already used or expired – fall back to normal reload.
+        await Future.delayed(const Duration(milliseconds: 500));
         await _advanceIfVerified();
       }
     } else if (uri.scheme == 'jarsflow') {

@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,52 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _appLinks = AppLinks();
+  String? _initialRoute;
+  Object? _initialArgs;
+
+  @override
+  void initState() {
+    super.initState();
+    _handleInitialDeepLink();
+  }
+
+  /// Checks for initial deep link on cold start
+  Future<void> _handleInitialDeepLink() async {
+    final initialUri = await _appLinks.getInitialLink();
+    if (initialUri != null) {
+      _processDeepLink(initialUri);
+    }
+  }
+
+  /// Processes a deep link and determines which route to navigate to
+  void _processDeepLink(Uri uri) {
+    final mode = uri.queryParameters['mode'];
+    final oobCode = uri.queryParameters['oobCode'];
+
+    // Check if this is an email verification link
+    if (mode == 'verifyEmail' && oobCode != null) {
+      setState(() {
+        _initialRoute = AppRoutes.emailVerification;
+        _initialArgs = null; // The EmailVerificationScreen will handle the deep link directly
+      });
+    }
+    // Check if this is a password reset link
+    else if (mode == 'resetPassword' && oobCode != null) {
+      setState(() {
+        _initialRoute = AppRoutes.resetPassword;
+        _initialArgs = null; // The ResetPasswordScreen will handle the deep link directly
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +94,8 @@ class MyApp extends StatelessWidget {
               ],
             );
           },
-          routes: AppRoutes.routes,
-          initialRoute: AppRoutes.splash,
+          onGenerateRoute: AppRoutes.generateRoute,
+          initialRoute: _initialRoute ?? AppRoutes.splash,
         );
       },
     );
