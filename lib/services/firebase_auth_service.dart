@@ -59,6 +59,12 @@ class FirebaseAuthService {
     await _auth.signOut();
   }
 
+  /// Updates the current user's display name
+  Future<void> updateDisplayName(String displayName) async {
+    await _auth.currentUser?.updateDisplayName(displayName);
+    await _auth.currentUser?.reload();
+  }
+
   /// Sends a password reset email to the specified email address
   Future<void> sendPasswordResetEmail({required String email}) async {
     final actionCodeSettings = ActionCodeSettings(

@@ -108,7 +108,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             context: context,
                             icon: Icons.settings_outlined,
                             title: 'drawer.general_settings'.tr(),
-                            onTap: () => Navigator.pop(context),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(context, AppRoutes.generalSettings);
+                            },
                           ),
 
                           _buildDrawerItem(
@@ -166,7 +169,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             context: context,
                             icon: Icons.help_outline,
                             title: 'drawer.terms_of_service'.tr(),
-                            onTap: () => Navigator.pop(context),
+                            onTap: () => _showPrivacyPolicyDialog(context),
                           ),
 
                           _buildDrawerItemLogout(
@@ -481,6 +484,38 @@ class _DrawerWidgetState extends State<DrawerWidget>
       ),
     );
   }
+}
+
+void _showPrivacyPolicyDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          'drawer.privacy_policy_title'.tr(),
+          style: TextStyle(color: context.primaryTextColor),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Text(
+              'drawer.privacy_policy_content'.tr(),
+              style: AppTextStyle.s14in.copyWith(
+                color: context.secondaryTextColor,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('common.close'.tr(), style: AppTextStyle.s14in),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 void _showLogoutDialog(BuildContext context) {

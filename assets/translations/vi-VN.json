@@ -221,7 +221,9 @@
         "logout_title": "Đăng xuất",
         "logout_message": "Bạn có chắc chắn muốn đăng xuất?",
         "logout_cancel": "Hủy",
-        "logout_confirm": "Đăng xuất"
+        "logout_confirm": "Đăng xuất",
+        "privacy_policy_title": "Chính sách bảo mật",
+        "privacy_policy_content": "JarsFlow tôn trọng quyền riêng tư của bạn. Chính sách này mô tả cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn.\n\n1. Thông tin chúng tôi thu thập: Chúng tôi thu thập thông tin bạn cung cấp khi đăng ký (tên, email) và dữ liệu sử dụng để cải thiện ứng dụng.\n\n2. Cách sử dụng: Dữ liệu của bạn được dùng để cá nhân hóa trải nghiệm, đồng bộ kế hoạch tài chính trên các thiết bị và hỗ trợ bạn.\n\n3. Bảo mật dữ liệu: Chúng tôi sử dụng mã hóa và máy chủ bảo mật theo chuẩn để bảo vệ thông tin của bạn.\n\n4. Quyền của bạn: Bạn có thể truy cập, cập nhật hoặc xóa dữ liệu từ cài đặt ứng dụng hoặc liên hệ với chúng tôi.\n\n5. Thay đổi: Chúng tôi có thể cập nhật chính sách; chúng tôi sẽ thông báo cho bạn về các thay đổi quan trọng qua ứng dụng hoặc email.\n\nCập nhật lần cuối: 2026."
     },
     "validation": {
         "required": "Trường này là bắt buộc",

@@ -11,4 +11,8 @@ class UserDatabaseService {
   Future<void> updateUserCurrency(String uid, String currency) async {
     await _usersRef.child(uid).update({'currency': currency});
   }
+
+  Future<void> updateUserName(String uid, String name) async {
+    await _usersRef.child(uid).update({'name': name});
+  }
 }
