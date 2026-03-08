@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/screen/jars_detail_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverBalanceCardWidget extends StatefulWidget {
   const SliverBalanceCardWidget({super.key});
@@ -44,7 +45,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Total Balance',
+            'home_screen.total_balance'.tr(),
             style: AppTextStyle.s14in.copyWith(
               color: AppColors.white,
               fontWeight: FontWeight.bold,
@@ -88,12 +89,12 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'View the 6 Jars structure',
+                  'home_screen.view_jars'.tr(),
                   style: AppTextStyle.s12in.copyWith(
                     color: AppColors.lightGray,
                   ),
                 ),
-                const SizedBox(width: 4),
+                AppGap.w4,
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: AppColors.white.withValues(alpha: 0.7),
@@ -112,7 +113,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                 child: _MiniStatCard(
                   icon: IconPath.arrowUpRight,
                   iconColor: const Color(0xFF00D09E),
-                  label: 'INCOME',
+                  label: 'home_screen.income'.tr(),
                   amount: '\$5,000',
                   // TODO: Bind data
                   backgroundColor: AppColors.white.withAlpha(38),
@@ -125,7 +126,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                 child: _MiniStatCard(
                   icon: IconPath.arrowDownLeft,
                   iconColor: const Color(0xFFFF6B93),
-                  label: 'EXPENSE',
+                  label: 'home_screen.expense'.tr(),
                   amount: '\$1,250',
                   // TODO: Bind data
                   backgroundColor: AppColors.white.withAlpha(38),

@@ -41,15 +41,15 @@ class TransactionItemWidget extends StatelessWidget {
             padding: AppPad.a18,
             decoration: BoxDecoration(
               color: isIncome
-                  ? context.incomeBackgroundColor
-                  : context.expenseBackgroundColor,
+                  ? AppColors.incomeLightGreen
+                  : AppColors.expenseLightRed,
               borderRadius: AppBorderRadius.a12,
             ),
             child: SvgPicture.asset(
               isIncome ? IconPath.arrowUpRight : IconPath.arrowDownLeft,
               colorFilter: isIncome
-                  ? const ColorFilter.mode(Color(0xFF00D09E), BlendMode.srcIn)
-                  : const ColorFilter.mode(Color(0xFFFF6B93), BlendMode.srcIn),
+                  ? ColorFilter.mode(context.incomeColor, BlendMode.srcIn)
+                  : ColorFilter.mode(context.expenseColor, BlendMode.srcIn),
               height: 15,
               width: 15,
             ),
@@ -63,7 +63,7 @@ class TransactionItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                Text(
+                Text( 
                   title,
                   style: AppTextStyle.s16in.copyWith(
                     fontWeight: FontWeight.w600,

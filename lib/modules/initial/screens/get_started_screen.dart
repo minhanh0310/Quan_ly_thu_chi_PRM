@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});
@@ -26,8 +27,8 @@ class GetStartedScreen extends StatelessWidget {
                       icon: Icons.language,
                       iconColor: AppColors.white,
                       iconBgColor: Color(0xff0890FE),
-                      title: 'Global',
-                      subtitle: 'Multi-currency support',
+                      title: 'onboarding.global'.tr(),
+                      subtitle: 'onboarding.st_global'.tr(),
                     ),
                   ),
                   AppGap.w16,
@@ -37,8 +38,8 @@ class GetStartedScreen extends StatelessWidget {
                       icon: Icons.check_sharp,
                       iconColor: AppColors.white,
                       iconBgColor: AppColors.green,
-                      title: 'Simple',
-                      subtitle: 'Clean & intuitive UI',
+                      title: 'onboarding.simple'.tr(),
+                      subtitle: 'onboarding.st_simple'.tr(),
                     ),
                   ),
                 ],
@@ -47,7 +48,7 @@ class GetStartedScreen extends StatelessWidget {
               const Spacer(),
 
               PrimaryButton(
-                text: 'Get Started',
+                text: 'onboarding.get_started'.tr(),
                 onClick: () {
                   Navigator.pushNamed(context, AppRoutes.signup);
                 },
@@ -83,7 +84,7 @@ class GetStartedScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             RichText(
-              text: const TextSpan(
+              text: TextSpan(
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -91,11 +92,11 @@ class GetStartedScreen extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    text: 'Master Your ',
+                    text: 'onboarding.header1'.tr(),
                     style: TextStyle(color: Colors.black),
                   ),
                   TextSpan(
-                    text: 'Finances',
+                    text: 'onboarding.header2'.tr(),
                     style: TextStyle(color: Color(0xFF5B4EE5)),
                   ),
                 ],
@@ -104,8 +105,7 @@ class GetStartedScreen extends StatelessWidget {
 
             AppGap.h12,
 
-            const Text(
-              'Track income, plan for your dream home,\nand reach your financial goals with ease.',
+            Text('onboarding.sub_header'.tr(),
               style: TextStyle(fontSize: 14, color: Colors.grey, height: 1.5),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ChangePwSuccessfullyScreen extends StatelessWidget {
   const ChangePwSuccessfullyScreen({super.key});
@@ -24,7 +25,7 @@ class ChangePwSuccessfullyScreen extends StatelessWidget {
               AppGap.h32,
 
               Text(
-                'Change password successfully!',
+                'change_password.success_title'.tr(),
                 style: AppTextStyle.s20.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryColor,
@@ -34,7 +35,7 @@ class ChangePwSuccessfullyScreen extends StatelessWidget {
               AppGap.h24,
 
               Text(
-                '''You have successfully changed password.\nPlease use the new password when Sign in''',
+                '''change_password.success_message'''.tr(),
                 style: AppTextStyle.s14.copyWith(color: context.primaryTextColor),
                 textAlign: TextAlign.center,
               ),
@@ -44,7 +45,7 @@ class ChangePwSuccessfullyScreen extends StatelessWidget {
               Padding(
                 padding: AppPad.h24,
                 child: PrimaryButton(
-                  text: 'Ok',
+                  text: 'common.ok'.tr(),
                   onClick: () {
                     // TODO: Save data and navigate to home screen
                     Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboard, (route) => false);

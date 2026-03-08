@@ -1,6 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jar_card_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarsListWidget extends StatelessWidget {
   const SliverJarsListWidget({super.key});
@@ -10,7 +11,7 @@ class SliverJarsListWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: 'Current Distribution'),
+        _SectionHeader(title: 'jars_screen.current_distribution'.tr()),
         AppGap.h16,
 
         ...JarModel.mockList.map((jar) => SliverJarCardWidget(jar: jar)),

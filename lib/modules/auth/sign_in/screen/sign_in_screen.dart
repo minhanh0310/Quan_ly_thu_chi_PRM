@@ -3,6 +3,7 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_in/widgets/sign_in_form.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_header.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_redirect_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -33,7 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
           backgroundColor: context.backgroundColor,
           appBar: AppBar(
             title: Text(
-              'Sign In',
+              'sign_in.appbar'.tr(),
               style: AppTextStyle.s20.copyWith(
                 color: AppColors.white,
                 fontWeight: FontWeight.w600,
@@ -55,8 +56,8 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
 
               AuthRedirectText(
-                text: 'Don\'t have an account?',
-                btnText: 'Sign Up',
+                text: 'sign_in.dont_have_account'.tr(),
+                btnText: 'sign_in.signup_link'.tr(),
                 onPressed: () {
                   Navigator.pushNamed(context, AppRoutes.signup);
                 },
@@ -89,15 +90,15 @@ class Body extends StatelessWidget {
           AppGap.h32,
 
           AuthHeader(
-            title: 'Welcome Back!',
-            subtitle: 'Hello there, sign in to continue',
+            title: 'sign_in.title'.tr(),
+            subtitle: 'sign_in.subtitle'.tr(),
           ),
 
           AppGap.h32,
 
           SignInForm(
-            email: 'Enter your email',
-            password: 'Enter your password',
+            email: 'sign_in.email'.tr(),
+            password: 'sign_in.password'.tr(),
             emailController: emailController,
             passwordController: passwordController,
           ),

@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarsBalanceCardWidget extends StatelessWidget {
   final double totalBalance;
@@ -36,7 +37,7 @@ class SliverJarsBalanceCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Total Assets Managed',
+            'jars_screen.total_assets'.tr(),
             style: AppTextStyle.s12in.copyWith(
               color: AppColors.white.withValues(alpha: 0.8),
             ),
@@ -54,14 +55,14 @@ class SliverJarsBalanceCardWidget extends StatelessWidget {
           Row(
             children: [
               _Badge(
-                label: 'CASH IN',
+                label: 'jars_screen.cash_in'.tr(),
                 value: '+12.5%', //TODO: lay gia tri thuc te
                 icon: Icons.trending_up_rounded,
                 color: AppColors.incomeGreen,
               ),
               AppGap.w20,
               _Badge(
-                label: 'CASH OUT',
+                label: 'jars_screen.cash_out'.tr(),
                 value: '-4.2%',
                 icon: Icons.trending_down_rounded,
                 color: AppColors.expenseRed,

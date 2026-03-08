@@ -3,6 +3,7 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_up/widgets/sign_up_form.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_header.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_redirect_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -35,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Scaffold(
           backgroundColor: context.backgroundColor,
           appBar: AuthAppBar(
-            title: 'Sign Up',
+            title: 'sign_up.signup_button'.tr(), //appbar
             backgroundColor: AppColors.mainColor,
             iconColor: AppColors.white,
             titleColor: AppColors.white,
@@ -52,8 +53,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
 
               AuthRedirectText(
-                text: 'Have an account?',
-                btnText: 'Sign In',
+                text: 'sign_up.already_have_account'.tr(),
+                btnText: 'sign_up.signin_link'.tr(),
                 onPressed: () {
                   Navigator.pushNamed(context, AppRoutes.signin);
                 },
@@ -90,16 +91,16 @@ class Body extends StatelessWidget {
           AppGap.h32,
 
           AuthHeader(
-            title: 'Welcome to us',
-            subtitle: 'Hello there, create new account',
+            title: 'sign_up.title'.tr(),
+            subtitle: 'sign_up.subtitle'.tr(),
           ),
 
           AppGap.h32,
 
           SignUpForm(
-            username: 'Name',
-            email: 'Email',
-            password: 'Password',
+            username: 'sign_up.full_name'.tr(),
+            email: 'sign_up.email'.tr(),
+            password: 'sign_up.password'.tr(),
             usernameController: usernameController,
             emailController: emailController,
             passwordController: passwordController,

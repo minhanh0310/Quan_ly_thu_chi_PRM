@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ChangePasswordForm extends StatelessWidget {
   final TextEditingController newPwController;
@@ -16,7 +17,7 @@ class ChangePasswordForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Type your new password',
+          'change_password.new_password'.tr(),
           style: AppTextStyle.s12.copyWith(
             color: AppColors.grey,
             fontWeight: FontWeight.w400,
@@ -28,7 +29,7 @@ class ChangePasswordForm extends StatelessWidget {
         AppGap.h20,
 
         Text(
-          'Confirm password',
+          'change_password.confirm_password'.tr(),
           style: AppTextStyle.s12.copyWith(
             color: AppColors.grey,
             fontWeight: FontWeight.w400,
@@ -41,7 +42,7 @@ class ChangePasswordForm extends StatelessWidget {
         AppGap.h40,
 
         PrimaryButton(
-          text: 'Change Password',
+          text: 'change_password.change_button'.tr(),
           onClick: () {
             // Validation
             final newPassword = newPwController.text.trim();
@@ -50,7 +51,7 @@ class ChangePasswordForm extends StatelessWidget {
             if (newPassword.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Please enter new password'),
+                  content: Text('change_password.new_password_empty'.tr()),
                   backgroundColor: AppColors.error,
                 ),
               );
@@ -60,7 +61,7 @@ class ChangePasswordForm extends StatelessWidget {
             if (confirmPassword.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Please confirm your password'),
+                  content: Text('change_password.confirm_password_empty'.tr()),
                   backgroundColor: AppColors.error,
                   duration: const Duration(seconds: 2),
                 ),
@@ -71,7 +72,7 @@ class ChangePasswordForm extends StatelessWidget {
             if (newPassword != confirmPassword) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Passwords do not match'),
+                  content: Text('change_password.pw_unmatch'.tr()),
                   backgroundColor: AppColors.error,
                   duration: const Duration(seconds: 2),
                 ),

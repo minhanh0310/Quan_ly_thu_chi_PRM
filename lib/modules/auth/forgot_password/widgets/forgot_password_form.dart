@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
   final TextEditingController emailController;
@@ -24,7 +25,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     return Column(
       children: [
         Text(
-          'Type your email address',
+          'forgot_password.email'.tr(),
           style: AppTextStyle.s12.copyWith(
             color: AppColors.grey,
             fontWeight: FontWeight.w600,
@@ -35,7 +36,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
         CustomTextField(
           controller: widget.emailController,
-          hintText: 'Enter your email',
+          hintText: 'forgot_password.email_hint'.tr(),
           keyboardType: TextInputType.emailAddress,
           errorText: _emailError,
           onChanged: _validateEmailRealTime,
@@ -45,7 +46,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         AppGap.h24,
 
         Text(
-          'We will send you a reset link to verify your email address',
+          'forgot_password.description'.tr(),
           style: AppTextStyle.s14.copyWith(color: context.primaryTextColor),
         ),
       ],

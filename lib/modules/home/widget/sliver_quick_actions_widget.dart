@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/home/widget/transaction_bottom_sheet.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverQuickActionsWidget extends StatelessWidget {
   const SliverQuickActionsWidget({super.key});
@@ -14,7 +15,7 @@ class SliverQuickActionsWidget extends StatelessWidget {
           children: [
             // Section Title
             Text(
-              'Quick Actions',
+              'home_screen.quick_actions'.tr(),
               style: AppTextStyle.s16in.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -30,7 +31,7 @@ class SliverQuickActionsWidget extends StatelessWidget {
               children: [
                 _ActionButton(
                   icon: IconPath.arrowUpRight,
-                  label: 'INCOME',
+                  label: 'home_screen.income'.tr(),
                   color: const Color(0xFF00D09E),
                   backgroundColor: const Color(0xFFE8F8F4),
                   onTap: () =>
@@ -38,7 +39,7 @@ class SliverQuickActionsWidget extends StatelessWidget {
                 ),
                 _ActionButton(
                   icon: IconPath.arrowDownLeft,
-                  label: 'EXPENSE',
+                  label: 'home_screen.expense'.tr(),
                   color: const Color(0xFFFF6B93),
                   backgroundColor: const Color(0xFFFFE8EE),
                   onTap: () =>
@@ -46,7 +47,7 @@ class SliverQuickActionsWidget extends StatelessWidget {
                 ),
                 _ActionButton(
                   icon: IconPath.plus,
-                  label: 'NEW PLAN',
+                  label: 'home_screen.new_plan'.tr(),
                   color: context.primaryColor,
                   backgroundColor: context.primaryColor.withValues(alpha: 0.1),
                   onTap: () {

@@ -7,6 +7,7 @@ import 'package:Quan_ly_thu_chi_PRM/modules/ledger/screen/ledger_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plans_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/screen/stats_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/drawer_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -33,25 +34,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     BottomNavItem(
       screen: HomeScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.home,
-      label: 'Home',
+      label: 'home_screen.home'.tr(),
       iconPath: IconPath.home,
     ),
     BottomNavItem(
       screen: LedgerScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.ledger,
-      label: 'Ledger',
+      label: 'ledger_screen.title'.tr(),
       iconPath: IconPath.ledger,
     ),
     BottomNavItem(
       screen: PlansScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.plans,
-      label: 'Plans',
+      label: 'plans_screen.title'.tr(),
       iconPath: IconPath.plans,
     ),
     BottomNavItem(
       screen: StatsScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.stats,
-      label: 'Stats',
+      label: 'stats_screen.title'.tr(),
       iconPath: IconPath.stats,
     ),
   ];

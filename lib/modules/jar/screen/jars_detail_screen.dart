@@ -3,6 +3,7 @@ import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_balance_card_
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_list_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_history_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_info_footer_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class JarsDetailScreen extends StatelessWidget {
   final double totalBalance;
@@ -15,7 +16,7 @@ class JarsDetailScreen extends StatelessWidget {
       backgroundColor: context.backgroundColor,
       appBar: AppBar(
         title: Text(
-          '6 Jars Structure',
+          'jars_screen.title'.tr(),
           style: AppTextStyle.s16in.copyWith(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(

@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarsInfoFooterWidget extends StatelessWidget {
   const SliverJarsInfoFooterWidget({super.key});
@@ -25,7 +26,7 @@ class SliverJarsInfoFooterWidget extends StatelessWidget {
           AppGap.w5,
           Expanded(
             child: Text(
-              'The 6 Jars model helps you manage your finances smartly by automatically dividing your income. The system will automatically transfer money to the corresponding jar each time you record an expense.',
+              'jars_screen.info_footer'.tr(),
               style: AppTextStyle.s12in.copyWith(
                 color: AppColors.primaryPurple,
                 height: 1.5,

@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 // 6 Jars categories
 const _incomeCategories = [
@@ -133,7 +134,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                   const SizedBox(height: 20),
                   _buildAmountDisplay(),
                   const SizedBox(height: 20),
-                  _buildSectionLabel('Tags'),
+                  _buildSectionLabel('home_screen.tags'.tr()),
                   const SizedBox(height: 10),
                   _buildCategoryChips(),
                   const SizedBox(height: 16),
@@ -174,7 +175,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Record Transaction',
+          'home_screen.record_transaction'.tr(),
           style: AppTextStyle.s16in.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -214,12 +215,12 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           child: Row(
             children: [
               _buildToggleTab(
-                label: 'Income',
+                label: 'home_screen.income'.tr(),
                 isSelected: _isIncome,
                 onTap: () => setState(() => _isIncome = true),
               ),
               _buildToggleTab(
-                label: 'Expense',
+                label: 'home_screen.expense'.tr(),
                 isSelected: !_isIncome,
                 onTap: () => setState(() => _isIncome = false),
               ),
@@ -227,7 +228,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           ),
         ),
         const SizedBox(height: 16),
-        _buildSectionLabel('Amount'),
+        _buildSectionLabel('home_screen.amount'.tr()),
         const SizedBox(height: 8),
         _buildAmountField(),
       ],
@@ -378,7 +379,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Transaction Date',
+                  'home_screen.transaction_date'.tr(),
                   style: AppTextStyle.s12in.copyWith(
                     color: context.secondaryTextColor,
                     fontSize: 10,
@@ -409,13 +410,13 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionLabel('Note'),
+        _buildSectionLabel('home_screen.note'.tr()),
         const SizedBox(height: 8),
         TextField(
           controller: _noteController,
           style: AppTextStyle.s14in.copyWith(color: context.primaryTextColor),
           decoration: InputDecoration(
-            hintText: 'e.g. Monthly salary #work',
+            hintText: 'home_screen.hint_note'.tr(),
             hintStyle: AppTextStyle.s14in.copyWith(color: context.hintColor),
             filled: true,
             fillColor: context.surfaceVariant,

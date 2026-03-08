@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class JarModel {
   final String name;
@@ -59,6 +60,7 @@ class JarModel {
       targetPercent: 0.10,
       actualPercent: 0.028,
       amount: 1500,
+      activePlansCount: 2,
     ),
     JarModel(
       name: 'Entertainment',
@@ -92,15 +94,15 @@ class DistributionEntry {
     required this.amount,
   });
 
-  static const List<DistributionEntry> mockList = [
+  static List<DistributionEntry> mockList = [
     DistributionEntry(
       month: 'February 2026',
-      subtitle: 'Auto-distributed across 6 Jars',
+      subtitle: 'jars_screen.auto_distributed'.tr(),
       amount: 5000,
     ),
     DistributionEntry(
       month: 'January 2026',
-      subtitle: 'Auto-distributed across 6 Jars',
+      subtitle: 'jars_screen.auto_distributed'.tr(),
       amount: 5000,
     ),
   ];
