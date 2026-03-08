@@ -49,7 +49,7 @@ class GetStartedScreen extends StatelessWidget {
               PrimaryButton(
                 text: 'Get Started',
                 onClick: () {
-                  Navigator.pushNamed(context, AppRoutes.onboardingCurrency);
+                  Navigator.pushNamed(context, AppRoutes.signup);
                 },
               ),
 

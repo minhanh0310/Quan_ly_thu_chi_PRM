@@ -55,13 +55,11 @@ class _FilterTabWidgetState extends State<FilterTabWidget> {
         padding: AppPad.h20v10,
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFFE8E7FF) // Light purple
-              : AppColors.white,
+              ? context.primaryColor.withValues(alpha: 0.1)
+              : context.surfaceColor,
           borderRadius: AppBorderRadius.a20,
           border: Border.all(
-            color: isSelected
-                ? AppColors.primaryPurple
-                : AppColors.lightGray,
+            color: isSelected ? context.primaryColor : context.borderColor,
             width: 1,
           ),
         ),
@@ -71,8 +69,8 @@ class _FilterTabWidgetState extends State<FilterTabWidget> {
             style: AppTextStyle.s14in.copyWith(
               fontWeight: FontWeight.w600,
               color: isSelected
-                  ? const Color(0xFF6C5CE7)
-                  : AppColors.grey,
+                  ? context.primaryColor
+                  : context.secondaryTextColor,
             ),
           ),
         ),

@@ -35,7 +35,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(
             Icons.arrow_back_ios,
             size: 16,
-            color: iconColor ?? AppColors.black,
+            color: iconColor ?? context.primaryTextColor,
           ),
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
@@ -46,7 +46,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: titleColor ?? AppColors.black,
+          color: titleColor ?? context.primaryTextColor,
         ),
       ),
       centerTitle: false,

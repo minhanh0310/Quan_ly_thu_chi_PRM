@@ -9,7 +9,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
     // TODO: Replace với data từ BLoC/Provider
     final mockActivities = [
       {
-        'icon': IconPath.arrowDownLeft,
+        'icon': IconPath.arrowUpRight,
         'iconColor': AppColors.incomeGreen,
         'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Salary',
@@ -18,7 +18,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'isIncome': true,
       },
       {
-        'icon': IconPath.arrowUpRight,
+        'icon': IconPath.arrowDownLeft,
         'iconColor': AppColors.expenseRed,
         'backgroundColor': AppColors.expenseLightRed,
         'title': 'Rent',
@@ -27,7 +27,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'isIncome': false,
       },
       {
-        'icon': IconPath.arrowUpRight,
+        'icon': IconPath.arrowDownLeft,
         'iconColor': AppColors.expenseRed,
         'backgroundColor': AppColors.expenseLightRed,
         'title': 'Groceries',
@@ -36,7 +36,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'isIncome': false,
       },
       {
-        'icon': IconPath.arrowDownLeft,
+        'icon': IconPath.arrowUpRight,
         'iconColor': AppColors.incomeGreen,
         'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Freelance',
@@ -56,12 +56,10 @@ class SliverRecentActivityWidget extends StatelessWidget {
               style: AppTextStyle.s16in.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.text,
+                color: context.primaryTextColor,
               ),
             );
           }
-
-          // Activity items từ index 1
           final activityIndex = index - 1;
           if (activityIndex >= mockActivities.length) {
             return null;
@@ -110,7 +108,7 @@ class _ActivityItem extends StatelessWidget {
       margin: AppPad.b10,
       padding: AppPad.a8,
       decoration: BoxDecoration(
-        color: AppColors.lightGrayBackground,
+        color: context.surfaceVariant,
         borderRadius: AppBorderRadius.a12,
         boxShadow: [
           BoxShadow(
@@ -146,15 +144,21 @@ class _ActivityItem extends StatelessWidget {
               children: [
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.s14in.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.text,
+                    color: context.primaryTextColor,
                   ),
                 ),
                 AppGap.h4,
                 Text(
                   date,
-                  style: AppTextStyle.s12in.copyWith(color: AppColors.grey),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.s12in.copyWith(
+                    color: context.secondaryTextColor,
+                  ),
                 ),
               ],
             ),

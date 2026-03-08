@@ -32,7 +32,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '279622842154',
     projectId: 'quanlythuchiprm',
     authDomain: 'quanlythuchiprm.firebaseapp.com',
+    databaseURL: 'https://quanlythuchiprm-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'quanlythuchiprm.firebasestorage.app',
+    measurementId: 'G-32BYWQL288',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -40,6 +42,7 @@ class DefaultFirebaseOptions {
     appId: '1:279622842154:android:985a49d6b5b509fa9cd053',
     messagingSenderId: '279622842154',
     projectId: 'quanlythuchiprm',
+    databaseURL: 'https://quanlythuchiprm-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'quanlythuchiprm.firebasestorage.app',
   );
 
@@ -49,6 +52,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '279622842154',
     projectId: 'quanlythuchiprm',
     authDomain: 'quanlythuchiprm.firebaseapp.com',
+    databaseURL: 'https://quanlythuchiprm-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'quanlythuchiprm.firebasestorage.app',
+    measurementId: 'G-QEZ1C8C6CR',
   );
+
 }

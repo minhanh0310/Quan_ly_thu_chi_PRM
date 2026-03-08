@@ -6,20 +6,26 @@ import '../constants/app_constants.dart';
 class   AppTextStyle {
   // font family
   static const String fontFamily = AppConst.poppinsFont;
+  static const TextStyle s10 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 10, height: 15/10, fontWeight: FontWeight.w500);
   static const TextStyle s12 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 12, height: 18/12, fontWeight: FontWeight.w500);
   static const TextStyle s14 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 14, height: 21/14, fontWeight: FontWeight.w500);
   static const TextStyle s16 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 16, height: 24/16, fontWeight: FontWeight.w500);
+  static const TextStyle s18 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 18, height: 27/18, fontWeight: FontWeight.w500);
   static const TextStyle s20 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 20, height: 30/20, fontWeight: FontWeight.w500);
   static const TextStyle s24 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 24, height: 36/24, fontWeight: FontWeight.w500);
   static const TextStyle s28 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 28, height: 42/28, fontWeight: FontWeight.w500);
+  static const TextStyle s32 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 32, height: 48/32, fontWeight: FontWeight.w500);
 
   static const String fontFamilySecondary = AppConst.interFont;
+  static const TextStyle s10in = TextStyle(fontFamily: AppConst.interFont, fontSize: 10, height: 15/10, fontWeight: FontWeight.w500);
   static const TextStyle s12in = TextStyle(fontFamily: AppConst.interFont, fontSize: 12, height: 18/12, fontWeight: FontWeight.w500);
   static const TextStyle s14in = TextStyle(fontFamily: AppConst.interFont, fontSize: 14, height: 21/14, fontWeight: FontWeight.w500);
   static const TextStyle s16in = TextStyle(fontFamily: AppConst.interFont, fontSize: 16, height: 24/16, fontWeight: FontWeight.w500);
+  static const TextStyle s18in = TextStyle(fontFamily: AppConst.interFont, fontSize: 18, height: 27/18, fontWeight: FontWeight.w500);
   static const TextStyle s20in = TextStyle(fontFamily: AppConst.interFont, fontSize: 20, height: 30/20, fontWeight: FontWeight.w500);
   static const TextStyle s24in = TextStyle(fontFamily: AppConst.interFont, fontSize: 24, height: 36/24, fontWeight: FontWeight.w500);
   static const TextStyle s28in = TextStyle(fontFamily: AppConst.interFont, fontSize: 28, height: 42/28, fontWeight: FontWeight.w500);
+  static const TextStyle s32in = TextStyle(fontFamily: AppConst.interFont, fontSize: 32, height: 48/32, fontWeight: FontWeight.w500);
 
 }
 

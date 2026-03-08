@@ -1,4 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
 
 class SignInForm extends StatefulWidget {
@@ -22,30 +24,89 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   bool _showPassword = false;
   bool _rememberAccount = true;
+  bool _isLoading = false;
 
   // Error state for each field
   String? _emailError;
   String? _passwordError;
 
-  void _validateForm() {
+  Future<void> _validateForm() async {
     setState(() {
-      // Validate each field
       // _emailError = FormValidators.validateEmail(widget.emailController.text);
       // _passwordError = FormValidators.validatePassword(
       //   widget.passwordController.text,
       // );
     });
 
-    // Check if all fields are valid
     final isFormValid = _emailError == null && _passwordError == null;
+    if (!isFormValid) return;
 
-    if (isFormValid) {
-      // All validations passed, proceed to login
+    setState(() => _isLoading = true);
+
+    final auth = FirebaseAuthService();
+    final email = widget.emailController.text.trim();
+    final password = widget.passwordController.text;
+
+    try {
+      final cred = await auth.signInWithEmailPassword(
+        email: email,
+        password: password,
+      );
+
+      if (!mounted) return;
+
+      if (cred.user?.emailVerified != true) {
+        // Re-send the verification email while the user is still signed in,
+        // then sign them out and redirect.
+        try {
+          await auth.sendEmailVerification();
+        } catch (_) {
+          // Best-effort — ignore if rate-limited
+        }
+        await auth.signOut();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'A new verification link has been sent to your email.'
+              ' Please verify before signing in.',
+            ),
+            backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRoutes.emailVerification,
+          (route) => false,
+          arguments: email,
+        );
+        return;
+      }
+
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.dashboard,
         (route) => false,
       );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? e.code),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sign in failed: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -121,44 +182,51 @@ class _SignInFormState extends State<SignInForm> {
 
         // Remember Account Checkbox & Forgot Password Row
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Remember Account Checkbox
-            Row(
-              children: [
-                SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: Checkbox(
-                    value: _rememberAccount,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _rememberAccount = value ?? false;
-                      });
-                    },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+            Expanded(
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Checkbox(
+                      value: _rememberAccount,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _rememberAccount = value ?? false;
+                        });
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      side: BorderSide(color: AppColors.lightGray, width: 1.5),
                     ),
-                    side: BorderSide(color: AppColors.lightGray, width: 1.5),
                   ),
-                ),
-                AppGap.w12,
-                Text(
-                  'Remember account',
-                  style: AppTextStyle.s14.copyWith(
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w500,
+                  AppGap.w12,
+                  Expanded(
+                    child: Text(
+                      'Remember account',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.s14.copyWith(
+                        color: context.primaryTextColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            // Forgot Password Link
+
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.forgotPw);
               },
               child: Text(
                 'Forgot your password?',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
                 style: AppTextStyle.s12.copyWith(
                   color: AppColors.lightGray,
                   fontWeight: FontWeight.w500,
@@ -175,6 +243,7 @@ class _SignInFormState extends State<SignInForm> {
           text: 'Sign In',
           color: AppColors.mainColor,
           onClick: _validateForm,
+          isLoading: _isLoading,
         ),
       ],
     );

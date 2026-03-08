@@ -26,8 +26,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor: AppColors.white,
-          appBar: AuthAppBar(title: 'Change Password'),
+          backgroundColor: context.backgroundColor,
+          appBar: AuthAppBar(title: 'Change Password', backgroundColor: context.primaryColor,),
           body: _Body(
             newPwController: _newPwController,
             confirmPwController: _confirmPwController,

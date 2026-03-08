@@ -13,7 +13,7 @@ class AuthHeader extends StatelessWidget {
           title,
           style: AppTextStyle.s24.copyWith(
             fontWeight: FontWeight.w700,
-            color: AppColors.mainColor,
+            color: context.primaryColor,
           ),
         ),
 
@@ -21,7 +21,7 @@ class AuthHeader extends StatelessWidget {
 
         Text(
           subtitle,
-          style: AppTextStyle.s12.copyWith(color: AppColors.black),
+          style: AppTextStyle.s12.copyWith(color: context.primaryTextColor),
         ),
       ],
     );

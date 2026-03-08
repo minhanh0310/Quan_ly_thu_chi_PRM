@@ -1,7 +1,5 @@
+import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'dart:ui';
-import 'package:Quan_ly_thu_chi_PRM/core/constants/resources.dart';
-import 'package:Quan_ly_thu_chi_PRM/core/routers/routes.dart';
-import 'package:flutter/material.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/dashboard/model/bottom_nav_item.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/dashboard/widgets/custom_bottom_nav_bar.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/home/screen/home_screen.dart';
@@ -28,7 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
-    print('====> Navigated to: ${_navItems[index].route}');
+    // print('====> Navigated to: ${_navItems[index].route}');
   }
 
   late final List<BottomNavItem> _navItems = [
@@ -45,7 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       iconPath: IconPath.ledger,
     ),
     BottomNavItem(
-      screen: PlansScreen(),
+      screen: PlansScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.plans,
       label: 'Plans',
       iconPath: IconPath.plans,
@@ -65,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+        backgroundColor: context.backgroundColor,
         drawer: SafeArea(
           top: false,
           child: BackdropFilter(

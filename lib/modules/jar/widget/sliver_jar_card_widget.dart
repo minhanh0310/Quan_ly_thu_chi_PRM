@@ -23,7 +23,7 @@ class SliverJarCardWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: AppPad.a16,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.surfaceVariant,
         borderRadius: AppBorderRadius.a16,
         boxShadow: const [
           BoxShadow(
@@ -127,16 +127,18 @@ class _JarNameBadges extends StatelessWidget {
           name,
           style: AppTextStyle.s14in.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: context.primaryTextColor,
           ),
         ),
         AppGap.h3,
         Row(
           children: [
             _PillBadge(label: 'TARGET: $targetPct%', color: color),
-            const SizedBox(width: 8),
+            AppGap.w8,
             Text(
               'Actual: $actualPct%',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: AppTextStyle.s12in.copyWith(
                 color: AppColors.textSecondary,
                 fontSize: 11,
@@ -164,7 +166,7 @@ class _JarAmountDetail extends StatelessWidget {
           amount,
           style: AppTextStyle.s14in.copyWith(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: context.primaryTextColor,
           ),
         ),
       ],
@@ -201,13 +203,14 @@ class _ActivePlansRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        AppGap.w8,
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, AppRoutes.plans);
           },
           child: Text(
             'Nurturing $count active plans',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyle.s12in.copyWith(
               color: AppColors.textSecondary,
               fontSize: 11,
@@ -235,6 +238,8 @@ class _PillBadge extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: AppTextStyle.s12in.copyWith(
           color: color,
           fontWeight: FontWeight.w700,

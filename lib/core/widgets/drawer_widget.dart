@@ -12,28 +12,23 @@ class _DrawerWidgetState extends State<DrawerWidget>
   late AnimationController _animationController;
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
-  bool isDarkMode = false; // TODO: Get from ThemeProvider
 
   @override
   void initState() {
     super.initState();
-
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-
     _slideAnimation = Tween<double>(begin: -1.0, end: 0.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
-
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
       ),
     );
-
     _animationController.forward();
   }
 
@@ -45,6 +40,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -54,8 +51,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             opacity: _fadeAnimation.value,
             child: Container(
               width: 280,
-              color: AppColors.white,
-
+              color: context.drawerColor,
               child: Column(
                 children: [
                   Expanded(
@@ -64,42 +60,17 @@ class _DrawerWidgetState extends State<DrawerWidget>
                       child: ListView(
                         padding: EdgeInsets.zero,
                         children: <Widget>[
-                          // AppGap.h40,
-
-                          // // Close button
-                          // Padding(
-                          //   padding: AppPad.h20,
-                          //   child: Align(
-                          //     alignment: Alignment.centerLeft,
-                          //     child: GestureDetector(
-                          //       onTap: () => Navigator.pop(context),
-                          //       child: Container(
-                          //         width: 40,
-                          //         height: 40,
-                          //         decoration: const BoxDecoration(
-                          //           shape: BoxShape.circle,
-                          //           color: Color(0xffF5F6FA),
-                          //         ),
-                          //         child: const Icon(
-                          //           Icons.close,
-                          //           color: AppColors.grey,
-                          //           size: 20,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-
                           AppGap.h20,
 
                           // Profile Section
                           Container(
                             padding: AppPad.a20,
-                            child: _buildDrawerHeader(),
+                            child: _buildDrawerHeader(context),
                           ),
 
                           AppGap.h10,
-                          const Divider(height: 1, color: AppColors.lightGray),
+                          // ✅ Divider tự đổi màu theo theme
+                          Divider(height: 1, color: context.dividerColor),
                           AppGap.h10,
 
                           Padding(
@@ -109,17 +80,17 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           AppGap.h10,
 
                           _buildDrawerItemWithSwitch(
+                            context: context,
                             icon: Icons.dark_mode_outlined,
                             title: 'Dark Mode',
-                            value: isDarkMode,
+                            value: themeProvider.isDarkMode,
                             onChanged: (value) {
-                              setState(() => isDarkMode = value);
-                              print('====> Dark mode: $value');
+                              context.read<ThemeProvider>().setDarkMode(value);
                             },
                           ),
 
                           AppGap.h20,
-                          const Divider(height: 1, color: AppColors.lightGray),
+                          Divider(height: 1, color: context.dividerColor),
                           AppGap.h20,
 
                           Padding(
@@ -129,45 +100,45 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           AppGap.h10,
 
                           _buildDrawerItem(
+                            context: context,
                             icon: Icons.settings_outlined,
                             title: 'General Settings',
                             onTap: () {
                               Navigator.pop(context);
-                              print('====> Settings');
                             },
                           ),
 
                           _buildDrawerItem(
+                            context: context,
                             icon: Icons.lock_outline,
                             title: 'Security & Biometrics',
                             onTap: () {
                               Navigator.pop(context);
-                              print('====> Security');
                             },
                           ),
 
                           _buildDrawerItem(
+                            context: context,
                             icon: Icons.notifications_outlined,
                             title: 'Notifications',
                             onTap: () {
                               Navigator.pop(context);
-                              print('====> Notifications');
                             },
                           ),
 
                           _buildDrawerItemWithBadge(
+                            context: context,
                             icon: Icons.language,
                             title: 'Language',
                             badge: 'EN',
                             badgeColor: const Color(0xFF6C5CE7),
                             onTap: () {
                               Navigator.pop(context);
-                              print('====> Language');
                             },
                           ),
 
                           AppGap.h20,
-                          const Divider(height: 1, color: AppColors.lightGray),
+                          Divider(height: 1, color: context.dividerColor),
                           AppGap.h20,
 
                           Padding(
@@ -177,21 +148,41 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           AppGap.h10,
 
                           _buildDrawerItem(
+                            context: context,
                             icon: Icons.file_download_outlined,
                             title: 'Export Report (PDF/Excel)',
-                            onTap: () {
-                              Navigator.pop(context);
-                              print('====> Export');
-                            },
+                            onTap: () => Navigator.pop(context),
                           ),
 
                           _buildDrawerItem(
+                            context: context,
                             icon: Icons.folder_outlined,
                             title: 'Manage Cards & Wallets',
-                            onTap: () {
-                              Navigator.pop(context);
-                              print('====> Wallet');
-                            },
+                            onTap: () => Navigator.pop(context),
+                          ),
+
+                          AppGap.h20,
+                          Divider(height: 1, color: context.dividerColor),
+                          AppGap.h20,
+
+                          Padding(
+                            padding: AppPad.h20,
+                            child: _SectionHeader(title: 'OTHER'),
+                          ),
+                          AppGap.h10,
+
+                          _buildDrawerItem(
+                            context: context,
+                            icon: Icons.help_outline,
+                            title: 'Terms of service',
+                            onTap: () => Navigator.pop(context),
+                          ),
+
+                          _buildDrawerItemLogout(
+                            context: context,
+                            icon: Icons.logout,
+                            title: 'Log out',
+                            onTap: () => _showLogoutDialog(context),
                           ),
 
                           AppGap.h40,
@@ -204,18 +195,21 @@ class _DrawerWidgetState extends State<DrawerWidget>
                     top: false,
                     child: Container(
                       padding: AppPad.a20,
-                      decoration: const BoxDecoration(
-                        color: AppColors.white,
+                      decoration: BoxDecoration(
+                        // ✅ Tự đổi theo theme
+                        color: context.drawerColor,
                         border: Border(
-                          top: BorderSide(color: AppColors.lightGray, width: 1),
+                          top: BorderSide(
+                            color: context.dividerColor,
+                            width: 1,
+                          ),
                         ),
                       ),
                       child: Text(
                         'JarsFlow - Expense Management (Build 2026)',
                         textAlign: TextAlign.center,
                         style: AppTextStyle.s12in.copyWith(
-                          color: AppColors.grey,
-                          height: 1.5,
+                          color: context.secondaryTextColor,
                         ),
                       ),
                     ),
@@ -229,23 +223,15 @@ class _DrawerWidgetState extends State<DrawerWidget>
     );
   }
 
-  Widget _buildDrawerHeader() {
+  Widget _buildDrawerHeader(BuildContext context) {
     return Row(
       children: [
-        // Avatar
-        Container(
-          width: 45,
-          height: 45,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color(0xFF6C5CE7),
-          ),
-          child: const Icon(Icons.person, color: AppColors.white, size: 24),
+        CircleAvatar(
+          radius: 24,
+          backgroundColor: context.primaryColor.withValues(alpha: 0.1),
+          child: Icon(Icons.person, color: context.primaryColor, size: 28),
         ),
-
         AppGap.w12,
-
-        // Name & Verified
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,7 +240,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                 'mtnee',
                 style: AppTextStyle.s16in.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AppColors.text,
+                  color: context.primaryTextColor,
                 ),
               ),
               AppGap.h4,
@@ -264,7 +250,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                     'Verified Profile',
                     style: AppTextStyle.s12in.copyWith(
                       fontSize: 11,
-                      color: AppColors.grey,
+                      color: context.secondaryTextColor,
                     ),
                   ),
                   AppGap.w4,
@@ -278,8 +264,6 @@ class _DrawerWidgetState extends State<DrawerWidget>
             ],
           ),
         ),
-
-        // Premium Badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
@@ -300,8 +284,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
     );
   }
 
-  /// Build normal item
   Widget _buildDrawerItem({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required VoidCallback onTap,
@@ -312,26 +296,30 @@ class _DrawerWidgetState extends State<DrawerWidget>
         padding: AppPad.h20v12,
         child: Row(
           children: [
-            Icon(icon, size: 22, color: AppColors.text),
+            Icon(icon, size: 22, color: context.iconColor),
             AppGap.w12,
             Expanded(
               child: Text(
                 title,
                 style: AppTextStyle.s14in.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: AppColors.text,
+                  color: context.primaryTextColor,
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right, size: 20, color: AppColors.grey),
+            Icon(
+              Icons.chevron_right,
+              size: 20,
+              color: context.secondaryTextColor,
+            ),
           ],
         ),
       ),
     );
   }
 
-  /// Build item with Switch
   Widget _buildDrawerItemWithSwitch({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required bool value,
@@ -341,20 +329,20 @@ class _DrawerWidgetState extends State<DrawerWidget>
       padding: AppPad.h20v8,
       child: Row(
         children: [
-          Icon(icon, size: 22, color: AppColors.text),
+          Icon(icon, size: 22, color: context.iconColor),
           AppGap.w12,
           Expanded(
             child: Text(
               title,
               style: AppTextStyle.s14in.copyWith(
                 fontWeight: FontWeight.w500,
-                color: AppColors.text,
+                color: context.primaryTextColor,
               ),
             ),
           ),
           Switch(
             value: value,
-            activeThumbColor: const Color(0xFF6C5CE7),
+            activeThumbColor: context.primaryColor,
             onChanged: onChanged,
           ),
         ],
@@ -362,8 +350,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
     );
   }
 
-  /// Build item with Badge
   Widget _buildDrawerItemWithBadge({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String badge,
@@ -376,14 +364,14 @@ class _DrawerWidgetState extends State<DrawerWidget>
         padding: AppPad.h20v12,
         child: Row(
           children: [
-            Icon(icon, size: 22, color: AppColors.text),
+            Icon(icon, size: 22, color: context.iconColor),
             AppGap.w12,
             Expanded(
               child: Text(
                 title,
                 style: AppTextStyle.s14in.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: AppColors.text,
+                  color: context.primaryTextColor,
                 ),
               ),
             ),
@@ -406,12 +394,84 @@ class _DrawerWidgetState extends State<DrawerWidget>
       ),
     );
   }
+
+  Widget _buildDrawerItemLogout({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: AppPad.h20v12,
+        child: Row(
+          children: [
+            Icon(icon, size: 22, color: context.errorColor),
+            AppGap.w12,
+            Expanded(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyle.s14in.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.errorColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          'Log out',
+          style: TextStyle(color: context.primaryTextColor),
+        ),
+        content: Text(
+          'Are you sure you want to log out?',
+          style: TextStyle(color: context.secondaryTextColor),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel', style: AppTextStyle.s14in),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pop(context); // Close drawer
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.signin,
+                (route) => false,
+              );
+            },
+            child: Text(
+              'Log out',
+              style: AppTextStyle.s14in.copyWith(
+                color: context.errorColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 /// Section Header
 class _SectionHeader extends StatelessWidget {
   final String title;
-
   const _SectionHeader({required this.title});
 
   @override
@@ -421,7 +481,7 @@ class _SectionHeader extends StatelessWidget {
       style: AppTextStyle.s12in.copyWith(
         fontSize: 11,
         fontWeight: FontWeight.w600,
-        color: AppColors.grey,
+        color: context.secondaryTextColor,
         letterSpacing: 0.5,
       ),
     );

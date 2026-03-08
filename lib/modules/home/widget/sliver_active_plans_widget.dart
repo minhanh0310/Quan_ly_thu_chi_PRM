@@ -34,7 +34,7 @@ class SliverActivePlansWidget extends StatelessWidget {
                   style: AppTextStyle.s12in.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: context.primaryTextColor,
                   ),
                 ),
                 TextButton(
@@ -136,7 +136,7 @@ class _PlanCard extends StatelessWidget {
       margin: AppPad.b10,
       padding: AppPad.a12,
       decoration: BoxDecoration(
-        color: AppColors.lightGrayBackground,
+        color: context.surfaceVariant,
         borderRadius: AppBorderRadius.a16,
         boxShadow: [
           BoxShadow(
@@ -177,7 +177,7 @@ class _PlanCard extends StatelessWidget {
                   title,
                   style: AppTextStyle.s14in.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.black,
+                    color: context.primaryTextColor,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -187,7 +187,7 @@ class _PlanCard extends StatelessWidget {
                   '$current / $target',
                   style: AppTextStyle.s12in.copyWith(
                     fontSize: 11,
-                    color: AppColors.grey,
+                    color: context.secondaryTextColor,
                   ),
                 ),
                 AppGap.h8,

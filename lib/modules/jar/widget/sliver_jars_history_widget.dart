@@ -12,10 +12,10 @@ class SliverJarsHistoryWidget extends StatelessWidget {
       children: [
         SectionHeader(
           title: 'Distribution History',
-          trailing: const Icon(
+          trailing: Icon(
             Icons.history_rounded,
             size: 20,
-            color: AppColors.black,
+            color: context.primaryTextColor,
           ),
         ),
         AppGap.h16,
@@ -42,7 +42,7 @@ class _HistoryCard extends StatelessWidget {
       margin: AppPad.b10,
       padding: AppPad.h16v12,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.backgroundColor,
         borderRadius: AppBorderRadius.a12,
         boxShadow: const [
           BoxShadow(
@@ -57,7 +57,7 @@ class _HistoryCard extends StatelessWidget {
           // icon
           Container(
             decoration: BoxDecoration(
-              color: AppColors.primaryPurpleLight,
+              color: context.surfaceVariant,
               borderRadius: AppBorderRadius.a10,
             ),
             child: Padding(
@@ -81,7 +81,7 @@ class _HistoryCard extends StatelessWidget {
                   entry.month,
                   style: AppTextStyle.s12in.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: context.primaryTextColor,
                   ),
                 ),
                 AppGap.h2,
@@ -99,7 +99,7 @@ class _HistoryCard extends StatelessWidget {
 
           // Amount
           Text(
-            '+${_formatAmount(entry.amount)}',
+            '+${_formatAmount(entry.amount)}',  
             style: AppTextStyle.s14in.copyWith(
               color: AppColors.incomeGreen,
               fontWeight: FontWeight.bold,

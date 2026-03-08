@@ -23,8 +23,7 @@ class CustomBottomNavBar extends StatelessWidget {
     return Container(
       height: 80,
       decoration: BoxDecoration(
-        color: Colors
-            .white, // TODO: Thay bằng context.secondaryColor từ theme extension
+        color: context.bottomNavColor,
         boxShadow: [
           BoxShadow(
             color: const Color(0x1D1E2014),
@@ -45,6 +44,7 @@ class CustomBottomNavBar extends StatelessWidget {
         backgroundColor: Colors.transparent,
         items: items.asMap().entries.map((entry) {
           return _buildNavItem(
+            context,
             entry.key,
             entry.value.label,
             entry.value.iconPath,
@@ -55,6 +55,7 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   BottomNavigationBarItem _buildNavItem(
+    BuildContext context,
     int index,
     String label,
     String iconPath,
@@ -66,7 +67,7 @@ class CustomBottomNavBar extends StatelessWidget {
           ? Text(
               label,
               style: AppTextStyle.s12in.copyWith(
-                color: AppColors.mainColor,
+                color: context.primaryColor,
                 fontWeight: FontWeight.w600,
               ),
             )
@@ -74,8 +75,8 @@ class CustomBottomNavBar extends StatelessWidget {
               iconPath,
               width: 20,
               height: 20,
-              colorFilter: const ColorFilter.mode(
-                Color(0xff8F959E),
+              colorFilter: ColorFilter.mode(
+                context.secondaryTextColor,
                 BlendMode.srcIn,
               ),
             ),

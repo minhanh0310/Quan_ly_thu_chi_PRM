@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:Quan_ly_thu_chi_PRM/common/widgets/images/custom_asset_svg_picture.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/initial/model/currency_item_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class OnboardingCurrencyScreen extends StatefulWidget {
   const OnboardingCurrencyScreen({super.key});
@@ -12,13 +15,11 @@ class OnboardingCurrencyScreen extends StatefulWidget {
 
 class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
   String? selectedCurrency;
+  bool _isLoading = false;
 
   final List<CurrencyItemModel> currencies = [
     CurrencyItemModel(code: 'VND', symbol: '₫', name: 'Vietnamese Dong'),
     CurrencyItemModel(code: 'USD', symbol: '\$', name: 'US Dollar'),
-    CurrencyItemModel(code: 'EUR', symbol: '€', name: 'Euro'),
-    CurrencyItemModel(code: 'JPY', symbol: '¥', name: 'Japanese Yen'),
-    CurrencyItemModel(code: 'GBP', symbol: '£', name: 'British Pound'),
   ];
 
   @override
@@ -209,7 +210,11 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
           ),
         ],
       ),
-      child: PrimaryButton(text: 'Finalize Setup', onClick: _handleFinalize),
+      child: PrimaryButton(
+          text: 'Finalize Setup',
+          onClick: _handleFinalize,
+          isLoading: _isLoading,
+        ),
     );
   }
 
@@ -227,17 +232,35 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
     );
   }
 
-  void _handleFinalize() {
-    // Validate: Check if currency is selected
+  Future<void> _handleFinalize() async {
     if (selectedCurrency == null) {
       _showFloatingSnackBar('Please select a currency to continue');
       return;
     }
 
-    // TODO: Save currency to SharedPreferences or State Management
-    // await _saveCurrency(selectedCurrency!);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      _showFloatingSnackBar('Session expired. Please sign in again.');
+      return;
+    }
 
-    // Navigate to next screen
-    Navigator.pushReplacementNamed(context, AppRoutes.signin);
+    setState(() => _isLoading = true);
+    try {
+      // firebase_database is not supported on Windows/macOS/Linux desktop
+      final isDesktop = !kIsWeb &&
+          (defaultTargetPlatform == TargetPlatform.windows ||
+           defaultTargetPlatform == TargetPlatform.macOS ||
+           defaultTargetPlatform == TargetPlatform.linux);
+      if (!isDesktop) {
+        await UserDatabaseService().updateUserCurrency(uid, selectedCurrency!);
+      }
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+    } catch (e) {
+      if (!mounted) return;
+      _showFloatingSnackBar('Failed to save currency. Please try again.');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 }
