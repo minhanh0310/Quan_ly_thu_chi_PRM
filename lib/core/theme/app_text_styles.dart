@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 // import 'app_colors.dart';
 
-class AppTextStyle {
+class   AppTextStyle {
   // font family
   static const String fontFamily = AppConst.poppinsFont;
   static const TextStyle s12 = TextStyle(fontFamily: AppConst.poppinsFont, fontSize: 12, height: 18/12, fontWeight: FontWeight.w500);
