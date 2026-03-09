@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -328,6 +329,11 @@ class _DrawerWidgetState extends State<DrawerWidget>
   }
 
   Widget _buildDrawerHeader(BuildContext context) {
+    final currentUser = FirebaseAuthService().currentUser;
+    final displayName = currentUser?.displayName ?? 
+                        currentUser?.email?.split('@').first ?? 
+                        'User';
+    
     return Row(
       children: [
         CircleAvatar(
@@ -341,7 +347,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'mtnee',
+                displayName,
                 style: AppTextStyle.s16in.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -537,14 +543,31 @@ void _showLogoutDialog(BuildContext context) {
             child: Text('drawer.logout_cancel'.tr(), style: AppTextStyle.s14in),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Close drawer
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.signin,
-                (route) => false,
-              );
+            onPressed: () async {
+              try {
+                // Sign out from Firebase
+                await FirebaseAuthService().signOut();
+                
+                if (!context.mounted) return;
+                Navigator.pop(context); // Close dialog
+                Navigator.pop(context); // Close drawer
+                
+                // Navigate to signin screen
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.signin,
+                  (route) => false,
+                );
+              } catch (e) {
+                if (!context.mounted) return;
+                Navigator.pop(context); // Close dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error during logout: ${e.toString()}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
             },
             child: Text(
               'drawer.logout_confirm'.tr(),

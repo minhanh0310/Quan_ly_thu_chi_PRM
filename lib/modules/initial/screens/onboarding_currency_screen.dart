@@ -25,31 +25,34 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: AppPad.h24,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppGap.h40,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: AppPad.h24,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppGap.h40,
 
-                    _buildHeader(),
+                      _buildHeader(),
 
-                    AppGap.h32,
+                      AppGap.h32,
 
-                    _buildCurrencyList(),
-                  ],
+                      _buildCurrencyList(),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            _buildBottomButton(context),
-          ],
+              _buildBottomButton(context),
+            ],
+          ),
         ),
       ),
     );

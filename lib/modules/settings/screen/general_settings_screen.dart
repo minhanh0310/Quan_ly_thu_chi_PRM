@@ -48,8 +48,23 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
     });
 
     try {
+      // First check if user record exists in database
+      final userRecord = await _userDbService.getUserById(user.uid);
+      if (userRecord == null) {
+        if (!mounted) return;
+        setState(() {
+          _isLoading = false;
+          _errorText = 'User profile not found. Please try again.';
+        });
+        return;
+      }
+
+      // Update Firebase Auth display name
       await _authService.updateDisplayName(name);
+      
+      // Then update database with complete user data to prevent data loss
       await _userDbService.updateUserName(user.uid, name);
+      
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -62,7 +77,9 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
       if (!mounted) return;
       setState(() {
         _isLoading = false;
-        _errorText = 'errors.operation_failed'.tr();
+        _errorText = e.toString().contains('User record not found')
+            ? 'User profile not found. Please sign in again.'
+            : 'errors.operation_failed'.tr();
       });
     }
   }
