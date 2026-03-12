@@ -14,7 +14,7 @@ import 'package:Quan_ly_thu_chi_PRM/modules/dashboard/screen/dashboard_screen.da
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/screen/ledger_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plans_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/screen/stats_screen.dart';
-// import 'package:Quan_ly_thu_chi_PRM/modules/stats/screen/stats_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/settings/screen/general_settings_screen.dart';
 
 
 class AppRoutes {
@@ -33,7 +33,8 @@ class AppRoutes {
   static const String ledger = "/ledger";
   static const String plans = "/plans";
   static const String stats = "/stats";
-  
+  static const String generalSettings = "/general-settings";
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splash:
@@ -87,6 +88,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const PlansScreen());
       case stats:
         return MaterialPageRoute(builder: (_) => const StatsScreen());
+      case generalSettings:
+        return MaterialPageRoute(builder: (_) => const GeneralSettingsScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

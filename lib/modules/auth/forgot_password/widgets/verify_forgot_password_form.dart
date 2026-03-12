@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class VerifyForgotPasswordForm extends StatelessWidget {
   final TextEditingController verifyCodeController;
@@ -13,7 +14,7 @@ class VerifyForgotPasswordForm extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Type a code',
+          'forgot_password.type_code'.tr(),
           style: AppTextStyle.s12.copyWith(
             color: AppColors.grey,
             fontWeight: FontWeight.w600,
@@ -28,7 +29,7 @@ class VerifyForgotPasswordForm extends StatelessWidget {
               flex: 2,
               child: CustomTextField(
                 controller: verifyCodeController,
-                hintText: 'Enter code',
+                hintText: 'forgot_password.enter_code'.tr(),
                 keyboardType: TextInputType.number,
               ),
             ),
@@ -41,7 +42,7 @@ class VerifyForgotPasswordForm extends StatelessWidget {
               ),
               padding: AppPad.h24v10,
               child: Text(
-                'Resend',
+                'forgot_password.resend_code'.tr(),
                 style: AppTextStyle.s14.copyWith(
                   color: AppColors.white,
                   fontWeight: FontWeight.w600,

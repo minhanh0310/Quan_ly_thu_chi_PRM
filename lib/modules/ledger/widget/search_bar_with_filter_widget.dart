@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SearchBarWithFilterWidget extends StatelessWidget {
   final TextEditingController? controller;
@@ -22,7 +23,7 @@ class SearchBarWithFilterWidget extends StatelessWidget {
             controller: controller,
             style: AppTextStyle.s14in.copyWith(color: context.primaryTextColor),
             decoration: InputDecoration(
-              hintText: hintText ?? 'Search category, tags, notes...',
+              hintText: hintText ?? 'ledger_screen.search_placeholder'.tr(),
               hintStyle: AppTextStyle.s14in.copyWith(color: context.hintColor),
               filled: true,
               fillColor: context.inputFillColor,

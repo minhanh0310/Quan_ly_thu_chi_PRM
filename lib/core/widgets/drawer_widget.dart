@@ -1,4 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -12,6 +14,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
   late AnimationController _animationController;
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
+  bool _isLanguageExpanded = false;
 
   @override
   void initState() {
@@ -69,20 +72,21 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           ),
 
                           AppGap.h10,
-                          // ✅ Divider tự đổi màu theo theme
                           Divider(height: 1, color: context.dividerColor),
                           AppGap.h10,
 
                           Padding(
                             padding: AppPad.h20,
-                            child: _SectionHeader(title: 'APPEARANCE'),
+                            child: _SectionHeader(
+                              title: 'drawer.appearance'.tr(),
+                            ),
                           ),
                           AppGap.h10,
 
                           _buildDrawerItemWithSwitch(
                             context: context,
                             icon: Icons.dark_mode_outlined,
-                            title: 'Dark Mode',
+                            title: 'drawer.dark_mode'.tr(),
                             value: themeProvider.isDarkMode,
                             onChanged: (value) {
                               context.read<ThemeProvider>().setDarkMode(value);
@@ -95,18 +99,18 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
                           Padding(
                             padding: AppPad.h20,
-                            child: _SectionHeader(title: 'ACCOUNT & SECURITY'),
+                            child: _SectionHeader(
+                              title: 'drawer.account_security'.tr(),
+                            ),
                           ),
                           AppGap.h10,
 
                           _buildDrawerItem(
                             context: context,
                             icon: Icons.settings_outlined,
-                            title: 'General Settings',
+                            title: 'drawer.general_settings'.tr(),
                             onTap: () {
                               Navigator.pop(context);
-                              // TODO: Navigate to General Settings screen
-                              // Hoặc hiện popup settings
                             },
                           ),
 
@@ -116,30 +120,18 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             title: 'Security & Biometrics',
                             onTap: () {
                               Navigator.pop(context);
-                              // Hiển popup Security & Biometrics
-                              SecurityBiometricsPopup.show(context);
                             },
                           ),
 
                           _buildDrawerItem(
                             context: context,
                             icon: Icons.notifications_outlined,
-                            title: 'Notifications',
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            title: 'drawer.notifications'.tr(),
+                            onTap: () => Navigator.pop(context),
                           ),
 
-                          _buildDrawerItemWithBadge(
-                            context: context,
-                            icon: Icons.language,
-                            title: 'Language',
-                            badge: 'EN',
-                            badgeColor: const Color(0xFF6C5CE7),
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                          ),
+                          // ── Language expand ──
+                          _buildLanguageExpand(context),
 
                           AppGap.h20,
                           Divider(height: 1, color: context.dividerColor),
@@ -147,21 +139,21 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
                           Padding(
                             padding: AppPad.h20,
-                            child: _SectionHeader(title: 'DATA'),
+                            child: _SectionHeader(title: 'drawer.data'.tr()),
                           ),
                           AppGap.h10,
 
                           _buildDrawerItem(
                             context: context,
                             icon: Icons.file_download_outlined,
-                            title: 'Export Report (PDF/Excel)',
+                            title: 'drawer.export_report'.tr(),
                             onTap: () => Navigator.pop(context),
                           ),
 
                           _buildDrawerItem(
                             context: context,
                             icon: Icons.folder_outlined,
-                            title: 'Manage Cards & Wallets',
+                            title: 'drawer.manage_wallets'.tr(),
                             onTap: () => Navigator.pop(context),
                           ),
 
@@ -171,21 +163,21 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
                           Padding(
                             padding: AppPad.h20,
-                            child: _SectionHeader(title: 'OTHER'),
+                            child: _SectionHeader(title: 'drawer.other'.tr()),
                           ),
                           AppGap.h10,
 
                           _buildDrawerItem(
                             context: context,
                             icon: Icons.help_outline,
-                            title: 'Terms of service',
-                            onTap: () => Navigator.pop(context),
+                            title: 'drawer.terms_of_service'.tr(),
+                            onTap: () => _showPrivacyPolicyDialog(context),
                           ),
 
                           _buildDrawerItemLogout(
                             context: context,
                             icon: Icons.logout,
-                            title: 'Log out',
+                            title: 'drawer.logout'.tr(),
                             onTap: () => _showLogoutDialog(context),
                           ),
 
@@ -200,7 +192,6 @@ class _DrawerWidgetState extends State<DrawerWidget>
                     child: Container(
                       padding: AppPad.a20,
                       decoration: BoxDecoration(
-                        // ✅ Tự đổi theo theme
                         color: context.drawerColor,
                         border: Border(
                           top: BorderSide(
@@ -210,7 +201,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                         ),
                       ),
                       child: Text(
-                        'JarsFlow - Expense Management (Build 2026)',
+                        'drawer.footer'.tr(),
                         textAlign: TextAlign.center,
                         style: AppTextStyle.s12in.copyWith(
                           color: context.secondaryTextColor,
@@ -227,7 +218,123 @@ class _DrawerWidgetState extends State<DrawerWidget>
     );
   }
 
+  // ── Language expand widget ──
+  Widget _buildLanguageExpand(BuildContext context) {
+    final languages = [
+      {'label': 'English', 'locale': const Locale('en', 'US'), 'badge': 'EN'},
+      {
+        'label': 'Tiếng Việt',
+        'locale': const Locale('vi', 'VN'),
+        'badge': 'VI',
+      },
+    ];
+
+    final currentCode = context.locale.languageCode;
+
+    return Column(
+      children: [
+        // Header row
+        InkWell(
+          onTap: () =>
+              setState(() => _isLanguageExpanded = !_isLanguageExpanded),
+          child: Padding(
+            padding: AppPad.h20v12,
+            child: Row(
+              children: [
+                Icon(Icons.language, size: 22, color: context.iconColor),
+                AppGap.w12,
+                Expanded(
+                  child: Text(
+                    'drawer.language'.tr(),
+                    style: AppTextStyle.s14in.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: context.primaryTextColor,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+                    borderRadius: AppBorderRadius.a8,
+                  ),
+                  child: Text(
+                    currentCode == 'vi' ? 'VI' : 'EN',
+                    style: AppTextStyle.s12in.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF6C5CE7),
+                    ),
+                  ),
+                ),
+                AppGap.w8,
+                Icon(
+                  _isLanguageExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  size: 20,
+                  color: context.secondaryTextColor,
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Expand options
+        if (_isLanguageExpanded)
+          ...languages.map((lang) {
+            final locale = lang['locale'] as Locale;
+            final isSelected = context.locale == locale;
+            return InkWell(
+              onTap: () {
+                context.setLocale(locale);
+                setState(() => _isLanguageExpanded = false);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 54,
+                  right: 20,
+                  top: 10,
+                  bottom: 10,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        lang['label'] as String,
+                        style: AppTextStyle.s14in.copyWith(
+                          color: isSelected
+                              ? context.primaryColor
+                              : context.primaryTextColor,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    if (isSelected)
+                      Icon(
+                        Icons.check_rounded,
+                        size: 18,
+                        color: context.primaryColor,
+                      ),
+                  ],
+                ),
+              ),
+            );
+          }),
+      ],
+    );
+  }
+
   Widget _buildDrawerHeader(BuildContext context) {
+    final currentUser = FirebaseAuthService().currentUser;
+    final displayName = currentUser?.displayName ?? 
+                        currentUser?.email?.split('@').first ?? 
+                        'User';
+    
     return Row(
       children: [
         CircleAvatar(
@@ -241,7 +348,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'mtnee',
+                displayName,
                 style: AppTextStyle.s16in.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.primaryTextColor,
@@ -251,7 +358,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               Row(
                 children: [
                   Text(
-                    'Verified Profile',
+                    'drawer.verified_profile'.tr(),
                     style: AppTextStyle.s12in.copyWith(
                       fontSize: 11,
                       color: context.secondaryTextColor,
@@ -354,51 +461,6 @@ class _DrawerWidgetState extends State<DrawerWidget>
     );
   }
 
-  Widget _buildDrawerItemWithBadge({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required String badge,
-    required Color badgeColor,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: AppPad.h20v12,
-        child: Row(
-          children: [
-            Icon(icon, size: 22, color: context.iconColor),
-            AppGap.w12,
-            Expanded(
-              child: Text(
-                title,
-                style: AppTextStyle.s14in.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: context.primaryTextColor,
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: badgeColor.withValues(alpha: 0.1),
-                borderRadius: AppBorderRadius.a8,
-              ),
-              child: Text(
-                badge,
-                style: AppTextStyle.s12in.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: badgeColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildDrawerItemLogout({
     required BuildContext context,
     required IconData icon,
@@ -431,36 +493,85 @@ class _DrawerWidgetState extends State<DrawerWidget>
   }
 }
 
+void _showPrivacyPolicyDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          'drawer.privacy_policy_title'.tr(),
+          style: TextStyle(color: context.primaryTextColor),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Text(
+              'drawer.privacy_policy_content'.tr(),
+              style: AppTextStyle.s14in.copyWith(
+                color: context.secondaryTextColor,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('common.close'.tr(), style: AppTextStyle.s14in),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 void _showLogoutDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(
-          'Log out',
+          'drawer.logout_title'.tr(),
           style: TextStyle(color: context.primaryTextColor),
         ),
         content: Text(
-          'Are you sure you want to log out?',
+          'drawer.logout_message'.tr(),
           style: TextStyle(color: context.secondaryTextColor),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: AppTextStyle.s14in),
+            child: Text('drawer.logout_cancel'.tr(), style: AppTextStyle.s14in),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Close drawer
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.signin,
-                (route) => false,
-              );
+            onPressed: () async {
+              try {
+                // Sign out from Firebase
+                await FirebaseAuthService().signOut();
+                
+                if (!context.mounted) return;
+                Navigator.pop(context); // Close dialog
+                Navigator.pop(context); // Close drawer
+                
+                // Navigate to signin screen
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.signin,
+                  (route) => false,
+                );
+              } catch (e) {
+                if (!context.mounted) return;
+                Navigator.pop(context); // Close dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error during logout: ${e.toString()}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
             },
             child: Text(
-              'Log out',
+              'drawer.logout_confirm'.tr(),
               style: AppTextStyle.s14in.copyWith(
                 color: context.errorColor,
                 fontWeight: FontWeight.w600,

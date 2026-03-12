@@ -1,4 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final String? subtitle;
@@ -39,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              title ?? 'JarsFlow',
+              title ?? 'common.app_name'.tr(),
               style: AppTextStyle.s20in.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppColors.primary,
@@ -47,10 +49,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             AppGap.h5,
             Text(
-              subtitle ?? 'MODERN WEALTH',
-              style: AppTextStyle.s12in.copyWith(
+              subtitle ?? 'common.app_slogan'.tr(),
+              style: AppTextStyle.s14in.copyWith(
                 color: AppColors.grey,
-                letterSpacing: 1.2,
               ),
             ),
           ],

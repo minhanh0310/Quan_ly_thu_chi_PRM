@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverActivePlansWidget extends StatelessWidget {
   const SliverActivePlansWidget({super.key});
@@ -30,7 +31,7 @@ class SliverActivePlansWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Active Plans',
+                  'home_screen.active_plans'.tr(),
                   style: AppTextStyle.s12in.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -43,7 +44,7 @@ class SliverActivePlansWidget extends StatelessWidget {
                     print('====> View All Plans');
                   },
                   child: Text(
-                    'View All',
+                    'common.view_all'.tr(),
                     style: AppTextStyle.s12in.copyWith(
                       color: AppColors.grey,
                       fontWeight: FontWeight.w600,
@@ -87,7 +88,7 @@ class SliverActivePlansWidget extends StatelessWidget {
 
   static final List<Map<String, dynamic>> mockPlans = [
     {
-      'title': 'Buy a House',
+      'title': 'home_screen.buy_house'.tr(),
       'current': '\$125,000',
       'target': '\$500,000',
       'progress': 0.25, //TODO: Calculate progress based on actual values (ex: current/target)
@@ -95,7 +96,7 @@ class SliverActivePlansWidget extends StatelessWidget {
       'category': 'property',
     },
     {
-      'title': 'Buy a Tesla',
+      'title': 'home_screen.buy_tesla'.tr(),
       'current': '\$15,000',
       'target': '\$60,000',
       'progress': 0.25,
@@ -103,7 +104,7 @@ class SliverActivePlansWidget extends StatelessWidget {
       'category': 'vehicle',
     },
     {
-      'title': 'Travel Fund',
+      'title': 'home_screen.travel_fund'.tr(),
       'current': '\$8,000',
       'target': '\$20,000',
       'progress': 0.4,

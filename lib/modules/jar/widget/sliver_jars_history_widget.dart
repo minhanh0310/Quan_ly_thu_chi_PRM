@@ -1,6 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_list_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarsHistoryWidget extends StatelessWidget {
   const SliverJarsHistoryWidget({super.key});
@@ -11,7 +12,7 @@ class SliverJarsHistoryWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
-          title: 'Distribution History',
+          title: 'jars_screen.distribution_history'.tr(),
           trailing: Icon(
             Icons.history_rounded,
             size: 20,

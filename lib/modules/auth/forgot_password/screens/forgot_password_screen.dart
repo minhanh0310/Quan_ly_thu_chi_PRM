@@ -5,6 +5,7 @@ import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/auth_header.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -91,15 +92,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: Scaffold(
           backgroundColor: context.backgroundColor,
           appBar: AuthAppBar(
-            title: 'Forgot Password',
+            title: 'forgot_password.title'.tr(),
             backgroundColor: context.primaryColor,
           ),
           body: Column(
             children: [
               Expanded(child: _Body(emailController: _emailController)),
               AuthRedirectText(
-                text: 'Remembered your password?',
-                btnText: 'Sign In',
+                text: 'forgot_password.remembered_pw'.tr(),
+                btnText: 'sign_in.signin_button'.tr(),
                 onPressed: () {
                   Navigator.pushNamed(context, AppRoutes.signin);
                 },
@@ -123,7 +124,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ForgotPasswordForm(emailController: emailController),
             AppGap.h40,
             PrimaryButton(
-              text: 'Send',
+              text: 'forgot_password.send_code'.tr(),
               onClick: _handleSendResetEmail,
               isLoading: _isLoading,
             ),

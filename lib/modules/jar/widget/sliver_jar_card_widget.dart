@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarCardWidget extends StatelessWidget {
   final JarModel jar;
@@ -133,10 +134,15 @@ class _JarNameBadges extends StatelessWidget {
         AppGap.h3,
         Row(
           children: [
-            _PillBadge(label: 'TARGET: $targetPct%', color: color),
+            _PillBadge(
+              label: 'jars_screen.target'.tr(
+                namedArgs: {'value': '$targetPct%'},
+              ),
+              color: color,
+            ),
             AppGap.w8,
             Text(
-              'Actual: $actualPct%',
+              'jars_screen.actual'.tr(namedArgs: {'value': '$actualPct%'}),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyle.s12in.copyWith(
@@ -208,7 +214,7 @@ class _ActivePlansRow extends StatelessWidget {
             Navigator.pushNamed(context, AppRoutes.plans);
           },
           child: Text(
-            'Nurturing $count active plans',
+            'jars_screen.active_plans_count'.tr(namedArgs: {'count': '$count'}),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyle.s12in.copyWith(

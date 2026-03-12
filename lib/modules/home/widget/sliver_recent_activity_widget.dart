@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Recent Activity Widget - Sử dụng theme constants và SliverList
 class SliverRecentActivityWidget extends StatelessWidget {
@@ -52,7 +53,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         delegate: SliverChildBuilderDelegate((context, index) {
           if (index == 0) {
             return Text(
-              'Recent Activity',
+              'home_screen.recent_activity'.tr(),
               style: AppTextStyle.s16in.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

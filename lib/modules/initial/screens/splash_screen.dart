@@ -2,6 +2,7 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 // import 'package:Quan_ly_thu_chi_PRM/modules/auth/sign_in/screen/sign_in_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/initial/screens/get_started_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -31,7 +32,7 @@ class SplashScreen extends StatelessWidget {
 
               AppGap.h15,
 
-              Text('JarsFlow',
+              Text('splash_screen.title'.tr(),
                 style: TextStyle(
                   fontFamily: AppTextStyle.fontFamily,
                   fontSize: 30,
@@ -42,7 +43,7 @@ class SplashScreen extends StatelessWidget {
 
               AppGap.h5,
 
-              Text('Manage Your Expense',
+              Text('splash_screen.subtitle'.tr(),
                 style: TextStyle(
                   fontFamily: AppTextStyle.fontFamily,
                   fontSize: 15,

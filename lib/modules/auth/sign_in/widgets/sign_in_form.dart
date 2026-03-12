@@ -2,6 +2,7 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SignInForm extends StatefulWidget {
   final String email;
@@ -205,7 +206,7 @@ class _SignInFormState extends State<SignInForm> {
                   AppGap.w12,
                   Expanded(
                     child: Text(
-                      'Remember account',
+                      'sign_in.remember_account'.tr(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.s14.copyWith(
@@ -223,7 +224,7 @@ class _SignInFormState extends State<SignInForm> {
                 Navigator.pushNamed(context, AppRoutes.forgotPw);
               },
               child: Text(
-                'Forgot your password?',
+                'sign_in.forgot_password'.tr(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.end,
@@ -240,7 +241,7 @@ class _SignInFormState extends State<SignInForm> {
 
         // Sign In Button
         PrimaryButton(
-          text: 'Sign In',
+          text: 'sign_in.signin_button'.tr(),
           color: AppColors.mainColor,
           onClick: _validateForm,
           isLoading: _isLoading,

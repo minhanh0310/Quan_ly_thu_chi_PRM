@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FilterTabWidget extends StatefulWidget {
   final Function(int)? onTabChanged;
@@ -13,7 +14,11 @@ class FilterTabWidget extends StatefulWidget {
 class _FilterTabWidgetState extends State<FilterTabWidget> {
   late int selectedIndex;
 
-  final List<String> tabs = ['All', 'Income', 'Expense'];
+  List<String> get tabs => [
+    'ledger_screen.all'.tr(),
+    'ledger_screen.income'.tr(),
+    'ledger_screen.expense'.tr(),
+  ];
 
   @override
   void initState() {

@@ -4,6 +4,7 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/initial/model/currency_item_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class OnboardingCurrencyScreen extends StatefulWidget {
   const OnboardingCurrencyScreen({super.key});
@@ -24,31 +25,34 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: AppPad.h24,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppGap.h40,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: AppPad.h24,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppGap.h40,
 
-                    _buildHeader(),
+                      _buildHeader(),
 
-                    AppGap.h32,
+                      AppGap.h32,
 
-                    _buildCurrencyList(),
-                  ],
+                      _buildCurrencyList(),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            _buildBottomButton(context),
-          ],
+              _buildBottomButton(context),
+            ],
+          ),
         ),
       ),
     );
@@ -78,7 +82,7 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
           children: [
             // Title
             Text(
-              'Select Currency',
+              'onboarding.select_currency'.tr(),
               style: AppTextStyle.s24.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.black,
@@ -89,7 +93,7 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
 
             // Subtitle
             Text(
-              'Important: This primary currency cannot be changed later.',
+              'onboarding.important'.tr(),
               style: AppTextStyle.s12.copyWith(
                 color: AppColors.grey,
                 height: 1.5,
@@ -211,7 +215,7 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
         ],
       ),
       child: PrimaryButton(
-          text: 'Finalize Setup',
+          text: 'onboarding.currency_button'.tr(),
           onClick: _handleFinalize,
           isLoading: _isLoading,
         ),
@@ -234,7 +238,7 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
 
   Future<void> _handleFinalize() async {
     if (selectedCurrency == null) {
-      _showFloatingSnackBar('Please select a currency to continue');
+      _showFloatingSnackBar('onboarding.currency_null'.tr());
       return;
     }
 

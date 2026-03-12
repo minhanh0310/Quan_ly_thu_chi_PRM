@@ -5,6 +5,7 @@ import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/utils/validators/form_validators.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SignUpForm extends StatefulWidget {
   final String username;
@@ -245,7 +246,7 @@ class _SignUpFormState extends State<SignUpForm> {
         // Confirm Password field
         CustomTextField(
           controller: widget.confirmPasswordController,
-          hintText: 'Confirm Password',
+          hintText: 'sign_up.confirm_password'.tr(),
           keyboardType: TextInputType.visiblePassword,
           obscureText: !_showPasswords,
           isPassword: false,
@@ -300,9 +301,9 @@ class _SignUpFormState extends State<SignUpForm> {
                     height: 1.5,
                   ),
                   children: [
-                    TextSpan(text: 'By creating an account you agree to our '),
+                    TextSpan(text: 'sign_up.text_checkbox'.tr()),
                     TextSpan(
-                      text: 'Term and Conditions',
+                      text: 'sign_up.term_n_conditions'.tr(),
                       style: AppTextStyle.s14.copyWith(
                         color: AppColors.mainColor,
                         fontWeight: FontWeight.w600,
@@ -320,7 +321,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
         // Sign Up Button
         PrimaryButton(
-          text: 'Sign Up',
+          text: 'sign_up.signup_button'.tr(),
           color: AppColors.mainColor,
           onClick: _validateForm,
           isLoading: _isLoading,

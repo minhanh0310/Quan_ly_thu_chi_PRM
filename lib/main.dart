@@ -1,25 +1,32 @@
 import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+// import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/theme/theme_provider.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/routers/routes.dart';
 import 'firebase_options.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   // khoi tao truoc khi chay app
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await EasyLocalization.ensureInitialized();
 
   // final db = FirebaseDatabase.instance.ref('test/message');
   // await db.set('Hello, Firebase Realtime Database!');
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: const MyApp(),
+    EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en', 'US'),
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -78,6 +85,9 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           title: 'Expense Managing App',
           debugShowCheckedModeBanner: false,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           theme: themeProvider.currentTheme,
           themeMode: themeProvider.isDarkMode
               ? ThemeMode.dark

@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/change_password/widgets/change_password_form.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -27,7 +28,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         top: false,
         child: Scaffold(
           backgroundColor: context.backgroundColor,
-          appBar: AuthAppBar(title: 'Change Password', backgroundColor: context.primaryColor,),
+          appBar: AuthAppBar(
+            title: 'change_password.title'.tr(),
+            backgroundColor: context.primaryColor,
+          ),
           body: _Body(
             newPwController: _newPwController,
             confirmPwController: _confirmPwController,
