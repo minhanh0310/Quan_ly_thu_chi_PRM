@@ -48,7 +48,7 @@ class BudgetStatusSummary extends StatelessWidget {
               Text(
                 currentMonth,
                 style: AppTextStyle.s16in.copyWith(
-                  color: AppColors.textSecondary,
+                  color: context.secondaryTextColor,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -66,7 +66,7 @@ class BudgetStatusSummary extends StatelessWidget {
                     Text(
                       isOverSpent ? 'Overspent Amount' : 'Remaining Amount',
                       style: AppTextStyle.s14in.copyWith(
-                        color: AppColors.textSecondary,
+                        color: context.secondaryTextColor,
                       ),
                     ),
                     AppGap.h4,
@@ -98,21 +98,21 @@ class BudgetStatusSummary extends StatelessWidget {
                   Text(
                     'Spent',
                     style: AppTextStyle.s12in.copyWith(
-                      color: AppColors.textTertiary,
+                      color: context.secondaryTextColor,
                     ),
                   ),
                   AppGap.h4,
                   Text(
                     '\$${expense.toStringAsFixed(0)}',
                     style: AppTextStyle.s20.copyWith(
-                      color: AppColors.textPrimary,
+                      color: context.primaryTextColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     'of \$${budget.toStringAsFixed(0)}',
                     style: AppTextStyle.s12in.copyWith(
-                      color: AppColors.textTertiary,
+                      color: context.secondaryTextColor,
                     ),
                   ),
                 ],
@@ -120,12 +120,12 @@ class BudgetStatusSummary extends StatelessWidget {
             ],
           ),
           AppGap.h16,
-          _buildProgressBar(percentage, status),
+          _buildProgressBar(percentage, status, context),
           AppGap.h8,
           Text(
             '${percentage.toStringAsFixed(1)}% of budget used',
             style: AppTextStyle.s12in.copyWith(
-              color: AppColors.textSecondary,
+              color: context.secondaryTextColor,
             ),
           ),
         ],
@@ -161,9 +161,9 @@ class BudgetStatusSummary extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBar(double percentage, BudgetStatus status) {
+  Widget _buildProgressBar(double percentage, BudgetStatus status, BuildContext context) {
     final clampedPercentage = percentage.clamp(0.0, 100.0).toDouble();
-    
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Stack(
@@ -171,7 +171,7 @@ class BudgetStatusSummary extends StatelessWidget {
           Container(
             height: 12,
             width: double.infinity,
-            color: AppColors.grey.withValues(alpha: 0.2),
+            color: context.surfaceVariant,
           ),
           FractionallySizedBox(
             widthFactor: clampedPercentage / 100,

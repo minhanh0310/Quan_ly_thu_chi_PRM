@@ -26,7 +26,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: AppColors.raisinBlack,
+              tooltipBgColor: context.isDarkMode ? const Color(0xFF29363D) : AppColors.raisinBlack,
               tooltipPadding: const EdgeInsets.all(8),
               tooltipMargin: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -34,7 +34,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
                 return BarTooltipItem(
                   '${isBudget ? "Budget" : "Actual"}: \$${rod.toY.toStringAsFixed(0)}',
                   AppTextStyle.s12in.copyWith(
-                    color: AppColors.white,
+                    color: context.surfaceColor,
                     fontWeight: FontWeight.w600,
                   ),
                 );
@@ -54,7 +54,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
                       child: Text(
                         data[index].month,
                         style: AppTextStyle.s12in.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.secondaryTextColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -72,9 +72,9 @@ class BudgetComparisonBarChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   return Text(
                     '\$${value.toInt()}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 10,
-                      color: AppColors.textTertiary,
+                      color: context.secondaryTextColor,
                     ),
                   );
                 },
@@ -94,13 +94,13 @@ class BudgetComparisonBarChart extends StatelessWidget {
             horizontalInterval: _getMaxY() / 4,
             getDrawingHorizontalLine: (value) {
               return FlLine(
-                color: AppColors.grey.withValues(alpha: 0.2),
+                color: context.borderColor.withValues(alpha: 0.2),
                 strokeWidth: 1,
                 dashArray: [5, 5],
               );
             },
           ),
-          barGroups: _buildBarGroups(),
+          barGroups: _buildBarGroups(context),
         ),
       ),
     );
@@ -117,7 +117,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
     return max * 1.2;
   }
 
-  List<BarChartGroupData> _buildBarGroups() {
+  List<BarChartGroupData> _buildBarGroups(BuildContext context) {
     return data.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
@@ -126,7 +126,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
         barRods: [
           BarChartRodData(
             toY: item.budget,
-            color: AppColors.primaryPurple,
+            color: context.primaryColor,
             width: 20,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(6),
@@ -169,14 +169,14 @@ class BarChartLegend extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildLegendItem('Budget', AppColors.primaryPurple),
+        _buildLegendItem('Budget', context.primaryColor, context),
         AppGap.w20,
-        _buildLegendItem('Actual', AppColors.green),
+        _buildLegendItem('Actual', AppColors.green, context),
       ],
     );
   }
 
-  Widget _buildLegendItem(String label, Color color) {
+  Widget _buildLegendItem(String label, Color color, BuildContext context) {
     return Row(
       children: [
         Container(
@@ -191,7 +191,7 @@ class BarChartLegend extends StatelessWidget {
         Text(
           label,
           style: AppTextStyle.s12in.copyWith(
-            color: AppColors.textSecondary,
+            color: context.secondaryTextColor,
           ),
         ),
       ],

@@ -105,6 +105,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             title: 'General Settings',
                             onTap: () {
                               Navigator.pop(context);
+                              // TODO: Navigate to General Settings screen
+                              // Hoặc hiện popup settings
                             },
                           ),
 
@@ -114,6 +116,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             title: 'Security & Biometrics',
                             onTap: () {
                               Navigator.pop(context);
+                              // Hiển popup Security & Biometrics
+                              SecurityBiometricsPopup.show(context);
                             },
                           ),
 

@@ -74,7 +74,7 @@ class BudgetWarningDialog extends StatelessWidget {
       child: Container(
         padding: AppPad.h24,
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: context.surfaceColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -102,10 +102,10 @@ class BudgetWarningDialog extends StatelessWidget {
               ),
             ),
             AppGap.h20,
-            
+
             // Title
             Text(
-              'Bạn đã tiêu lố ngân sách!',
+              'Budget exceeded!',
               style: AppTextStyle.s20.copyWith(
                 color: AppColors.expenseRed,
                 fontWeight: FontWeight.bold,
@@ -113,53 +113,53 @@ class BudgetWarningDialog extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             AppGap.h12,
-            
+
             // Description
             Text(
-              'Khoản chi mới này sẽ khiến tổng chi vượt quá ngân sách của bạn.',
+              'This new expense will make your total spending exceed the budget.',
               style: AppTextStyle.s14in.copyWith(
-                color: AppColors.textSecondary,
+                color: context.secondaryTextColor,
               ),
               textAlign: TextAlign.center,
             ),
             AppGap.h20,
-            
+
             // Stats
             Container(
               padding: AppPad.h16,
               decoration: BoxDecoration(
-                color: AppColors.backgroundLight,
+                color: context.surfaceVariant,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 children: [
                   _buildStatRow(
-                    'Ngân sách hiện tại:',
+                    'Current budget:',
                     '\$${budget.toStringAsFixed(0)}',
-                    AppColors.textSecondary,
+                    context.secondaryTextColor,
                   ),
                   AppGap.h8,
                   _buildStatRow(
-                    'Chi tiêu hiện tại:',
+                    'Current spending:',
                     '\$${currentExpense.toStringAsFixed(0)}',
-                    AppColors.textSecondary,
+                    context.secondaryTextColor,
                   ),
                   AppGap.h8,
                   _buildStatRow(
-                    'Khoản chi mới:',
+                    'New expense:',
                     '-\$${newExpenseAmount.toStringAsFixed(0)}',
                     AppColors.expenseRed,
                   ),
                   const Divider(height: 16),
                   _buildStatRow(
-                    'Tổng sau khi thêm:',
+                    'Total after adding:',
                     '\$${totalAfter.toStringAsFixed(0)} (${percentage.toStringAsFixed(0)}%)',
                     AppColors.expenseRed,
                     isBold: true,
                   ),
                   AppGap.h8,
                   _buildStatRow(
-                    'Vượt ngân sách:',
+                    'Over budget:',
                     '+\$${overAmount.toStringAsFixed(0)}',
                     AppColors.expenseRed,
                     isBold: true,
@@ -168,7 +168,7 @@ class BudgetWarningDialog extends StatelessWidget {
               ),
             ),
             AppGap.h24,
-            
+
             // Buttons
             Row(
               children: [
@@ -177,15 +177,15 @@ class BudgetWarningDialog extends StatelessWidget {
                     onPressed: onCancel ?? () => Navigator.of(context).pop(false),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      side: const BorderSide(color: AppColors.grey),
+                      side: BorderSide(color: context.borderColor),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: Text(
-                      'Hủy bỏ',
+                      'Cancel',
                       style: AppTextStyle.s16.copyWith(
-                        color: AppColors.textSecondary,
+                        color: context.primaryTextColor,
                       ),
                     ),
                   ),
@@ -202,9 +202,9 @@ class BudgetWarningDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Vẫn thêm',
+                      'Add anyway',
                       style: AppTextStyle.s16.copyWith(
-                        color: AppColors.white,
+                        color: context.surfaceColor,
                       ),
                     ),
                   ),
@@ -224,7 +224,7 @@ class BudgetWarningDialog extends StatelessWidget {
         Text(
           label,
           style: AppTextStyle.s14in.copyWith(
-            color: AppColors.textSecondary,
+            color: valueColor,
           ),
         ),
         Text(
@@ -253,7 +253,7 @@ class BudgetWarningBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = _getStatus(percentage);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -287,7 +287,7 @@ class BudgetWarningBanner extends StatelessWidget {
                   Text(
                     _getStatusMessage(status),
                     style: AppTextStyle.s12in.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.secondaryTextColor,
                     ),
                   ),
                 ],
@@ -336,22 +336,22 @@ class BudgetWarningBanner extends StatelessWidget {
   String _getStatusTitle(BudgetStatus status) {
     switch (status) {
       case BudgetStatus.safe:
-        return 'Ngân sách an toàn';
+        return 'Budget is safe';
       case BudgetStatus.warning:
-        return 'Cảnh báo ngân sách';
+        return 'Budget warning';
       case BudgetStatus.overSpent:
-        return 'Đã vượt ngân sách!';
+        return 'Over budget!';
     }
   }
 
   String _getStatusMessage(BudgetStatus status) {
     switch (status) {
       case BudgetStatus.safe:
-        return 'Bạn đang chi tiêu dưới 80% ngân sách';
+        return 'You have used less than 80% of your budget';
       case BudgetStatus.warning:
-        return 'Chi tiêu đã đạt 80-100% ngân sách';
+        return 'You have used 80–100% of your budget';
       case BudgetStatus.overSpent:
-        return 'Chi tiêu đã vượt quá ngân sách!';
+        return 'Your spending has exceeded the budget!';
     }
   }
 }

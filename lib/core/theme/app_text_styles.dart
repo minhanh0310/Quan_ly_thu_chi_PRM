@@ -19,7 +19,9 @@ class   AppTextStyle {
   static const String fontFamilySecondary = AppConst.interFont;
   static const TextStyle s10in = TextStyle(fontFamily: AppConst.interFont, fontSize: 10, height: 15/10, fontWeight: FontWeight.w500);
   static const TextStyle s12in = TextStyle(fontFamily: AppConst.interFont, fontSize: 12, height: 18/12, fontWeight: FontWeight.w500);
+  static const TextStyle s13in = TextStyle(fontFamily: AppConst.interFont, fontSize: 13, height: 19.5/13, fontWeight: FontWeight.w500);
   static const TextStyle s14in = TextStyle(fontFamily: AppConst.interFont, fontSize: 14, height: 21/14, fontWeight: FontWeight.w500);
+  static const TextStyle s15in = TextStyle(fontFamily: AppConst.interFont, fontSize: 15, height: 22.5/15, fontWeight: FontWeight.w500);
   static const TextStyle s16in = TextStyle(fontFamily: AppConst.interFont, fontSize: 16, height: 24/16, fontWeight: FontWeight.w500);
   static const TextStyle s18in = TextStyle(fontFamily: AppConst.interFont, fontSize: 18, height: 27/18, fontWeight: FontWeight.w500);
   static const TextStyle s20in = TextStyle(fontFamily: AppConst.interFont, fontSize: 20, height: 30/20, fontWeight: FontWeight.w500);

@@ -34,6 +34,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return FunctionScreenTemplate(
+      backgroundColor: context.backgroundColor,
       onOpenDrawer: widget.onOpenDrawer,
       screen: _Body(tabController: _tabController),
     );
@@ -66,7 +67,7 @@ class _Body extends StatelessWidget {
                     Text(
                       'Statistics',
                       style: AppTextStyle.s24.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.primaryTextColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -74,7 +75,7 @@ class _Body extends StatelessWidget {
                     Text(
                       'Track your budget and expenses',
                       style: AppTextStyle.s14in.copyWith(
-                        color: AppColors.textSecondary,
+                        color: context.secondaryTextColor,
                       ),
                     ),
                   ],
@@ -90,17 +91,17 @@ class _Body extends StatelessWidget {
         Container(
           margin: AppPad.h20,
           decoration: BoxDecoration(
-            color: AppColors.backgroundLight,
+            color: context.surfaceVariant,
             borderRadius: BorderRadius.circular(12),
           ),
           child: TabBar(
             controller: tabController,
-            labelColor: AppColors.white,
-            unselectedLabelColor: AppColors.textSecondary,
+            labelColor: context.onPrimaryColor,
+            unselectedLabelColor: context.secondaryTextColor,
             indicatorSize: TabBarIndicatorSize.tab,
             dividerColor: Colors.transparent,
             indicator: BoxDecoration(
-              color: AppColors.primaryPurple,
+              color: context.primaryColor,
               borderRadius: BorderRadius.circular(12),
             ),
             labelStyle: AppTextStyle.s14.copyWith(fontWeight: FontWeight.w600),
@@ -111,6 +112,8 @@ class _Body extends StatelessWidget {
             ],
           ),
         ),
+
+        AppGap.h16,
 
         // Tab content
         Expanded(
@@ -150,16 +153,16 @@ class _OverviewTab extends StatelessWidget {
           AppGap.h24,
 
           // Bar Chart Section
-          _buildSectionTitle('Budget vs Actual'),
+          _buildSectionTitle('Budget vs Actual', context),
           AppGap.h12,
           Container(
             padding: AppPad.h16,
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: context.surfaceColor,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.05),
+                  color: context.shadowColor,
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -187,11 +190,11 @@ class _OverviewTab extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, BuildContext context) {
     return Text(
       title,
       style: AppTextStyle.s20.copyWith(
-        color: AppColors.textPrimary,
+        color: context.primaryTextColor,
         fontWeight: FontWeight.w600,
       ),
     );
@@ -212,16 +215,16 @@ class _CategoriesTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Pie Chart Section
-          _buildSectionTitle('Expense by Category'),
+          _buildSectionTitle('Expense by Category', context),
           AppGap.h12,
           Container(
             padding: AppPad.h16,
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: context.surfaceColor,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.05),
+                  color: context.shadowColor,
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -233,16 +236,16 @@ class _CategoriesTab extends StatelessWidget {
           AppGap.h24,
 
           // Category Breakdown List
-          _buildSectionTitle('Category Breakdown'),
+          _buildSectionTitle('Category Breakdown', context),
           AppGap.h12,
           Container(
             padding: AppPad.h16,
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: context.surfaceColor,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.05),
+                  color: context.shadowColor,
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -257,11 +260,11 @@ class _CategoriesTab extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, BuildContext context) {
     return Text(
       title,
       style: AppTextStyle.s20.copyWith(
-        color: AppColors.textPrimary,
+        color: context.primaryTextColor,
         fontWeight: FontWeight.w600,
       ),
     );

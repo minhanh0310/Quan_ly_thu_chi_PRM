@@ -6,7 +6,7 @@ class GetStartedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -14,7 +14,7 @@ class GetStartedScreen extends StatelessWidget {
             children: [
               AppGap.h60,
 
-              _buildHeader(),
+              _buildHeader(context),
 
               AppGap.h40,
 
@@ -22,7 +22,8 @@ class GetStartedScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildFeatureCard(
-                      bgColor: Color(0xffE3EEEF),
+                      context: context,
+                      bgColor: context.surfaceVariant,
                       icon: Icons.language,
                       iconColor: AppColors.white,
                       iconBgColor: Color(0xff0890FE),
@@ -33,7 +34,8 @@ class GetStartedScreen extends StatelessWidget {
                   AppGap.w16,
                   Expanded(
                     child: _buildFeatureCard(
-                      bgColor: Color(0xffE3EEEF),
+                      context: context,
+                      bgColor: context.surfaceVariant,
                       icon: Icons.check_sharp,
                       iconColor: AppColors.white,
                       iconBgColor: AppColors.green,
@@ -61,7 +63,7 @@ class GetStartedScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -83,7 +85,7 @@ class GetStartedScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             RichText(
-              text: const TextSpan(
+              text: TextSpan(
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -92,7 +94,7 @@ class GetStartedScreen extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'Master Your ',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: context.primaryTextColor),
                   ),
                   TextSpan(
                     text: 'Finances',
@@ -104,9 +106,13 @@ class GetStartedScreen extends StatelessWidget {
 
             AppGap.h12,
 
-            const Text(
+            Text(
               'Track income, plan for your dream home,\nand reach your financial goals with ease.',
-              style: TextStyle(fontSize: 14, color: Colors.grey, height: 1.5),
+              style: TextStyle(
+                fontSize: 14,
+                color: context.secondaryTextColor,
+                height: 1.5,
+              ),
             ),
           ],
         ),
@@ -115,6 +121,7 @@ class GetStartedScreen extends StatelessWidget {
   }
 
   Widget _buildFeatureCard({
+    required BuildContext context,
     required Color bgColor,
     required IconData icon,
     required Color iconColor,
@@ -145,7 +152,7 @@ class GetStartedScreen extends StatelessWidget {
           Text(
             title,
             style: AppTextStyle.s16.copyWith(
-              color: AppColors.black,
+              color: context.primaryTextColor,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -154,7 +161,7 @@ class GetStartedScreen extends StatelessWidget {
 
           Text(
             subtitle,
-            style: AppTextStyle.s12.copyWith(color: AppColors.grey),
+            style: AppTextStyle.s12.copyWith(color: context.secondaryTextColor),
           ),
         ],
       ),
