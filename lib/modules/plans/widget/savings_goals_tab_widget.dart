@@ -2,6 +2,8 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/savings_goal_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plan_detail_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SavingsGoalsTabWidget extends StatefulWidget {
@@ -329,14 +331,9 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                     labelText: 'plans_screen.target_amount'.tr(),
                     hintText: '10000000',
                     prefixIcon: const Icon(Icons.attach_money_rounded),
-                    prefixText: 'VND ',
-                    border: OutlineInputBorder(
-                      borderRadius: AppBorderRadius.a12,
-                    ),
+                    prefixText: context.read<CurrencyProvider>().inputPrefix,
                   ),
                 ),
-                AppGap.h16,
-                // End date
                 InkWell(
                   onTap: () async {
                     final date = await showDatePicker(
@@ -471,7 +468,7 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
               ),
               AppGap.h8,
               Text(
-                '${'plans_screen.available_from_financial_freedom'.tr()}: ${_formatCurrency(ffBalance)}',
+                '${'plans_screen.available_from_financial_freedom'.tr()}: ${_formatCurrency(context, ffBalance)}',
                 style: AppTextStyle.s14in.copyWith(
                   color: AppColors.primaryPurple,
                   fontWeight: FontWeight.w600,
@@ -479,7 +476,7 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
               ),
               AppGap.h8,
               Text(
-                'Target: ${_formatCurrency(goal.targetAmount)} · Current: ${_formatCurrency(goal.currentAmount)}',
+                'Target: ${_formatCurrency(context, goal.targetAmount)} · Current: ${_formatCurrency(context, goal.currentAmount)}',
                 style: AppTextStyle.s14in.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -492,7 +489,7 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                 decoration: InputDecoration(
                   labelText: 'plans_screen.amount'.tr(),
                   hintText: '0',
-                  prefixText: 'VND ',
+                  prefixText: context.read<CurrencyProvider>().inputPrefix,
                   border: OutlineInputBorder(borderRadius: AppBorderRadius.a12),
                 ),
               ),
@@ -543,13 +540,8 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
     );
   }
 
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M VND';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K VND';
-    }
-    return '${amount.toStringAsFixed(0)} VND';
+  String _formatCurrency(BuildContext context, double amount) {
+    return context.read<CurrencyProvider>().formatCurrency(amount);
   }
 }
 
@@ -639,7 +631,7 @@ class _FinancialJourneyCard extends StatelessWidget {
                     ),
                     AppGap.h4,
                     Text(
-                      'Goal: ${_formatCurrency(goal.targetAmount)}',
+                      'Goal: ${_formatCurrency(context, goal.targetAmount)}',
                       style: AppTextStyle.s14in.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -783,13 +775,8 @@ class _FinancialJourneyCard extends StatelessWidget {
     );
   }
 
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M VND';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K VND';
-    }
-    return '${amount.toStringAsFixed(0)} VND';
+  String _formatCurrency(BuildContext context, double amount) {
+    return context.read<CurrencyProvider>().formatCurrency(amount);
   }
 
   String _formatDate(DateTime d) {

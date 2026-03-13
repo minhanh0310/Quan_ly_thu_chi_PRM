@@ -1,5 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/recurring_transaction_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 
 class RecurringTransactionsTabWidget extends StatelessWidget {
   const RecurringTransactionsTabWidget({super.key});
@@ -11,12 +13,12 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
     final incomeTransactions = transactions.where((t) => t.isIncome).toList();
     final dueSoonTransactions = transactions.where((t) => t.isDueSoon).toList();
     final overdueTransactions = transactions.where((t) => t.isOverdue).toList();
-    
+
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(child: AppGap.h20),
-        
+
         // Upcoming Payments Summary
         if (dueSoonTransactions.isNotEmpty || overdueTransactions.isNotEmpty)
           SliverToBoxAdapter(
@@ -28,7 +30,7 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
               ),
             ),
           ),
-        
+
         // Section Header - Expenses
         SliverToBoxAdapter(
           child: Padding(
@@ -57,22 +59,19 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Expenses List
         if (expenseTransactions.isNotEmpty)
           SliverPadding(
             padding: AppPad.h20,
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final transaction = expenseTransactions[index];
-                  return Padding(
-                    padding: AppPad.b12,
-                    child: _RecurringTransactionCard(transaction: transaction),
-                  );
-                },
-                childCount: expenseTransactions.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final transaction = expenseTransactions[index];
+                return Padding(
+                  padding: AppPad.b12,
+                  child: _RecurringTransactionCard(transaction: transaction),
+                );
+              }, childCount: expenseTransactions.length),
             ),
           )
         else
@@ -85,7 +84,7 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
               ),
             ),
           ),
-        
+
         // Section Header - Income
         SliverToBoxAdapter(
           child: Padding(
@@ -99,22 +98,19 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Income List
         if (incomeTransactions.isNotEmpty)
           SliverPadding(
             padding: AppPad.h20,
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final transaction = incomeTransactions[index];
-                  return Padding(
-                    padding: AppPad.b12,
-                    child: _RecurringTransactionCard(transaction: transaction),
-                  );
-                },
-                childCount: incomeTransactions.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final transaction = incomeTransactions[index];
+                return Padding(
+                  padding: AppPad.b12,
+                  child: _RecurringTransactionCard(transaction: transaction),
+                );
+              }, childCount: incomeTransactions.length),
             ),
           )
         else
@@ -127,7 +123,7 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
               ),
             ),
           ),
-        
+
         SliverToBoxAdapter(child: AppGap.h100),
       ],
     );
@@ -138,10 +134,7 @@ class _UpcomingPaymentsCard extends StatelessWidget {
   final List<RecurringTransactionModel> dueSoon;
   final List<RecurringTransactionModel> overdue;
 
-  const _UpcomingPaymentsCard({
-    required this.dueSoon,
-    required this.overdue,
-  });
+  const _UpcomingPaymentsCard({required this.dueSoon, required this.overdue});
 
   @override
   Widget build(BuildContext context) {
@@ -153,16 +146,25 @@ class _UpcomingPaymentsCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: overdue.isNotEmpty
-              ? [AppColors.expenseRed, AppColors.expenseRed.withValues(alpha: 0.8)]
-              : [AppColors.accentYellow, AppColors.accentYellow.withValues(alpha: 0.8)],
+              ? [
+                  AppColors.expenseRed,
+                  AppColors.expenseRed.withValues(alpha: 0.8),
+                ]
+              : [
+                  AppColors.accentYellow,
+                  AppColors.accentYellow.withValues(alpha: 0.8),
+                ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: AppBorderRadius.a20,
         boxShadow: [
           BoxShadow(
-            color: (overdue.isNotEmpty ? AppColors.expenseRed : AppColors.accentYellow)
-                .withValues(alpha: 0.3),
+            color:
+                (overdue.isNotEmpty
+                        ? AppColors.expenseRed
+                        : AppColors.accentYellow)
+                    .withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -174,17 +176,15 @@ class _UpcomingPaymentsCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                overdue.isNotEmpty 
-                    ? Icons.warning_rounded 
+                overdue.isNotEmpty
+                    ? Icons.warning_rounded
                     : Icons.notifications_active_rounded,
                 color: Colors.white,
                 size: 24,
               ),
               AppGap.w12,
               Text(
-                overdue.isNotEmpty 
-                    ? 'Overdue Payments' 
-                    : 'Upcoming Payments',
+                overdue.isNotEmpty ? 'Overdue Payments' : 'Upcoming Payments',
                 style: AppTextStyle.s18in.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -196,12 +196,10 @@ class _UpcomingPaymentsCard extends StatelessWidget {
           if (overdue.isNotEmpty) ...[
             Text(
               '${overdue.length} payment(s) overdue',
-              style: AppTextStyle.s14in.copyWith(
-                color: Colors.white,
-              ),
+              style: AppTextStyle.s14in.copyWith(color: Colors.white),
             ),
             Text(
-              'Total: ${_formatCurrency(totalOverdue)}',
+              'Total: ${_formatCurrency(context, totalOverdue)}',
               style: AppTextStyle.s16in.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -210,12 +208,10 @@ class _UpcomingPaymentsCard extends StatelessWidget {
           ] else ...[
             Text(
               '${dueSoon.length} payment(s) due within 3 days',
-              style: AppTextStyle.s14in.copyWith(
-                color: Colors.white,
-              ),
+              style: AppTextStyle.s14in.copyWith(color: Colors.white),
             ),
             Text(
-              'Total: ${_formatCurrency(totalDueSoon)}',
+              'Total: ${_formatCurrency(context, totalDueSoon)}',
               style: AppTextStyle.s16in.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -232,7 +228,9 @@ class _UpcomingPaymentsCard extends StatelessWidget {
               itemCount: overdue.isNotEmpty ? overdue.length : dueSoon.length,
               separatorBuilder: (_, __) => AppGap.w8,
               itemBuilder: (context, index) {
-                final item = overdue.isNotEmpty ? overdue[index] : dueSoon[index];
+                final item = overdue.isNotEmpty
+                    ? overdue[index]
+                    : dueSoon[index];
                 return Container(
                   padding: AppPad.a12,
                   decoration: BoxDecoration(
@@ -253,7 +251,7 @@ class _UpcomingPaymentsCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        _formatCurrency(item.amount),
+                        _formatCurrency(context, item.amount),
                         style: AppTextStyle.s14in.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -269,14 +267,9 @@ class _UpcomingPaymentsCard extends StatelessWidget {
       ),
     );
   }
-  
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M VND';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K VND';
-    }
-    return '${amount.toStringAsFixed(0)} VND';
+
+  String _formatCurrency(BuildContext context, double amount) {
+    return context.read<CurrencyProvider>().formatCurrency(amount);
   }
 }
 
@@ -315,9 +308,9 @@ class _RecurringTransactionCard extends StatelessWidget {
               size: 24,
             ),
           ),
-          
+
           AppGap.w12,
-          
+
           // Transaction Info
           Expanded(
             child: Column(
@@ -370,23 +363,23 @@ class _RecurringTransactionCard extends StatelessWidget {
                     Icon(
                       Icons.calendar_today_rounded,
                       size: 12,
-                      color: transaction.isOverdue 
-                          ? AppColors.expenseRed 
-                          : transaction.isDueSoon 
-                              ? AppColors.accentYellow 
-                              : AppColors.textTertiary,
+                      color: transaction.isOverdue
+                          ? AppColors.expenseRed
+                          : transaction.isDueSoon
+                          ? AppColors.accentYellow
+                          : AppColors.textTertiary,
                     ),
                     AppGap.w4,
                     Text(
-                      transaction.isOverdue 
+                      transaction.isOverdue
                           ? 'Overdue: ${_formatDate(transaction.nextDueDate)}'
                           : 'Next: ${_formatDate(transaction.nextDueDate)}',
                       style: AppTextStyle.s12in.copyWith(
-                        color: transaction.isOverdue 
-                            ? AppColors.expenseRed 
-                            : transaction.isDueSoon 
-                                ? AppColors.accentYellow 
-                                : AppColors.textTertiary,
+                        color: transaction.isOverdue
+                            ? AppColors.expenseRed
+                            : transaction.isDueSoon
+                            ? AppColors.accentYellow
+                            : AppColors.textTertiary,
                       ),
                     ),
                     if (transaction.isDueSoon && !transaction.isOverdue) ...[
@@ -439,19 +432,19 @@ class _RecurringTransactionCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Amount
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                transaction.isIncome 
-                    ? '+${_formatCurrency(transaction.amount)}'
-                    : '-${_formatCurrency(transaction.amount)}',
+                transaction.isIncome
+                    ? '+${_formatCurrency(context, transaction.amount)}'
+                    : '-${_formatCurrency(context, transaction.amount)}',
                 style: AppTextStyle.s16in.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: transaction.isIncome 
-                      ? AppColors.incomeGreen 
+                  color: transaction.isIncome
+                      ? AppColors.incomeGreen
                       : AppColors.expenseRed,
                 ),
               ),
@@ -464,7 +457,9 @@ class _RecurringTransactionCard extends StatelessWidget {
                   onChanged: (value) {
                     print('====> Toggle ${transaction.title}: $value');
                   },
-                  activeTrackColor: AppColors.primaryPurple.withValues(alpha: 0.5),
+                  activeTrackColor: AppColors.primaryPurple.withValues(
+                    alpha: 0.5,
+                  ),
                   activeThumbColor: AppColors.primaryPurple,
                 ),
               ),
@@ -474,16 +469,11 @@ class _RecurringTransactionCard extends StatelessWidget {
       ),
     );
   }
-  
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K';
-    }
-    return amount.toStringAsFixed(0);
+
+  String _formatCurrency(BuildContext context, double amount) {
+    return context.read<CurrencyProvider>().formatCurrency(amount);
   }
-  
+
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}';
   }
@@ -493,10 +483,7 @@ class _EmptyStateCard extends StatelessWidget {
   final IconData icon;
   final String message;
 
-  const _EmptyStateCard({
-    required this.icon,
-    required this.message,
-  });
+  const _EmptyStateCard({required this.icon, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -505,23 +492,15 @@ class _EmptyStateCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.lightGrayBackground,
         borderRadius: AppBorderRadius.a16,
-        border: Border.all(
-          color: AppColors.grey.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: AppColors.grey.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
-          Icon(
-            icon,
-            size: 48,
-            color: AppColors.grey.withValues(alpha: 0.5),
-          ),
+          Icon(icon, size: 48, color: AppColors.grey.withValues(alpha: 0.5)),
           AppGap.h12,
           Text(
             message,
-            style: AppTextStyle.s14in.copyWith(
-              color: AppColors.grey,
-            ),
+            style: AppTextStyle.s14in.copyWith(color: AppColors.grey),
             textAlign: TextAlign.center,
           ),
         ],

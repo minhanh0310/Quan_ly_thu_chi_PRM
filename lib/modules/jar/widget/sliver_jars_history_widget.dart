@@ -1,6 +1,8 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_list_widget.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarsHistoryWidget extends StatelessWidget {
@@ -34,8 +36,8 @@ class _HistoryCard extends StatelessWidget {
 
   const _HistoryCard({required this.entry});
 
-  String _formatAmount(double v) =>
-      v >= 1000 ? '\$${(v / 1000).toStringAsFixed(0)},000' : '\$${v.toInt()}';
+  String _formatAmount(BuildContext context, double v) =>
+      context.read<CurrencyProvider>().formatCurrency(v);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,7 @@ class _HistoryCard extends StatelessWidget {
 
           // Amount
           Text(
-            '+${_formatAmount(entry.amount)}',  
+            '+${_formatAmount(context, entry.amount)}',
             style: AppTextStyle.s14in.copyWith(
               color: AppColors.incomeGreen,
               fontWeight: FontWeight.bold,

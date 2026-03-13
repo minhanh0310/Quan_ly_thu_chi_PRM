@@ -1,5 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/savings_goal_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class PlanDetailScreen extends StatelessWidget {
@@ -17,14 +19,8 @@ class PlanDetailScreen extends StatelessWidget {
   static String _formatDate(DateTime d) =>
       '${d.day.toString().padLeft(2, '0')}-${d.month.toString().padLeft(2, '0')}-${d.year}';
 
-  static String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M VND';
-    }
-    if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K VND';
-    }
-    return '${amount.toStringAsFixed(0)} VND';
+  String _formatCurrency(BuildContext context, double amount) {
+    return context.read<CurrencyProvider>().formatCurrency(amount);
   }
 
   @override
@@ -54,7 +50,7 @@ class PlanDetailScreen extends StatelessWidget {
                       AppGap.h20,
                       _buildProgressCard(context, goal),
                       AppGap.h16,
-                      if (!goal.isCompleted) _buildSmartForecast(goal),
+                      if (!goal.isCompleted) _buildSmartForecast(context, goal),
                       AppGap.h16,
                       _buildJourneySection(goal),
                       AppGap.h24,
@@ -176,9 +172,7 @@ class PlanDetailScreen extends StatelessWidget {
                   AppGap.w4,
                   Text(
                     '${'plans_screen.end_date'.tr()}: ${_formatDate(goal.deadline)}',
-                    style: AppTextStyle.s12in.copyWith(
-                      color: AppColors.white,
-                    ),
+                    style: AppTextStyle.s12in.copyWith(color: AppColors.white),
                   ),
                 ],
               ),
@@ -252,7 +246,7 @@ class PlanDetailScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _formatCurrency(goal.currentAmount),
+                    _formatCurrency(context, goal.currentAmount),
                     style: AppTextStyle.s16in.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.incomeGreen,
@@ -270,7 +264,7 @@ class PlanDetailScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _formatCurrency(goal.remainingAmount),
+                    _formatCurrency(context, goal.remainingAmount),
                     style: AppTextStyle.s16in.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.expenseRed,
@@ -285,13 +279,16 @@ class PlanDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSmartForecast(SavingsGoalModel goal) {
+  Widget _buildSmartForecast(BuildContext context, SavingsGoalModel goal) {
     final monthly = goal.monthlyRequired;
     final monthsLeft = goal.deadline.difference(DateTime.now()).inDays / 30;
     String forecast = '';
     if (monthsLeft > 0 && monthly > 0) {
-      final estimatedMonth = DateTime.now().add(Duration(days: (goal.remainingAmount / monthly * 30).round()));
-      forecast = 'Với tốc độ tiết kiệm ${_formatCurrency(monthly)}/tháng, bạn sẽ hoàn thành mục tiêu này vào tháng ${estimatedMonth.month}/${estimatedMonth.year}.';
+      final estimatedMonth = DateTime.now().add(
+        Duration(days: (goal.remainingAmount / monthly * 30).round()),
+      );
+      forecast =
+          'Với tốc độ tiết kiệm ${_formatCurrency(context, monthly)}/tháng, bạn sẽ hoàn thành mục tiêu này vào tháng ${estimatedMonth.month}/${estimatedMonth.year}.';
     }
     if (forecast.isEmpty) forecast = 'Thêm tiền tích lũy để xem dự báo.';
     return Container(
@@ -299,18 +296,12 @@ class PlanDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: goal.color.withValues(alpha: 0.08),
         borderRadius: AppBorderRadius.a12,
-        border: Border.all(
-          color: goal.color.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: goal.color.withValues(alpha: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.trending_up_rounded,
-            color: goal.color,
-            size: 24,
-          ),
+          Icon(Icons.trending_up_rounded, color: goal.color, size: 24),
           AppGap.w12,
           Expanded(
             child: Column(
@@ -410,7 +401,10 @@ class PlanDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAccumulationHistory(BuildContext context, SavingsGoalModel goal) {
+  Widget _buildAccumulationHistory(
+    BuildContext context,
+    SavingsGoalModel goal,
+  ) {
     final history = goal.accumulationHistory;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -510,7 +504,7 @@ class PlanDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '+${_formatCurrency(entry.amount)}',
+                        '+${_formatCurrency(context, entry.amount)}',
                         style: AppTextStyle.s14in.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.incomeGreen,
@@ -534,9 +528,7 @@ class PlanDetailScreen extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(ctx).viewInsets.bottom,
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
         decoration: const BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -560,13 +552,11 @@ class PlanDetailScreen extends StatelessWidget {
               AppGap.h20,
               Text(
                 '${'plans_screen.add_to_plan'.tr()} "${goal.name}"',
-                style: AppTextStyle.s18in.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyle.s18in.copyWith(fontWeight: FontWeight.bold),
               ),
               AppGap.h8,
               Text(
-                '${'plans_screen.available_from_financial_freedom'.tr()}: ${_formatCurrency(balance)}',
+                '${'plans_screen.available_from_financial_freedom'.tr()}: ${_formatCurrency(ctx, balance)}',
                 style: AppTextStyle.s14in.copyWith(
                   color: AppColors.primaryPurple,
                   fontWeight: FontWeight.w600,
@@ -580,10 +570,8 @@ class PlanDetailScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'plans_screen.amount'.tr(),
                   hintText: '0',
-                  prefixText: 'VND ',
-                  border: OutlineInputBorder(
-                    borderRadius: AppBorderRadius.a12,
-                  ),
+                  prefixText: ctx.read<CurrencyProvider>().inputPrefix,
+                  border: OutlineInputBorder(borderRadius: AppBorderRadius.a12),
                 ),
               ),
               AppGap.h20,

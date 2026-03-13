@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 
 /// Bar chart widget comparing Budget vs Actual spending
 class BudgetComparisonBarChart extends StatelessWidget {
@@ -17,6 +19,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cp = context.read<CurrencyProvider>();
     return Container(
       height: height,
       padding: const EdgeInsets.only(right: 16, top: 16),
@@ -38,7 +41,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
                     ? 'stats_screen.budget'.tr()
                     : 'stats_screen.actual'.tr();
                 return BarTooltipItem(
-                  '$label: \$${rod.toY.toStringAsFixed(0)}',
+                  '$label: ${context.read<CurrencyProvider>().formatCurrency(rod.toY)}',
                   AppTextStyle.s12in.copyWith(
                     color: context.surfaceColor,
                     fontWeight: FontWeight.w600,
@@ -77,7 +80,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
                 reservedSize: 50,
                 getTitlesWidget: (value, meta) {
                   return Text(
-                    '\$${value.toInt()}',
+                    cp.formatCurrency(value),
                     style: TextStyle(
                       fontSize: 10,
                       color: context.secondaryTextColor,

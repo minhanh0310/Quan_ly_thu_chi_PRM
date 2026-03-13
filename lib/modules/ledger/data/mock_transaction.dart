@@ -3,7 +3,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Salary',
     'date': '2024-02-01',
-    'amount': '+\$5,000',
+    'rawAmount': 5000.0,
     'category': 'INCOMING',
     'tag': 'work',
     'isIncome': true,
@@ -11,7 +11,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Rent',
     'date': '2024-02-02',
-    'amount': '-\$1,200',
+    'rawAmount': 1200.0,
     'category': 'RECURRING',
     'tag': 'living',
     'isIncome': false,
@@ -19,7 +19,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Food',
     'date': '2024-02-03',
-    'amount': '-\$50',
+    'rawAmount': 50.0,
     'category': '',
     'tag': 'food',
     'isIncome': false,
@@ -27,7 +27,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Freelance Project',
     'date': '2024-02-04',
-    'amount': '+\$800',
+    'rawAmount': 800.0,
     'category': 'INCOMING',
     'tag': null,
     'isIncome': true,
@@ -35,7 +35,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Electricity Bill',
     'date': '2024-02-05',
-    'amount': '-\$120',
+    'rawAmount': 120.0,
     'category': 'RECURRING',
     'tag': 'utilities',
     'isIncome': false,
@@ -43,7 +43,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Coffee',
     'date': '2024-02-06',
-    'amount': '-\$15',
+    'rawAmount': 15.0,
     'category': '',
     'tag': 'food',
     'isIncome': false,
@@ -51,7 +51,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Investment Return',
     'date': '2024-02-07',
-    'amount': '+\$250',
+    'rawAmount': 250.0,
     'category': 'INCOMING',
     'tag': 'investment',
     'isIncome': true,
@@ -59,7 +59,7 @@ final List<Map<String, dynamic>> mockTransactions = [
   {
     'title': 'Gym Membership',
     'date': '2024-02-08',
-    'amount': '-\$60',
+    'rawAmount': 60.0,
     'category': 'RECURRING',
     'tag': 'health',
     'isIncome': false,

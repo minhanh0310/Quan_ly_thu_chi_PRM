@@ -1,3 +1,4 @@
+import 'package:Quan_ly_thu_chi_PRM/core/widgets/responsive_layout.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/opacity_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/template/button_widget.dart';
@@ -105,7 +106,7 @@ class _FunctionScreenTemplateState extends State<FunctionScreenTemplate>
                 )
               : null,
 
-          body: SafeArea(child: body),
+          body: ResponsiveLayout(child: body),
 
           bottomNavigationBar: widget.isShowBottomButton
               ? Column(

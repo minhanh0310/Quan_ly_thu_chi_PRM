@@ -1,5 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarCardWidget extends StatelessWidget {
@@ -7,18 +9,13 @@ class SliverJarCardWidget extends StatelessWidget {
 
   const SliverJarCardWidget({super.key, required this.jar});
 
-  String _formatAmount(double v) {
-    final intVal = v.toInt().toString();
-    if (intVal.length > 3) {
-      return '\$${intVal.substring(0, intVal.length - 3)},${intVal.substring(intVal.length - 3)}';
-    }
-    return '\$$intVal';
-  }
-
   @override
   Widget build(BuildContext context) {
     final targetPct = (jar.targetPercent * 100).toStringAsFixed(0);
     final actualPct = (jar.actualPercent * 100).toStringAsFixed(1);
+    final formattedAmount = context.read<CurrencyProvider>().formatCurrency(
+      jar.amount,
+    );
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -49,10 +46,7 @@ class SliverJarCardWidget extends StatelessWidget {
                   color: jar.color,
                 ),
               ),
-              _JarAmountDetail(
-                amount: _formatAmount(jar.amount),
-                color: jar.color,
-              ),
+              _JarAmountDetail(amount: formattedAmount, color: jar.color),
             ],
           ),
 

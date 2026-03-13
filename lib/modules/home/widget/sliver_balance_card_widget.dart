@@ -1,5 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/screen/jars_detail_screen.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SliverBalanceCardWidget extends StatefulWidget {
@@ -59,7 +61,9 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _isBalanceVisible ? '\$53,500' : '••••••',
+                _isBalanceVisible
+                    ? context.read<CurrencyProvider>().formatCurrency(53500)
+                    : '••••••',
                 // TODO: Bind với data từ BLoC/Provider
                 style: AppTextStyle.s28in.copyWith(
                   color: AppColors.white,
@@ -114,7 +118,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                   icon: IconPath.arrowUpRight,
                   iconColor: const Color(0xFF00D09E),
                   label: 'home_screen.income'.tr(),
-                  amount: '\$5,000',
+                  amount: context.read<CurrencyProvider>().formatCurrency(5000),
                   // TODO: Bind data
                   backgroundColor: AppColors.white.withAlpha(38),
                   progressValue: 1.0,
@@ -127,7 +131,7 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                   icon: IconPath.arrowDownLeft,
                   iconColor: const Color(0xFFFF6B93),
                   label: 'home_screen.expense'.tr(),
-                  amount: '\$1,250',
+                  amount: context.read<CurrencyProvider>().formatCurrency(1250),
                   // TODO: Bind data
                   backgroundColor: AppColors.white.withAlpha(38),
                   progressValue: 0.25,

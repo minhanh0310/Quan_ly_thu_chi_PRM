@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 
 /// Pie chart widget showing expense breakdown by category
 class ExpensePieChart extends StatefulWidget {
@@ -180,7 +182,9 @@ class CategoryBreakdownList extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '\$${item.amount.toStringAsFixed(0)}',
+                    context.read<CurrencyProvider>().formatCurrency(
+                      item.amount,
+                    ),
                     style: AppTextStyle.s14.copyWith(
                       color: context.primaryTextColor,
                       fontWeight: FontWeight.w600,

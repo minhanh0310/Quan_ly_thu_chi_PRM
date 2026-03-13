@@ -1,4 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 /// Recent Activity Widget - Sử dụng theme constants và SliverList
@@ -8,6 +10,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: Replace với data từ BLoC/Provider
+    final cp = context.read<CurrencyProvider>();
     final mockActivities = [
       {
         'icon': IconPath.arrowUpRight,
@@ -15,7 +18,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Salary',
         'date': '2024-02-01',
-        'amount': '+\$5,000',
+        'amount': '+${cp.formatCurrency(5000)}',
         'isIncome': true,
       },
       {
@@ -24,7 +27,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'backgroundColor': AppColors.expenseLightRed,
         'title': 'Rent',
         'date': '2024-02-02',
-        'amount': '-\$1,200',
+        'amount': '-${cp.formatCurrency(1200)}',
         'isIncome': false,
       },
       {
@@ -33,7 +36,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'backgroundColor': AppColors.expenseLightRed,
         'title': 'Groceries',
         'date': '2024-02-03',
-        'amount': '-\$450',
+        'amount': '-${cp.formatCurrency(450)}',
         'isIncome': false,
       },
       {
@@ -42,7 +45,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
         'backgroundColor': AppColors.incomeLightGreen,
         'title': 'Freelance',
         'date': '2024-02-04',
-        'amount': '+\$2,300',
+        'amount': '+${cp.formatCurrency(2300)}',
         'isIncome': true,
       },
     ];

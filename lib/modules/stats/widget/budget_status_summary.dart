@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 
 /// Widget displaying budget status summary with remaining/overspent amount
 class BudgetStatusSummary extends StatelessWidget {
@@ -21,6 +23,7 @@ class BudgetStatusSummary extends StatelessWidget {
     final percentage = budget > 0 ? (expense / budget) * 100 : 0.0;
     final isOverSpent = expense > budget;
     final status = _getStatus(percentage);
+    final cp = context.read<CurrencyProvider>();
 
     return Container(
       padding: AppPad.h20,
@@ -76,14 +79,14 @@ class BudgetStatusSummary extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          isOverSpent ? '-\$' : '+\$',
+                          isOverSpent ? '-' : '+',
                           style: AppTextStyle.s20.copyWith(
                             color: _getStatusColor(status),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          remaining.abs().toStringAsFixed(0),
+                          cp.formatCurrency(remaining.abs()),
                           style: AppTextStyle.s28.copyWith(
                             color: _getStatusColor(status),
                             fontWeight: FontWeight.bold,
@@ -105,7 +108,7 @@ class BudgetStatusSummary extends StatelessWidget {
                   ),
                   AppGap.h4,
                   Text(
-                    '\$${expense.toStringAsFixed(0)}',
+                    cp.formatCurrency(expense),
                     style: AppTextStyle.s20.copyWith(
                       color: context.primaryTextColor,
                       fontWeight: FontWeight.w600,
@@ -113,7 +116,7 @@ class BudgetStatusSummary extends StatelessWidget {
                   ),
                   Text(
                     'stats_screen.of_budget'.tr(
-                      args: [budget.toStringAsFixed(0)],
+                      args: [cp.formatCurrency(budget)],
                     ),
                     style: AppTextStyle.s12in.copyWith(
                       color: context.secondaryTextColor,

@@ -1,5 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/budget_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 
 class BudgetTabWidget extends StatelessWidget {
   const BudgetTabWidget({super.key});
@@ -7,12 +9,12 @@ class BudgetTabWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final budgets = BudgetModel.mockList;
-    
+
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(child: AppGap.h20),
-        
+
         // Summary Card
         SliverToBoxAdapter(
           child: Padding(
@@ -20,7 +22,7 @@ class BudgetTabWidget extends StatelessWidget {
             child: _BudgetSummaryCard(budgets: budgets),
           ),
         ),
-        
+
         // Section Header
         SliverToBoxAdapter(
           child: Padding(
@@ -49,24 +51,21 @@ class BudgetTabWidget extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Budget List
         SliverPadding(
           padding: AppPad.h20,
           sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final budget = budgets[index];
-                return Padding(
-                  padding: AppPad.b16,
-                  child: _BudgetCard(budget: budget),
-                );
-              },
-              childCount: budgets.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final budget = budgets[index];
+              return Padding(
+                padding: AppPad.b16,
+                child: _BudgetCard(budget: budget),
+              );
+            }, childCount: budgets.length),
           ),
         ),
-        
+
         SliverToBoxAdapter(child: AppGap.h100),
       ],
     );
@@ -84,7 +83,7 @@ class _BudgetSummaryCard extends StatelessWidget {
     final totalSpent = budgets.fold<double>(0, (sum, b) => sum + b.spentAmount);
     final totalRemaining = totalLimit - totalSpent;
     final percentUsed = totalLimit > 0 ? totalSpent / totalLimit : 0.0;
-    
+
     Color statusColor;
     if (percentUsed >= 1.0) {
       statusColor = AppColors.expenseRed;
@@ -98,10 +97,7 @@ class _BudgetSummaryCard extends StatelessWidget {
       padding: AppPad.a20,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.primaryPurple,
-            AppColors.primaryPurpleDark,
-          ],
+          colors: [AppColors.primaryPurple, AppColors.primaryPurpleDark],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -122,9 +118,7 @@ class _BudgetSummaryCard extends StatelessWidget {
             children: [
               Text(
                 'Total Budget',
-                style: AppTextStyle.s14in.copyWith(
-                  color: Colors.white70,
-                ),
+                style: AppTextStyle.s14in.copyWith(color: Colors.white70),
               ),
               Container(
                 padding: AppPad.h8v4,
@@ -134,16 +128,14 @@ class _BudgetSummaryCard extends StatelessWidget {
                 ),
                 child: Text(
                   'This Month',
-                  style: AppTextStyle.s12in.copyWith(
-                    color: Colors.white,
-                  ),
+                  style: AppTextStyle.s12in.copyWith(color: Colors.white),
                 ),
               ),
             ],
           ),
           AppGap.h12,
           Text(
-            _formatCurrency(totalRemaining),
+            _formatCurrency(context, totalRemaining),
             style: AppTextStyle.s32in.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -151,12 +143,10 @@ class _BudgetSummaryCard extends StatelessWidget {
           ),
           AppGap.h4,
           Text(
-            totalRemaining >= 0 
-                ? 'Remaining of ${_formatCurrency(totalLimit)}'
-                : 'Over budget by ${_formatCurrency(-totalRemaining)}',
-            style: AppTextStyle.s14in.copyWith(
-              color: Colors.white70,
-            ),
+            totalRemaining >= 0
+                ? 'Remaining of ${_formatCurrency(context, totalLimit)}'
+                : 'Over budget by ${_formatCurrency(context, -totalRemaining)}',
+            style: AppTextStyle.s14in.copyWith(color: Colors.white70),
           ),
           AppGap.h16,
           ClipRRect(
@@ -174,15 +164,11 @@ class _BudgetSummaryCard extends StatelessWidget {
             children: [
               Text(
                 '${(percentUsed * 100).toInt()}% used',
-                style: AppTextStyle.s12in.copyWith(
-                  color: Colors.white70,
-                ),
+                style: AppTextStyle.s12in.copyWith(color: Colors.white70),
               ),
               Text(
-                '${_formatCurrency(totalSpent)} spent',
-                style: AppTextStyle.s12in.copyWith(
-                  color: Colors.white70,
-                ),
+                '${_formatCurrency(context, totalSpent)} spent',
+                style: AppTextStyle.s12in.copyWith(color: Colors.white70),
               ),
             ],
           ),
@@ -190,14 +176,9 @@ class _BudgetSummaryCard extends StatelessWidget {
       ),
     );
   }
-  
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M VND';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K VND';
-    }
-    return '${amount.toStringAsFixed(0)} VND';
+
+  String _formatCurrency(BuildContext context, double amount) {
+    return context.read<CurrencyProvider>().formatCurrency(amount);
   }
 }
 
@@ -289,9 +270,9 @@ class _BudgetCard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           AppGap.h16,
-          
+
           // Progress Bar
           ClipRRect(
             borderRadius: AppBorderRadius.a4,
@@ -302,9 +283,9 @@ class _BudgetCard extends StatelessWidget {
               minHeight: 8,
             ),
           ),
-          
+
           AppGap.h12,
-          
+
           // Amount Details
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -319,11 +300,11 @@ class _BudgetCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _formatCurrency(budget.spentAmount),
+                    _formatCurrency(context, budget.spentAmount),
                     style: AppTextStyle.s14in.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: budget.isOverspent 
-                          ? AppColors.expenseRed 
+                      color: budget.isOverspent
+                          ? AppColors.expenseRed
                           : AppColors.textPrimary,
                     ),
                   ),
@@ -339,7 +320,7 @@ class _BudgetCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _formatCurrency(budget.limitAmount),
+                    _formatCurrency(context, budget.limitAmount),
                     style: AppTextStyle.s14in.copyWith(
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
@@ -357,11 +338,11 @@ class _BudgetCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _formatCurrency(budget.remainingAmount.abs()),
+                    _formatCurrency(context, budget.remainingAmount.abs()),
                     style: AppTextStyle.s14in.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: budget.isOverspent 
-                          ? AppColors.expenseRed 
+                      color: budget.isOverspent
+                          ? AppColors.expenseRed
                           : AppColors.incomeGreen,
                     ),
                   ),
@@ -369,7 +350,7 @@ class _BudgetCard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           // Overspent Warning
           if (budget.isOverspent) ...[
             AppGap.h12,
@@ -403,14 +384,9 @@ class _BudgetCard extends StatelessWidget {
       ),
     );
   }
-  
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(0)}K';
-    }
-    return amount.toStringAsFixed(0);
+
+  String _formatCurrency(BuildContext context, double amount) {
+    return context.read<CurrencyProvider>().formatCurrency(amount);
   }
 }
 
@@ -425,8 +401,8 @@ class _ExpenseTypeChip extends StatelessWidget {
     return Container(
       padding: AppPad.h6v2,
       decoration: BoxDecoration(
-        color: isFixed 
-            ? AppColors.primaryPurpleLight 
+        color: isFixed
+            ? AppColors.primaryPurpleLight
             : AppColors.accentYellow.withValues(alpha: 0.2),
         borderRadius: AppBorderRadius.a4,
       ),
@@ -460,7 +436,7 @@ class _CycleChip extends StatelessWidget {
         label = 'Yearly';
         break;
     }
-    
+
     return Container(
       padding: AppPad.h6v2,
       decoration: BoxDecoration(
@@ -469,9 +445,7 @@ class _CycleChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: AppTextStyle.s10in.copyWith(
-          color: AppColors.textTertiary,
-        ),
+        style: AppTextStyle.s10in.copyWith(color: AppColors.textTertiary),
       ),
     );
   }

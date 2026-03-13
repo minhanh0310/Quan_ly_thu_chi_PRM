@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 
 /// Dialog widget to show budget warning when expenses exceed budget
 class BudgetWarningDialog extends StatelessWidget {
@@ -68,6 +70,7 @@ class BudgetWarningDialog extends StatelessWidget {
     final totalAfter = currentExpense + newExpenseAmount;
     final overAmount = totalAfter - budget;
     final percentage = (totalAfter / budget) * 100;
+    final cp = context.read<CurrencyProvider>();
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -135,32 +138,32 @@ class BudgetWarningDialog extends StatelessWidget {
                 children: [
                   _buildStatRow(
                     'stats_screen.current_budget'.tr(),
-                    '\$${budget.toStringAsFixed(0)}',
+                    cp.formatCurrency(budget),
                     context.secondaryTextColor,
                   ),
                   AppGap.h8,
                   _buildStatRow(
                     'stats_screen.current_spending'.tr(),
-                    '\$${currentExpense.toStringAsFixed(0)}',
+                    cp.formatCurrency(currentExpense),
                     context.secondaryTextColor,
                   ),
                   AppGap.h8,
                   _buildStatRow(
                     'stats_screen.new_expense'.tr(),
-                    '-\$${newExpenseAmount.toStringAsFixed(0)}',
+                    '-${cp.formatCurrency(newExpenseAmount)}',
                     AppColors.expenseRed,
                   ),
                   const Divider(height: 16),
                   _buildStatRow(
                     'stats_screen.total_after_adding'.tr(),
-                    '\$${totalAfter.toStringAsFixed(0)} (${percentage.toStringAsFixed(0)}%)',
+                    '${cp.formatCurrency(totalAfter)} (${percentage.toStringAsFixed(0)}%)',
                     AppColors.expenseRed,
                     isBold: true,
                   ),
                   AppGap.h8,
                   _buildStatRow(
                     'stats_screen.over_budget'.tr(),
-                    '+\$${overAmount.toStringAsFixed(0)}',
+                    '+${cp.formatCurrency(overAmount)}',
                     AppColors.expenseRed,
                     isBold: true,
                   ),

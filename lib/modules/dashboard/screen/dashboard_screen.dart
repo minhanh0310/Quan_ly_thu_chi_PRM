@@ -1,6 +1,7 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'dart:ui';
-import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/dashboard/model/bottom_nav_item.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/dashboard/widgets/custom_bottom_nav_bar.dart';
@@ -10,6 +11,8 @@ import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plans_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/screen/stats_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/drawer_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -33,7 +36,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _checkUserCurrency() async {
     // firebase_database is not supported on Windows/macOS/Linux desktop
-    final isDesktop = !kIsWeb &&
+    final isDesktop =
+        !kIsWeb &&
         (defaultTargetPlatform == TargetPlatform.windows ||
             defaultTargetPlatform == TargetPlatform.macOS ||
             defaultTargetPlatform == TargetPlatform.linux);
@@ -62,6 +66,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       final user = await UserDatabaseService().getUserById(uid);
       if (mounted) {
+        // Nếu user có currency, load vào provider để dùng toàn app
+        if (user?.currency != null && user!.currency!.isNotEmpty) {
+          Provider.of<CurrencyProvider>(
+            context,
+            listen: false,
+          ).setCurrency(user.currency!);
+        }
+
         setState(() => _currencyCheckPending = false);
 
         // If user has no currency set, redirect to currency selection
@@ -123,9 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (_currencyCheckPending) {
       return Scaffold(
         backgroundColor: context.backgroundColor,
-        body: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
+        body: Center(child: CircularProgressIndicator.adaptive()),
       );
     }
 

@@ -1,4 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarsBalanceCardWidget extends StatelessWidget {
@@ -6,16 +8,11 @@ class SliverJarsBalanceCardWidget extends StatelessWidget {
 
   const SliverJarsBalanceCardWidget({super.key, required this.totalBalance});
 
-  String _formatBalance(double v) {
-    final intVal = v.toInt().toString();
-    if (intVal.length > 3) {
-      return '\$${intVal.substring(0, intVal.length - 3)},${intVal.substring(intVal.length - 3)}';
-    }
-    return '\$$intVal';
-  }
-
   @override
   Widget build(BuildContext context) {
+    final formattedBalance = context.read<CurrencyProvider>().formatCurrency(
+      totalBalance,
+    );
     return Container(
       padding: AppPad.a20,
       decoration: BoxDecoration(
@@ -44,7 +41,7 @@ class SliverJarsBalanceCardWidget extends StatelessWidget {
           ),
           AppGap.h6,
           Text(
-            _formatBalance(totalBalance),
+            formattedBalance,
             style: AppTextStyle.s28in.copyWith(
               color: AppColors.white,
               fontWeight: FontWeight.bold,

@@ -1,8 +1,11 @@
-import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:Quan_ly_thu_chi_PRM/common/widgets/images/custom_asset_svg_picture.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/initial/model/currency_item_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -215,19 +218,17 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
         ],
       ),
       child: PrimaryButton(
-          text: 'onboarding.currency_button'.tr(),
-          onClick: _handleFinalize,
-          isLoading: _isLoading,
-        ),
+        text: 'onboarding.currency_button'.tr(),
+        onClick: _handleFinalize,
+        isLoading: _isLoading,
+      ),
     );
   }
 
   void _showFloatingSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-        ),
+        content: Text(message),
         backgroundColor: AppColors.rustyRed,
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 110),
@@ -251,14 +252,20 @@ class _OnboardingCurrencyScreenState extends State<OnboardingCurrencyScreen> {
     setState(() => _isLoading = true);
     try {
       // firebase_database is not supported on Windows/macOS/Linux desktop
-      final isDesktop = !kIsWeb &&
+      final isDesktop =
+          !kIsWeb &&
           (defaultTargetPlatform == TargetPlatform.windows ||
-           defaultTargetPlatform == TargetPlatform.macOS ||
-           defaultTargetPlatform == TargetPlatform.linux);
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.linux);
       if (!isDesktop) {
         await UserDatabaseService().updateUserCurrency(uid, selectedCurrency!);
       }
       if (!mounted) return;
+      // Cập nhật provider ngay sau khi lưu – từ đây không thể thay đổi tiền tệ nữa
+      Provider.of<CurrencyProvider>(
+        context,
+        listen: false,
+      ).setCurrency(selectedCurrency!);
       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
     } catch (e) {
       if (!mounted) return;

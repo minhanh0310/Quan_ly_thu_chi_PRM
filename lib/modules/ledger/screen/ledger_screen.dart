@@ -1,10 +1,11 @@
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/template/function_screen_template.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
-// import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/header_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/search_bar_with_filter_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/data/mock_transaction.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/filter_tab_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/ledger/widget/transaction_item_widget.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 
 class LedgerScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -98,13 +99,18 @@ class _BodyState extends State<_Body> {
                   padding: AppPad.h20,
                   child: Column(
                     children: filteredTransactions.map((transaction) {
+                      final cp = context.read<CurrencyProvider>();
+                      final raw = (transaction['rawAmount'] as double?) ?? 0.0;
+                      final isIncome = transaction['isIncome'] as bool;
+                      final formatted =
+                          '${isIncome ? '+' : '-'}${cp.formatCurrency(raw)}';
                       return TransactionItemWidget(
                         title: transaction['title'],
                         date: transaction['date'],
-                        amount: transaction['amount'],
+                        amount: formatted,
                         category: transaction['category'] ?? '',
                         tag: transaction['tag'],
-                        isIncome: transaction['isIncome'],
+                        isIncome: isIncome,
                       );
                     }).toList(),
                   ),

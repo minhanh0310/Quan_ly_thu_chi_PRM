@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/theme/theme_provider.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/routers/routes.dart';
 import 'firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -23,8 +24,11 @@ void main() async {
       supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
       path: 'assets/translations',
       fallbackLocale: const Locale('en', 'US'),
-      child: ChangeNotifierProvider(
-        create: (_) => ThemeProvider(),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => CurrencyProvider()),
+        ],
         child: const MyApp(),
       ),
     ),
@@ -66,14 +70,16 @@ class _MyAppState extends State<MyApp> {
     if (mode == 'verifyEmail' && oobCode != null) {
       setState(() {
         _initialRoute = AppRoutes.emailVerification;
-        _initialArgs = null; // The EmailVerificationScreen will handle the deep link directly
+        _initialArgs =
+            null; // The EmailVerificationScreen will handle the deep link directly
       });
     }
     // Check if this is a password reset link
     else if (mode == 'resetPassword' && oobCode != null) {
       setState(() {
         _initialRoute = AppRoutes.resetPassword;
-        _initialArgs = null; // The ResetPasswordScreen will handle the deep link directly
+        _initialArgs =
+            null; // The ResetPasswordScreen will handle the deep link directly
       });
     }
   }
