@@ -29,11 +29,6 @@ class ResponsiveLayout extends StatelessWidget {
     this.mobile,
     this.tablet,
     this.desktop,
-    // Max width cho nội dung trên desktop/tablet
-    // Mặc định 600 — giống app mobile được canh giữa
-    this.maxContentWidth = 600,
-    // Có hiển thị side padding trên tablet/desktop không
-    this.useSidePadding = true,
     // Có wrap ScrollView không (tiện khi dùng Column)
     this.scrollable = false,
   }) : assert(
@@ -45,8 +40,6 @@ class ResponsiveLayout extends StatelessWidget {
   final Widget? mobile;
   final Widget? tablet;
   final Widget? desktop;
-  final double maxContentWidth;
-  final bool useSidePadding;
   final bool scrollable;
 
   @override
@@ -56,8 +49,7 @@ class ResponsiveLayout extends StatelessWidget {
     final isTablet = bp.isTablet;
     final isDesktop = bp.isDesktop || bp.largerThan(DESKTOP);
 
-    // Chọn widget theo breakpoint
-    // Fallback về child nếu không có widget riêng
+    // Chọn widget theo breakpoint, fallback về child
     Widget content;
     if (isDesktop && desktop != null) {
       content = desktop!;
@@ -66,32 +58,11 @@ class ResponsiveLayout extends StatelessWidget {
     } else if (isMobile && mobile != null) {
       content = mobile!;
     } else {
-      // Dùng child — layout tự co giãn theo ResponsiveFramework
       content = child ?? mobile!;
     }
 
-    // Mobile: full width, không cần wrap
-    if (isMobile) {
-      return scrollable ? SingleChildScrollView(child: content) : content;
-    }
-
-    // Tablet / Desktop: canh giữa với maxWidth
-    Widget centered = Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxContentWidth),
-        child: content,
-      ),
-    );
-
-    if (useSidePadding) {
-      final sidePad = isDesktop ? 0.0 : 0.0; // tuỳ chỉnh nếu cần
-      centered = Padding(
-        padding: EdgeInsets.symmetric(horizontal: sidePad),
-        child: centered,
-      );
-    }
-
-    return scrollable ? SingleChildScrollView(child: centered) : centered;
+    // Luôn stretch full width — không giới hạn maxWidth
+    return scrollable ? SingleChildScrollView(child: content) : content;
   }
 }
 
