@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
 
@@ -26,13 +27,18 @@ class BudgetComparisonBarChart extends StatelessWidget {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: context.isDarkMode ? const Color(0xFF29363D) : AppColors.raisinBlack,
+              tooltipBgColor: context.isDarkMode
+                  ? const Color(0xFF29363D)
+                  : AppColors.raisinBlack,
               tooltipPadding: const EdgeInsets.all(8),
               tooltipMargin: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 final isBudget = rodIndex == 0;
+                final label = isBudget
+                    ? 'stats_screen.budget'.tr()
+                    : 'stats_screen.actual'.tr();
                 return BarTooltipItem(
-                  '${isBudget ? "Budget" : "Actual"}: \$${rod.toY.toStringAsFixed(0)}',
+                  '$label: \$${rod.toY.toStringAsFixed(0)}',
                   AppTextStyle.s12in.copyWith(
                     color: context.surfaceColor,
                     fontWeight: FontWeight.w600,
@@ -169,9 +175,13 @@ class BarChartLegend extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildLegendItem('Budget', context.primaryColor, context),
+        _buildLegendItem(
+          'stats_screen.budget'.tr(),
+          context.primaryColor,
+          context,
+        ),
         AppGap.w20,
-        _buildLegendItem('Actual', AppColors.green, context),
+        _buildLegendItem('stats_screen.actual'.tr(), AppColors.green, context),
       ],
     );
   }
@@ -190,9 +200,7 @@ class BarChartLegend extends StatelessWidget {
         AppGap.w6,
         Text(
           label,
-          style: AppTextStyle.s12in.copyWith(
-            color: context.secondaryTextColor,
-          ),
+          style: AppTextStyle.s12in.copyWith(color: context.secondaryTextColor),
         ),
       ],
     );

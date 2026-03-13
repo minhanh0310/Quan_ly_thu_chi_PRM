@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/template/function_screen_template.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
@@ -16,7 +16,8 @@ class StatsScreen extends StatefulWidget {
   State<StatsScreen> createState() => _StatsScreenState();
 }
 
-class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStateMixin {
+class _StatsScreenState extends State<StatsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -65,7 +66,7 @@ class _Body extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Statistics',
+                      'stats_screen.title'.tr(),
                       style: AppTextStyle.s24.copyWith(
                         color: context.primaryTextColor,
                         fontWeight: FontWeight.bold,
@@ -73,7 +74,7 @@ class _Body extends StatelessWidget {
                     ),
                     AppGap.h4,
                     Text(
-                      'Track your budget and expenses',
+                      'stats_screen.subtitle'.tr(),
                       style: AppTextStyle.s14in.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -105,10 +106,12 @@ class _Body extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             labelStyle: AppTextStyle.s14.copyWith(fontWeight: FontWeight.w600),
-            unselectedLabelStyle: AppTextStyle.s14.copyWith(fontWeight: FontWeight.w500),
-            tabs: const [
-              Tab(text: 'Overview'),
-              Tab(text: 'Categories'),
+            unselectedLabelStyle: AppTextStyle.s14.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            tabs: [
+              Tab(text: 'stats_screen.overview'.tr()),
+              Tab(text: 'stats_screen.categories'.tr()),
             ],
           ),
         ),
@@ -153,7 +156,7 @@ class _OverviewTab extends StatelessWidget {
           AppGap.h24,
 
           // Bar Chart Section
-          _buildSectionTitle('Budget vs Actual', context),
+          _buildSectionTitle('stats_screen.budget_vs_actual'.tr(), context),
           AppGap.h12,
           Container(
             padding: AppPad.h16,
@@ -180,9 +183,7 @@ class _OverviewTab extends StatelessWidget {
           AppGap.h24,
 
           // Warning Banner (if applicable)
-          BudgetWarningBanner(
-            percentage: data.percentageUsed,
-          ),
+          BudgetWarningBanner(percentage: data.percentageUsed),
 
           AppGap.h20,
         ],
@@ -215,7 +216,7 @@ class _CategoriesTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Pie Chart Section
-          _buildSectionTitle('Expense by Category', context),
+          _buildSectionTitle('stats_screen.expense_by_category'.tr(), context),
           AppGap.h12,
           Container(
             padding: AppPad.h16,
@@ -236,7 +237,7 @@ class _CategoriesTab extends StatelessWidget {
           AppGap.h24,
 
           // Category Breakdown List
-          _buildSectionTitle('Category Breakdown', context),
+          _buildSectionTitle('stats_screen.category_breakdown'.tr(), context),
           AppGap.h12,
           Container(
             padding: AppPad.h16,

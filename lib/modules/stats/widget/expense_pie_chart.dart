@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
 
@@ -8,11 +9,7 @@ class ExpensePieChart extends StatefulWidget {
   final List<CategoryExpense> data;
   final double height;
 
-  const ExpensePieChart({
-    super.key,
-    required this.data,
-    this.height = 250,
-  });
+  const ExpensePieChart({super.key, required this.data, this.height = 250});
 
   @override
   State<ExpensePieChart> createState() => _ExpensePieChartState();
@@ -38,8 +35,8 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
                       touchedIndex = -1;
                       return;
                     }
-                    touchedIndex = pieTouchResponse
-                        .touchedSection!.touchedSectionIndex;
+                    touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
                   });
                 },
               ),
@@ -58,13 +55,13 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
 
   List<PieChartSectionData> _buildSections() {
     final total = widget.data.fold<double>(0, (sum, item) => sum + item.amount);
-    
+
     return widget.data.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
       final isTouched = index == touchedIndex;
       final percentage = (item.amount / total) * 100;
-      
+
       return PieChartSectionData(
         color: item.color,
         value: item.amount,
@@ -74,9 +71,7 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
           color: AppColors.white,
           fontWeight: FontWeight.bold,
         ),
-        badgeWidget: isTouched
-            ? null
-            : null,
+        badgeWidget: isTouched ? null : null,
         badgePositionPercentageOffset: 1.1,
       );
     }).toList();
@@ -88,18 +83,15 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
       runSpacing: 8,
       alignment: WrapAlignment.center,
       children: widget.data.map((item) {
-        return _buildLegendItem(
-          item.category,
-          item.color,
-          item.amount,
-        );
+        return _buildLegendItem(item.category, item.color, item.amount);
       }).toList(),
     );
   }
 
   Widget _buildLegendItem(String label, Color color, double amount) {
-    final isSelected = widget.data.indexWhere((e) => e.category == label) == touchedIndex;
-    
+    final isSelected =
+        widget.data.indexWhere((e) => e.category == label) == touchedIndex;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -118,10 +110,7 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
             Container(
               width: 10,
               height: 10,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
             AppGap.w6,
             Text(
@@ -142,27 +131,28 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
 class CategoryBreakdownList extends StatelessWidget {
   final List<CategoryExpense> data;
 
-  const CategoryBreakdownList({
-    super.key,
-    required this.data,
-  });
+  const CategoryBreakdownList({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     final total = data.fold<double>(0, (sum, item) => sum + item.amount);
-    
+
     return Column(
       children: data.map((item) {
         final percentage = (item.amount / total) * 100;
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: _buildCategoryItem(item, percentage),
+          child: _buildCategoryItem(context, item, percentage),
         );
       }).toList(),
     );
   }
 
-  Widget _buildCategoryItem(CategoryExpense item, double percentage) {
+  Widget _buildCategoryItem(
+    BuildContext context,
+    CategoryExpense item,
+    double percentage,
+  ) {
     return Row(
       children: [
         Container(
@@ -172,11 +162,7 @@ class CategoryBreakdownList extends StatelessWidget {
             color: item.color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            item.icon,
-            color: item.color,
-            size: 20,
-          ),
+          child: Icon(item.icon, color: item.color, size: 20),
         ),
         AppGap.w12,
         Expanded(
@@ -189,14 +175,14 @@ class CategoryBreakdownList extends StatelessWidget {
                   Text(
                     item.category,
                     style: AppTextStyle.s14.copyWith(
-                      color: AppColors.textPrimary,
+                      color: context.primaryTextColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
                     '\$${item.amount.toStringAsFixed(0)}',
                     style: AppTextStyle.s14.copyWith(
-                      color: AppColors.textPrimary,
+                      color: context.primaryTextColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

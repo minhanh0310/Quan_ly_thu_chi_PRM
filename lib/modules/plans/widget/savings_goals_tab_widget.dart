@@ -60,10 +60,9 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
     final now = DateTime.now();
     final entry = AccumulationEntry(
       date: now,
-      title: 'plans_screen.savings_month'.tr(namedArgs: {
-        'month': '${now.month}',
-        'year': '${now.year}',
-      }),
+      title: 'plans_screen.savings_month'.tr(
+        namedArgs: {'month': '${now.month}', 'year': '${now.year}'},
+      ),
       subtitle: 'plans_screen.from_salary_account'.tr(),
       amount: amount,
     );
@@ -88,8 +87,9 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
           financialFreedomBalance: _financialFreedomBalance,
           onAllocate: (amount) {
             _allocateToGoal(goalNotifier.value, amount);
-            final updated =
-                _goals.firstWhere((g) => g.id == goalNotifier.value.id);
+            final updated = _goals.firstWhere(
+              (g) => g.id == goalNotifier.value.id,
+            );
             goalNotifier.value = updated;
           },
         ),
@@ -99,12 +99,15 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final activeGoals =
-        _goals.where((g) => g.status == SavingsGoalStatus.active).toList();
-    final completedGoals =
-        _goals.where((g) => g.status == SavingsGoalStatus.completed).toList();
-    final overdueGoals =
-        _goals.where((g) => g.status == SavingsGoalStatus.overdue).toList();
+    final activeGoals = _goals
+        .where((g) => g.status == SavingsGoalStatus.active)
+        .toList();
+    final completedGoals = _goals
+        .where((g) => g.status == SavingsGoalStatus.completed)
+        .toList();
+    final overdueGoals = _goals
+        .where((g) => g.status == SavingsGoalStatus.overdue)
+        .toList();
 
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
@@ -126,7 +129,7 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                         'plans_screen.financial_journey'.tr(),
                         style: AppTextStyle.s20in.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: context.primaryTextColor,
                         ),
                       ),
                       AppGap.h4,
@@ -168,21 +171,17 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
           SliverPadding(
             padding: AppPad.h20,
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final goal = activeGoals[index];
-                  return Padding(
-                    padding: AppPad.b16,
-                    child: _FinancialJourneyCard(
-                      goal: goal,
-                      onTap: () => _openPlanDetail(context, goal),
-                      onUpdateProgress: () =>
-                          _showAllocateDialog(context, goal),
-                    ),
-                  );
-                },
-                childCount: activeGoals.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final goal = activeGoals[index];
+                return Padding(
+                  padding: AppPad.b16,
+                  child: _FinancialJourneyCard(
+                    goal: goal,
+                    onTap: () => _openPlanDetail(context, goal),
+                    onUpdateProgress: () => _showAllocateDialog(context, goal),
+                  ),
+                );
+              }, childCount: activeGoals.length),
             ),
           )
         else
@@ -213,21 +212,17 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
           SliverPadding(
             padding: AppPad.h20,
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final goal = overdueGoals[index];
-                  return Padding(
-                    padding: AppPad.b16,
-                    child: _FinancialJourneyCard(
-                      goal: goal,
-                      onTap: () => _openPlanDetail(context, goal),
-                      onUpdateProgress: () =>
-                          _showAllocateDialog(context, goal),
-                    ),
-                  );
-                },
-                childCount: overdueGoals.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final goal = overdueGoals[index];
+                return Padding(
+                  padding: AppPad.b16,
+                  child: _FinancialJourneyCard(
+                    goal: goal,
+                    onTap: () => _openPlanDetail(context, goal),
+                    onUpdateProgress: () => _showAllocateDialog(context, goal),
+                  ),
+                );
+              }, childCount: overdueGoals.length),
             ),
           ),
         ],
@@ -249,20 +244,17 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
           SliverPadding(
             padding: AppPad.h20,
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final goal = completedGoals[index];
-                  return Padding(
-                    padding: AppPad.b16,
-                    child: _FinancialJourneyCard(
-                      goal: goal,
-                      onTap: () => _openPlanDetail(context, goal),
-                      onUpdateProgress: null,
-                    ),
-                  );
-                },
-                childCount: completedGoals.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final goal = completedGoals[index];
+                return Padding(
+                  padding: AppPad.b16,
+                  child: _FinancialJourneyCard(
+                    goal: goal,
+                    onTap: () => _openPlanDetail(context, goal),
+                    onUpdateProgress: null,
+                  ),
+                );
+              }, childCount: completedGoals.length),
             ),
           ),
         ],
@@ -351,7 +343,9 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                       context: context,
                       initialDate: selectedDate,
                       firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
+                      lastDate: DateTime.now().add(
+                        const Duration(days: 365 * 10),
+                      ),
                     );
                     if (date != null) {
                       setModalState(() => selectedDate = date);
@@ -402,7 +396,10 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                       child: ElevatedButton(
                         onPressed: () {
                           final name = nameController.text.trim();
-                          final amountText = amountController.text.replaceAll(',', '');
+                          final amountText = amountController.text.replaceAll(
+                            ',',
+                            '',
+                          );
                           final amount = double.tryParse(amountText) ?? 0;
                           if (name.isNotEmpty && amount > 0) {
                             Navigator.pop(context);
@@ -470,9 +467,7 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
               AppGap.h20,
               Text(
                 '${'plans_screen.add_to_plan'.tr()} "${goal.name}"',
-                style: AppTextStyle.s18in.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyle.s18in.copyWith(fontWeight: FontWeight.bold),
               ),
               AppGap.h8,
               Text(
@@ -498,9 +493,7 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                   labelText: 'plans_screen.amount'.tr(),
                   hintText: '0',
                   prefixText: 'VND ',
-                  border: OutlineInputBorder(
-                    borderRadius: AppBorderRadius.a12,
-                  ),
+                  border: OutlineInputBorder(borderRadius: AppBorderRadius.a12),
                 ),
               ),
               AppGap.h20,
@@ -597,192 +590,194 @@ class _FinancialJourneyCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          // Image / placeholder area
-          Container(
-            height: 120,
-            width: double.infinity,
-            color: goal.color.withValues(alpha: 0.15),
-            child: goal.imageUrl != null
-                ? Image.network(goal.imageUrl!, fit: BoxFit.cover)
-                : Center(
-                    child: Icon(
-                      goal.icon,
-                      size: 48,
-                      color: goal.color.withValues(alpha: 0.6),
-                    ),
-                  ),
-          ),
-          Padding(
-            padding: AppPad.a16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        goal.name,
-                        style: AppTextStyle.s18in.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+              // Image / placeholder area
+              Container(
+                height: 120,
+                width: double.infinity,
+                color: goal.color.withValues(alpha: 0.15),
+                child: goal.imageUrl != null
+                    ? Image.network(goal.imageUrl!, fit: BoxFit.cover)
+                    : Center(
+                        child: Icon(
+                          goal.icon,
+                          size: 48,
+                          color: goal.color.withValues(alpha: 0.6),
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: AppPad.h8v4,
-                      decoration: BoxDecoration(
-                        color: goal.color.withValues(alpha: 0.12),
-                        borderRadius: AppBorderRadius.a8,
-                      ),
-                      child: Text(
-                        'TARGET: ${goal.deadline.year}',
-                        style: AppTextStyle.s12in.copyWith(
-                          color: goal.color,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                AppGap.h4,
-                Text(
-                  'Goal: ${_formatCurrency(goal.targetAmount)}',
-                  style: AppTextStyle.s14in.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                AppGap.h16,
-                // Progress
-                Text(
-                  'plans_screen.progress'.tr().toUpperCase(),
-                  style: AppTextStyle.s12in.copyWith(
-                    color: AppColors.textTertiary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                AppGap.h4,
-                Row(
+              ),
+              Padding(
+                padding: AppPad.a16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            goal.name,
+                            style: AppTextStyle.s18in.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: AppPad.h8v4,
+                          decoration: BoxDecoration(
+                            color: goal.color.withValues(alpha: 0.12),
+                            borderRadius: AppBorderRadius.a8,
+                          ),
+                          child: Text(
+                            'TARGET: ${goal.deadline.year}',
+                            style: AppTextStyle.s12in.copyWith(
+                              color: goal.color,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    AppGap.h4,
                     Text(
-                      '$progressPercent%',
-                      style: AppTextStyle.s24in.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: goal.color,
+                      'Goal: ${_formatCurrency(goal.targetAmount)}',
+                      style: AppTextStyle.s14in.copyWith(
+                        color: AppColors.textSecondary,
                       ),
                     ),
-                    AppGap.w12,
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: AppBorderRadius.a4,
-                        child: LinearProgressIndicator(
-                          value: goal.progressPercent,
-                          backgroundColor: AppColors.lightGrayBackground,
-                          valueColor: AlwaysStoppedAnimation<Color>(goal.color),
-                          minHeight: 8,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // Roadmap
-                if (milestones.isNotEmpty) ...[
-                  AppGap.h16,
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.map_rounded,
-                        size: 16,
+                    AppGap.h16,
+                    // Progress
+                    Text(
+                      'plans_screen.progress'.tr().toUpperCase(),
+                      style: AppTextStyle.s12in.copyWith(
                         color: AppColors.textTertiary,
+                        fontWeight: FontWeight.w600,
                       ),
-                      AppGap.w4,
-                      Text(
-                        'plans_screen.roadmap'.tr(),
-                        style: AppTextStyle.s12in.copyWith(
-                          color: AppColors.textTertiary,
-                          fontWeight: FontWeight.w600,
+                    ),
+                    AppGap.h4,
+                    Row(
+                      children: [
+                        Text(
+                          '$progressPercent%',
+                          style: AppTextStyle.s24in.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: goal.color,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  AppGap.h8,
-                  ...milestones.map(
-                    (m) => Padding(
-                      padding: AppPad.b8,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        AppGap.w12,
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: AppBorderRadius.a4,
+                            child: LinearProgressIndicator(
+                              value: goal.progressPercent,
+                              backgroundColor: AppColors.lightGrayBackground,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                goal.color,
+                              ),
+                              minHeight: 8,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Roadmap
+                    if (milestones.isNotEmpty) ...[
+                      AppGap.h16,
+                      Row(
                         children: [
                           Icon(
-                            m.isReached
-                                ? Icons.check_circle_rounded
-                                : Icons.radio_button_unchecked_rounded,
-                            size: 18,
-                            color: m.isReached
-                                ? goal.color
-                                : AppColors.textTertiary,
+                            Icons.map_rounded,
+                            size: 16,
+                            color: AppColors.textTertiary,
                           ),
-                          AppGap.w8,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  m.title,
-                                  style: AppTextStyle.s12in.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textPrimary,
-                                  ),
-                                ),
-                                Text(
-                                  m.description,
-                                  style: AppTextStyle.s12in.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                                if (m.date != null)
-                                  Text(
-                                    _formatDate(m.date!),
-                                    style: AppTextStyle.s10in.copyWith(
-                                      color: AppColors.textTertiary,
-                                    ),
-                                  ),
-                              ],
+                          AppGap.w4,
+                          Text(
+                            'plans_screen.roadmap'.tr(),
+                            style: AppTextStyle.s12in.copyWith(
+                              color: AppColors.textTertiary,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-                if (onUpdateProgress != null && !goal.isCompleted) ...[
-                  AppGap.h16,
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: onTap,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: goal.color,
-                        foregroundColor: AppColors.white,
-                        padding: AppPad.v14,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: AppBorderRadius.a12,
+                      AppGap.h8,
+                      ...milestones.map(
+                        (m) => Padding(
+                          padding: AppPad.b8,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                m.isReached
+                                    ? Icons.check_circle_rounded
+                                    : Icons.radio_button_unchecked_rounded,
+                                size: 18,
+                                color: m.isReached
+                                    ? goal.color
+                                    : AppColors.textTertiary,
+                              ),
+                              AppGap.w8,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      m.title,
+                                      style: AppTextStyle.s12in.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                    Text(
+                                      m.description,
+                                      style: AppTextStyle.s12in.copyWith(
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                    if (m.date != null)
+                                      Text(
+                                        _formatDate(m.date!),
+                                        style: AppTextStyle.s10in.copyWith(
+                                          color: AppColors.textTertiary,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('plans_screen.update_progress'.tr()),
-                          AppGap.w4,
-                          const Icon(Icons.arrow_forward_rounded, size: 18),
-                        ],
+                    ],
+                    if (onUpdateProgress != null && !goal.isCompleted) ...[
+                      AppGap.h16,
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: onTap,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: goal.color,
+                            foregroundColor: AppColors.white,
+                            padding: AppPad.v14,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: AppBorderRadius.a12,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('plans_screen.update_progress'.tr()),
+                              AppGap.w4,
+                              const Icon(Icons.arrow_forward_rounded, size: 18),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
         ),
       ),
     );
@@ -806,10 +801,7 @@ class _EmptyStateCard extends StatelessWidget {
   final IconData icon;
   final String message;
 
-  const _EmptyStateCard({
-    required this.icon,
-    required this.message,
-  });
+  const _EmptyStateCard({required this.icon, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -825,17 +817,11 @@ class _EmptyStateCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(
-            icon,
-            size: 48,
-            color: AppColors.grey.withValues(alpha: 0.5),
-          ),
+          Icon(icon, size: 48, color: AppColors.grey.withValues(alpha: 0.5)),
           AppGap.h12,
           Text(
             message,
-            style: AppTextStyle.s14in.copyWith(
-              color: AppColors.grey,
-            ),
+            style: AppTextStyle.s14in.copyWith(color: AppColors.grey),
             textAlign: TextAlign.center,
           ),
         ],

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
 
@@ -105,7 +105,7 @@ class BudgetWarningDialog extends StatelessWidget {
 
             // Title
             Text(
-              'Budget exceeded!',
+              'stats_screen.budget_exceeded'.tr(),
               style: AppTextStyle.s20.copyWith(
                 color: AppColors.expenseRed,
                 fontWeight: FontWeight.bold,
@@ -116,7 +116,7 @@ class BudgetWarningDialog extends StatelessWidget {
 
             // Description
             Text(
-              'This new expense will make your total spending exceed the budget.',
+              'stats_screen.budget_exceeded_description'.tr(),
               style: AppTextStyle.s14in.copyWith(
                 color: context.secondaryTextColor,
               ),
@@ -134,32 +134,32 @@ class BudgetWarningDialog extends StatelessWidget {
               child: Column(
                 children: [
                   _buildStatRow(
-                    'Current budget:',
+                    'stats_screen.current_budget'.tr(),
                     '\$${budget.toStringAsFixed(0)}',
                     context.secondaryTextColor,
                   ),
                   AppGap.h8,
                   _buildStatRow(
-                    'Current spending:',
+                    'stats_screen.current_spending'.tr(),
                     '\$${currentExpense.toStringAsFixed(0)}',
                     context.secondaryTextColor,
                   ),
                   AppGap.h8,
                   _buildStatRow(
-                    'New expense:',
+                    'stats_screen.new_expense'.tr(),
                     '-\$${newExpenseAmount.toStringAsFixed(0)}',
                     AppColors.expenseRed,
                   ),
                   const Divider(height: 16),
                   _buildStatRow(
-                    'Total after adding:',
+                    'stats_screen.total_after_adding'.tr(),
                     '\$${totalAfter.toStringAsFixed(0)} (${percentage.toStringAsFixed(0)}%)',
                     AppColors.expenseRed,
                     isBold: true,
                   ),
                   AppGap.h8,
                   _buildStatRow(
-                    'Over budget:',
+                    'stats_screen.over_budget'.tr(),
                     '+\$${overAmount.toStringAsFixed(0)}',
                     AppColors.expenseRed,
                     isBold: true,
@@ -174,7 +174,8 @@ class BudgetWarningDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: onCancel ?? () => Navigator.of(context).pop(false),
+                    onPressed:
+                        onCancel ?? () => Navigator.of(context).pop(false),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       side: BorderSide(color: context.borderColor),
@@ -183,7 +184,7 @@ class BudgetWarningDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Cancel',
+                      'common.cancel'.tr(),
                       style: AppTextStyle.s16.copyWith(
                         color: context.primaryTextColor,
                       ),
@@ -193,7 +194,8 @@ class BudgetWarningDialog extends StatelessWidget {
                 AppGap.w12,
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: onConfirm ?? () => Navigator.of(context).pop(true),
+                    onPressed:
+                        onConfirm ?? () => Navigator.of(context).pop(true),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.expenseRed,
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -202,7 +204,7 @@ class BudgetWarningDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Add anyway',
+                      'stats_screen.add_anyway'.tr(),
                       style: AppTextStyle.s16.copyWith(
                         color: context.surfaceColor,
                       ),
@@ -217,16 +219,16 @@ class BudgetWarningDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildStatRow(String label, String value, Color valueColor, {bool isBold = false}) {
+  Widget _buildStatRow(
+    String label,
+    String value,
+    Color valueColor, {
+    bool isBold = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: AppTextStyle.s14in.copyWith(
-            color: valueColor,
-          ),
-        ),
+        Text(label, style: AppTextStyle.s14in.copyWith(color: valueColor)),
         Text(
           value,
           style: AppTextStyle.s14.copyWith(
@@ -244,11 +246,7 @@ class BudgetWarningBanner extends StatelessWidget {
   final double percentage;
   final VoidCallback? onTap;
 
-  const BudgetWarningBanner({
-    super.key,
-    required this.percentage,
-    this.onTap,
-  });
+  const BudgetWarningBanner({super.key, required this.percentage, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -336,22 +334,22 @@ class BudgetWarningBanner extends StatelessWidget {
   String _getStatusTitle(BudgetStatus status) {
     switch (status) {
       case BudgetStatus.safe:
-        return 'Budget is safe';
+        return 'stats_screen.banner_safe_title'.tr();
       case BudgetStatus.warning:
-        return 'Budget warning';
+        return 'stats_screen.banner_warning_title'.tr();
       case BudgetStatus.overSpent:
-        return 'Over budget!';
+        return 'stats_screen.banner_overspent_title'.tr();
     }
   }
 
   String _getStatusMessage(BudgetStatus status) {
     switch (status) {
       case BudgetStatus.safe:
-        return 'You have used less than 80% of your budget';
+        return 'stats_screen.banner_safe_message'.tr();
       case BudgetStatus.warning:
-        return 'You have used 80–100% of your budget';
+        return 'stats_screen.banner_warning_message'.tr();
       case BudgetStatus.overSpent:
-        return 'Your spending has exceeded the budget!';
+        return 'stats_screen.banner_overspent_message'.tr();
     }
   }
 }

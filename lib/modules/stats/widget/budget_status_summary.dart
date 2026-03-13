@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
 
@@ -64,7 +64,9 @@ class BudgetStatusSummary extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isOverSpent ? 'Overspent Amount' : 'Remaining Amount',
+                      isOverSpent
+                          ? 'stats_screen.overspent_amount'.tr()
+                          : 'stats_screen.remaining_amount'.tr(),
                       style: AppTextStyle.s14in.copyWith(
                         color: context.secondaryTextColor,
                       ),
@@ -96,7 +98,7 @@ class BudgetStatusSummary extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Spent',
+                    'stats_screen.spent'.tr(),
                     style: AppTextStyle.s12in.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -110,7 +112,9 @@ class BudgetStatusSummary extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'of \$${budget.toStringAsFixed(0)}',
+                    'stats_screen.of_budget'.tr(
+                      args: [budget.toStringAsFixed(0)],
+                    ),
                     style: AppTextStyle.s12in.copyWith(
                       color: context.secondaryTextColor,
                     ),
@@ -123,7 +127,9 @@ class BudgetStatusSummary extends StatelessWidget {
           _buildProgressBar(percentage, status, context),
           AppGap.h8,
           Text(
-            '${percentage.toStringAsFixed(1)}% of budget used',
+            'stats_screen.budget_used'.tr(
+              args: [percentage.toStringAsFixed(1)],
+            ),
             style: AppTextStyle.s12in.copyWith(
               color: context.secondaryTextColor,
             ),
@@ -143,11 +149,7 @@ class BudgetStatusSummary extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            _getStatusIcon(status),
-            color: AppColors.white,
-            size: 14,
-          ),
+          Icon(_getStatusIcon(status), color: AppColors.white, size: 14),
           AppGap.w4,
           Text(
             _getStatusText(status),
@@ -161,7 +163,11 @@ class BudgetStatusSummary extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBar(double percentage, BudgetStatus status, BuildContext context) {
+  Widget _buildProgressBar(
+    double percentage,
+    BudgetStatus status,
+    BuildContext context,
+  ) {
     final clampedPercentage = percentage.clamp(0.0, 100.0).toDouble();
 
     return ClipRRect(
@@ -223,11 +229,11 @@ class BudgetStatusSummary extends StatelessWidget {
   String _getStatusText(BudgetStatus status) {
     switch (status) {
       case BudgetStatus.safe:
-        return 'Safe';
+        return 'stats_screen.status_safe'.tr();
       case BudgetStatus.warning:
-        return 'Warning';
+        return 'stats_screen.status_warning'.tr();
       case BudgetStatus.overSpent:
-        return 'Overspent';
+        return 'stats_screen.status_overspent'.tr();
     }
   }
 
