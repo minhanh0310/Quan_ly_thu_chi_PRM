@@ -113,6 +113,7 @@
         "budget": "Budget",
         "actual": "Actual",
         "spent": "Spent",
+        "income": "Income",
         "remaining_amount": "Remaining Amount",
         "overspent_amount": "Overspent Amount",
         "of_budget": "of ${}",

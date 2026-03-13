@@ -1,8 +1,10 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
-import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/savings_goal_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plan_detail_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -14,23 +16,7 @@ class SavingsGoalsTabWidget extends StatefulWidget {
 }
 
 class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
-  late List<SavingsGoalModel> _goals;
-  late double _financialFreedomBalance;
-
-  @override
-  void initState() {
-    super.initState();
-    _goals = List<SavingsGoalModel>.from(SavingsGoalModel.mockList);
-    JarModel? ffJar;
-    for (final j in JarModel.mockList) {
-      if (j.name == 'Financial Freedom') {
-        ffJar = j;
-        break;
-      }
-    }
-    // Use jar amount as available balance (same unit as goals; mock in VND)
-    _financialFreedomBalance = (ffJar?.amount ?? 45000) * 1000; // e.g. 45M VND
-  }
+  final _service = FinanceDatabaseService();
 
   void _addPlan({
     required String name,
@@ -38,61 +24,41 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
     required double targetAmount,
   }) {
     if (name.trim().isEmpty) return;
-    final id = '${DateTime.now().millisecondsSinceEpoch}';
-    setState(() {
-      _goals.insert(
-        0,
-        SavingsGoalModel(
-          id: id,
-          name: name.trim(),
-          targetAmount: targetAmount,
-          currentAmount: 0,
-          deadline: deadline,
-          color: AppColors.primaryPurple,
-          icon: Icons.flag_rounded,
-          createdAt: DateTime.now(),
-          jarId: SavingsGoalModel.jarFinancialFreedom,
-        ),
-      );
-    });
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    _service.createSavingsGoal(
+      uid: uid,
+      name: name.trim(),
+      targetAmount: targetAmount,
+      deadline: deadline,
+      color: AppColors.primaryPurple,
+      icon: Icons.flag_rounded,
+      jarId: SavingsGoalModel.jarFinancialFreedom,
+    );
   }
 
   void _allocateToGoal(SavingsGoalModel goal, double amount) {
-    if (amount <= 0 || amount > _financialFreedomBalance) return;
-    final now = DateTime.now();
-    final entry = AccumulationEntry(
-      date: now,
-      title: 'plans_screen.savings_month'.tr(
-        namedArgs: {'month': '${now.month}', 'year': '${now.year}'},
-      ),
-      subtitle: 'plans_screen.from_salary_account'.tr(),
-      amount: amount,
-    );
-    setState(() {
-      _financialFreedomBalance -= amount;
-      final idx = _goals.indexWhere((g) => g.id == goal.id);
-      if (idx >= 0) {
-        _goals[idx] = goal.copyWith(
-          currentAmount: goal.currentAmount + amount,
-          accumulationHistory: [...goal.accumulationHistory, entry],
-        );
-      }
-    });
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    _service.allocateToGoal(uid: uid, goal: goal, amount: amount);
   }
 
-  void _openPlanDetail(BuildContext context, SavingsGoalModel goal) {
+  void _openPlanDetail(
+    BuildContext context,
+    SavingsGoalModel goal,
+    double financialFreedomBalance,
+  ) {
     final goalNotifier = ValueNotifier<SavingsGoalModel>(goal);
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => PlanDetailScreen(
           goalNotifier: goalNotifier,
-          financialFreedomBalance: _financialFreedomBalance,
+          financialFreedomBalance: financialFreedomBalance,
           onAllocate: (amount) {
             _allocateToGoal(goalNotifier.value, amount);
-            final updated = _goals.firstWhere(
-              (g) => g.id == goalNotifier.value.id,
+            goalNotifier.value = goalNotifier.value.copyWith(
+              currentAmount: goalNotifier.value.currentAmount + amount,
             );
-            goalNotifier.value = updated;
           },
         ),
       ),
@@ -101,19 +67,44 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final activeGoals = _goals
-        .where((g) => g.status == SavingsGoalStatus.active)
-        .toList();
-    final completedGoals = _goals
-        .where((g) => g.status == SavingsGoalStatus.completed)
-        .toList();
-    final overdueGoals = _goals
-        .where((g) => g.status == SavingsGoalStatus.overdue)
-        .toList();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      _service.ensureDefaultJars(uid);
+    }
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
+    return StreamBuilder<List<SavingsGoalModel>>(
+      stream: uid == null ? Stream.empty() : _service.watchSavingsGoals(uid),
+      builder: (context, snapshot) {
+        final goals = snapshot.data ?? const [];
+        final activeGoals =
+            goals.where((g) => g.status == SavingsGoalStatus.active).toList();
+        final completedGoals =
+            goals.where((g) => g.status == SavingsGoalStatus.completed).toList();
+        final overdueGoals =
+            goals.where((g) => g.status == SavingsGoalStatus.overdue).toList();
+
+        return StreamBuilder<List<JarModel>>(
+          stream: uid == null ? Stream.empty() : _service.watchJars(uid),
+          builder: (context, jarSnapshot) {
+            final jars = jarSnapshot.data ?? const [];
+            final ffJar = jars.firstWhere(
+              (j) => j.id == SavingsGoalModel.jarFinancialFreedom,
+              orElse: () => JarModel(
+                id: SavingsGoalModel.jarFinancialFreedom,
+                name: 'Financial Freedom',
+                description: '',
+                color: AppColors.primaryPurple,
+                icon: Icons.trending_up_rounded,
+                targetPercent: 0,
+                actualPercent: 0,
+                amount: 0,
+              ),
+            );
+            final financialFreedomBalance = ffJar.amount;
+
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
         SliverToBoxAdapter(child: AppGap.h16),
 
         // Header: Financial Journey + subtitle + Add (+) button
@@ -179,8 +170,13 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                   padding: AppPad.b16,
                   child: _FinancialJourneyCard(
                     goal: goal,
-                    onTap: () => _openPlanDetail(context, goal),
-                    onUpdateProgress: () => _showAllocateDialog(context, goal),
+                    onTap: () => _openPlanDetail(
+                      context,
+                      goal,
+                      financialFreedomBalance,
+                    ),
+                    onUpdateProgress: () =>
+                        _showAllocateDialog(context, goal, financialFreedomBalance),
                   ),
                 );
               }, childCount: activeGoals.length),
@@ -220,8 +216,13 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                   padding: AppPad.b16,
                   child: _FinancialJourneyCard(
                     goal: goal,
-                    onTap: () => _openPlanDetail(context, goal),
-                    onUpdateProgress: () => _showAllocateDialog(context, goal),
+                    onTap: () => _openPlanDetail(
+                      context,
+                      goal,
+                      financialFreedomBalance,
+                    ),
+                    onUpdateProgress: () =>
+                        _showAllocateDialog(context, goal, financialFreedomBalance),
                   ),
                 );
               }, childCount: overdueGoals.length),
@@ -252,7 +253,11 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                   padding: AppPad.b16,
                   child: _FinancialJourneyCard(
                     goal: goal,
-                    onTap: () => _openPlanDetail(context, goal),
+                    onTap: () => _openPlanDetail(
+                      context,
+                      goal,
+                      financialFreedomBalance,
+                    ),
                     onUpdateProgress: null,
                   ),
                 );
@@ -263,6 +268,10 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
 
         SliverToBoxAdapter(child: AppGap.h100),
       ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -334,6 +343,7 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
                     prefixText: context.read<CurrencyProvider>().inputPrefix,
                   ),
                 ),
+                AppGap.h16,
                 InkWell(
                   onTap: () async {
                     final date = await showDatePicker(
@@ -429,9 +439,15 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
     );
   }
 
-  void _showAllocateDialog(BuildContext context, SavingsGoalModel goal) {
+  void _showAllocateDialog(
+    BuildContext context,
+    SavingsGoalModel goal,
+    double ffBalance,
+  ) {
     final controller = TextEditingController();
-    final ffBalance = _financialFreedomBalance;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    _service.ensureDefaultJars(uid);
 
     showModalBottomSheet(
       context: context,

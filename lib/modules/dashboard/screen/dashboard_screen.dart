@@ -11,6 +11,7 @@ import 'package:Quan_ly_thu_chi_PRM/modules/plans/screen/plans_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/screen/stats_screen.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/widgets/drawer_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -73,6 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             listen: false,
           ).setCurrency(user.currency!);
         }
+        await FinanceDatabaseService().ensureDefaultJars(uid);
 
         setState(() => _currencyCheckPending = false);
 

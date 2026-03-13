@@ -1,18 +1,26 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/budget_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BudgetTabWidget extends StatelessWidget {
   const BudgetTabWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final budgets = BudgetModel.mockList;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final service = FinanceDatabaseService();
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
+    return StreamBuilder<List<BudgetModel>>(
+      stream: uid == null ? Stream.empty() : service.watchBudgets(uid),
+      builder: (context, snapshot) {
+        final budgets = snapshot.data ?? const [];
+        return CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
         SliverToBoxAdapter(child: AppGap.h20),
 
         // Summary Card
@@ -53,21 +61,64 @@ class BudgetTabWidget extends StatelessWidget {
         ),
 
         // Budget List
-        SliverPadding(
-          padding: AppPad.h20,
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              final budget = budgets[index];
-              return Padding(
-                padding: AppPad.b16,
-                child: _BudgetCard(budget: budget),
-              );
-            }, childCount: budgets.length),
+        if (budgets.isNotEmpty)
+          SliverPadding(
+            padding: AppPad.h20,
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final budget = budgets[index];
+                return Padding(
+                  padding: AppPad.b16,
+                  child: _BudgetCard(budget: budget),
+                );
+              }, childCount: budgets.length),
+            ),
+          )
+        else
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: AppPad.h20,
+              child: _EmptyStateCard(
+                icon: Icons.receipt_long_outlined,
+                message: 'plans_screen.no_budgets'.tr(),
+              ),
+            ),
           ),
-        ),
 
         SliverToBoxAdapter(child: AppGap.h100),
       ],
+        );
+      },
+    );
+  }
+}
+
+class _EmptyStateCard extends StatelessWidget {
+  final IconData icon;
+  final String message;
+
+  const _EmptyStateCard({required this.icon, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: AppPad.a32,
+      decoration: BoxDecoration(
+        color: AppColors.lightGrayBackground,
+        borderRadius: AppBorderRadius.a16,
+        border: Border.all(color: AppColors.grey.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 48, color: AppColors.grey.withValues(alpha: 0.5)),
+          AppGap.h12,
+          Text(
+            message,
+            style: AppTextStyle.s14in.copyWith(color: AppColors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

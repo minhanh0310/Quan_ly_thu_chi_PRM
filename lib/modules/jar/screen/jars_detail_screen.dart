@@ -3,12 +3,15 @@ import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_balance_card_
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_list_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_history_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_info_footer_widget.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class JarsDetailScreen extends StatelessWidget {
-  final double totalBalance;
+  final double? totalBalance;
 
-  const JarsDetailScreen({super.key, this.totalBalance = 53500});
+  const JarsDetailScreen({super.key, this.totalBalance});
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +33,12 @@ class JarsDetailScreen extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  final double totalBalance;
+  final double? totalBalance;
   const _Body({required this.totalBalance});
 
   @override
   Widget build(BuildContext context) {
+    final service = FinanceDatabaseService();
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
@@ -42,7 +46,30 @@ class _Body extends StatelessWidget {
           padding: AppPad.h16v24,
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              SliverJarsBalanceCardWidget(totalBalance: totalBalance),
+              StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, authSnapshot) {
+                  final uid = authSnapshot.data?.uid;
+                  if (uid == null) {
+                    return SliverJarsBalanceCardWidget(
+                      totalBalance: totalBalance ?? 0,
+                    );
+                  }
+                  return StreamBuilder<List<JarModel>>(
+                    stream: service.watchJars(uid),
+                    builder: (context, snapshot) {
+                      final jars = snapshot.data ?? const [];
+                      final total = jars.fold<double>(
+                        0,
+                        (sum, j) => sum + j.amount,
+                      );
+                      return SliverJarsBalanceCardWidget(
+                        totalBalance: totalBalance ?? total,
+                      );
+                    },
+                  );
+                },
+              ),
 
               AppGap.h24,
 

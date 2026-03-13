@@ -6,6 +6,11 @@ import 'package:Quan_ly_thu_chi_PRM/modules/stats/widget/budget_comparison_bar_c
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/widget/expense_pie_chart.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/widget/budget_status_summary.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/widget/budget_warning_dialog.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_stats_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/models/transaction_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/budget_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class StatsScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -49,11 +54,23 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Using mock data - replace with Provider/BLoC
-    final statsData = StatsData.mockData;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final service = FinanceDatabaseService();
+    final statsService = FinanceStatsService();
 
-    return Column(
-      children: [
+    return StreamBuilder<List<TransactionModel>>(
+      stream: uid == null ? Stream.empty() : service.watchTransactions(uid),
+      builder: (context, txSnapshot) {
+        return StreamBuilder<List<BudgetModel>>(
+          stream: uid == null ? Stream.empty() : service.watchBudgets(uid),
+          builder: (context, budgetSnapshot) {
+            final statsData = statsService.buildStats(
+              transactions: txSnapshot.data ?? const [],
+              budgets: budgetSnapshot.data ?? const [],
+            );
+
+            return Column(
+              children: [
         AppGap.h20,
 
         // Header
@@ -124,11 +141,18 @@ class _Body extends StatelessWidget {
             controller: tabController,
             children: [
               _OverviewTab(data: statsData),
-              _CategoriesTab(data: statsData),
+              _CategoriesTab(
+                data: statsData,
+                transactions: txSnapshot.data ?? const [],
+              ),
             ],
           ),
         ),
       ],
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -150,6 +174,7 @@ class _OverviewTab extends StatelessWidget {
           BudgetStatusSummary(
             budget: data.totalBudget,
             expense: data.totalExpense,
+            income: data.totalIncome,
             currentMonth: data.currentMonth,
           ),
 
@@ -205,8 +230,9 @@ class _OverviewTab extends StatelessWidget {
 /// Categories Tab - Pie Chart and Breakdown
 class _CategoriesTab extends StatelessWidget {
   final StatsData data;
+  final List<TransactionModel> transactions;
 
-  const _CategoriesTab({required this.data});
+  const _CategoriesTab({required this.data, required this.transactions});
 
   @override
   Widget build(BuildContext context) {
@@ -252,7 +278,10 @@ class _CategoriesTab extends StatelessWidget {
                 ),
               ],
             ),
-            child: CategoryBreakdownList(data: data.categoryExpenses),
+            child: CategoryBreakdownList(
+              data: data.categoryExpenses,
+              transactions: transactions,
+            ),
           ),
 
           AppGap.h20,

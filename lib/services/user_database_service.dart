@@ -21,6 +21,9 @@ class UserDatabaseService {
       // Get existing user data to preserve all fields
       final existingUser = await getUserById(uid);
       if (existingUser != null) {
+        if (existingUser.currency != null && existingUser.currency!.isNotEmpty) {
+          return;
+        }
         // Update existing user while preserving all fields
         final updatedUser = UserModel(
           uid: existingUser.uid,

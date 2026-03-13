@@ -1,6 +1,8 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/recurring_transaction_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 class RecurringTransactionsTabWidget extends StatelessWidget {
@@ -8,15 +10,27 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transactions = RecurringTransactionModel.mockList;
-    final expenseTransactions = transactions.where((t) => !t.isIncome).toList();
-    final incomeTransactions = transactions.where((t) => t.isIncome).toList();
-    final dueSoonTransactions = transactions.where((t) => t.isDueSoon).toList();
-    final overdueTransactions = transactions.where((t) => t.isOverdue).toList();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final service = FinanceDatabaseService();
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
+    return StreamBuilder<List<RecurringTransactionModel>>(
+      stream: uid == null
+          ? Stream.empty()
+          : service.watchRecurringTransactions(uid),
+      builder: (context, snapshot) {
+        final transactions = snapshot.data ?? const [];
+        final expenseTransactions =
+            transactions.where((t) => !t.isIncome).toList();
+        final incomeTransactions =
+            transactions.where((t) => t.isIncome).toList();
+        final dueSoonTransactions =
+            transactions.where((t) => t.isDueSoon).toList();
+        final overdueTransactions =
+            transactions.where((t) => t.isOverdue).toList();
+
+        return CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
         SliverToBoxAdapter(child: AppGap.h20),
 
         // Upcoming Payments Summary
@@ -126,6 +140,8 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
 
         SliverToBoxAdapter(child: AppGap.h100),
       ],
+        );
+      },
     );
   }
 }
@@ -455,7 +471,13 @@ class _RecurringTransactionCard extends StatelessWidget {
                 child: Switch(
                   value: transaction.isActive,
                   onChanged: (value) {
-                    print('====> Toggle ${transaction.title}: $value');
+                    final uid = FirebaseAuth.instance.currentUser?.uid;
+                    if (uid == null) return;
+                    FinanceDatabaseService().setRecurringActive(
+                      uid: uid,
+                      id: transaction.id,
+                      isActive: value,
+                    );
                   },
                   activeTrackColor: AppColors.primaryPurple.withValues(
                     alpha: 0.5,

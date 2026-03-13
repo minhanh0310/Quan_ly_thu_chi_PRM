@@ -2,6 +2,8 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jars_list_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -10,6 +12,7 @@ class SliverJarsHistoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final service = FinanceDatabaseService();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,9 +25,33 @@ class SliverJarsHistoryWidget extends StatelessWidget {
           ),
         ),
         AppGap.h16,
-
-        ...DistributionEntry.mockList.map(
-          (entry) => _HistoryCard(entry: entry),
+        StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, authSnapshot) {
+            final uid = authSnapshot.data?.uid;
+            if (uid == null) {
+              return const SizedBox.shrink();
+            }
+            return StreamBuilder<List<DistributionEntry>>(
+              stream: service.watchDistributions(uid),
+              builder: (context, snapshot) {
+                final items = snapshot.data ?? const [];
+                if (items.isEmpty) {
+                  return Text(
+                    'No history yet',
+                    style: AppTextStyle.s12in.copyWith(
+                      color: context.secondaryTextColor,
+                    ),
+                  );
+                }
+                return Column(
+                  children: items
+                      .map((entry) => _HistoryCard(entry: entry))
+                      .toList(),
+                );
+              },
+            );
+          },
         ),
       ],
     );
@@ -41,6 +68,10 @@ class _HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final subtitleText =
+        entry.subtitle == 'auto_distributed' || entry.subtitle == 'Auto distributed'
+            ? 'jars_screen.auto_distributed'.tr()
+            : entry.subtitle;
     return Container(
       margin: AppPad.b10,
       padding: AppPad.h16v12,
@@ -89,7 +120,7 @@ class _HistoryCard extends StatelessWidget {
                 ),
                 AppGap.h2,
                 Text(
-                  entry.subtitle,
+                  subtitleText,
                   style: AppTextStyle.s12in.copyWith(
                     color: AppColors.textSecondary,
                     fontSize: 10,

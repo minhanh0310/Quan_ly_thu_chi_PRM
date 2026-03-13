@@ -56,6 +56,7 @@ enum BudgetStatus {
 class StatsData {
   final double totalBudget;
   final double totalExpense;
+  final double totalIncome;
   final List<MonthlyBudgetData> monthlyData;
   final List<CategoryExpense> categoryExpenses;
   final String currentMonth;
@@ -63,6 +64,7 @@ class StatsData {
   const StatsData({
     required this.totalBudget,
     required this.totalExpense,
+    required this.totalIncome,
     required this.monthlyData,
     required this.categoryExpenses,
     required this.currentMonth,
@@ -84,53 +86,4 @@ class StatsData {
     if (percentage >= 80) return BudgetStatus.warning;
     return BudgetStatus.safe;
   }
-
-  /// Mock data for demonstration
-  static StatsData get mockData => StatsData(
-    totalBudget: 5000.0,
-    totalExpense: 4250.0,
-    currentMonth: 'February 2026',
-    monthlyData: [
-      MonthlyBudgetData(month: 'Jan', budget: 4500, actual: 3800),
-      MonthlyBudgetData(month: 'Feb', budget: 5000, actual: 4250),
-    ],
-    categoryExpenses: [
-      CategoryExpense(
-        category: 'Necessities',
-        amount: 1800,
-        color: const Color(0xFF4CAF50),
-        icon: Icons.home_rounded,
-      ),
-      CategoryExpense(
-        category: 'Food',
-        amount: 850,
-        color: const Color(0xFFFF9800),
-        icon: Icons.restaurant_rounded,
-      ),
-      CategoryExpense(
-        category: 'Transportation',
-        amount: 450,
-        color: const Color(0xFF2196F3),
-        icon: Icons.directions_car_rounded,
-      ),
-      CategoryExpense(
-        category: 'Entertainment',
-        amount: 600,
-        color: const Color(0xFFE91E63),
-        icon: Icons.movie_rounded,
-      ),
-      CategoryExpense(
-        category: 'Shopping',
-        amount: 350,
-        color: const Color(0xFF9C27B0),
-        icon: Icons.shopping_bag_rounded,
-      ),
-      CategoryExpense(
-        category: 'Others',
-        amount: 200,
-        color: const Color(0xFF607D8B),
-        icon: Icons.more_horiz_rounded,
-      ),
-    ],
-  );
 }

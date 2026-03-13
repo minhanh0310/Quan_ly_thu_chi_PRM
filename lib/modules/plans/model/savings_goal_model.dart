@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/helpers/serialization_helpers.dart';
 
 enum SavingsGoalStatus { active, completed, overdue }
 
@@ -8,13 +9,34 @@ class AccumulationEntry {
   final String title;       // e.g. "Tiết kiệm tháng 2/2026"
   final String subtitle;   // e.g. "Chuyển từ tài khoản lương"
   final double amount;
+  final String? id;
 
   const AccumulationEntry({
+    this.id,
     required this.date,
     required this.title,
     required this.subtitle,
     required this.amount,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'date': dateTimeToMillis(date),
+      'title': title,
+      'subtitle': subtitle,
+      'amount': amount,
+    };
+  }
+
+  factory AccumulationEntry.fromMap(String id, Map<dynamic, dynamic> map) {
+    return AccumulationEntry(
+      id: id,
+      date: dateTimeFromMillis(map['date']),
+      title: map['title'] as String? ?? '',
+      subtitle: map['subtitle'] as String? ?? '',
+      amount: (map['amount'] as num?)?.toDouble() ?? 0,
+    );
+  }
 }
 
 /// Milestone for roadmap display
@@ -23,13 +45,34 @@ class PlanMilestone {
   final String description;
   final DateTime? date;
   final bool isReached;
+  final String? id;
 
   const PlanMilestone({
+    this.id,
     required this.title,
     required this.description,
     this.date,
     this.isReached = false,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'description': description,
+      'date': date != null ? dateTimeToMillis(date!) : null,
+      'isReached': isReached,
+    };
+  }
+
+  factory PlanMilestone.fromMap(String id, Map<dynamic, dynamic> map) {
+    return PlanMilestone(
+      id: id,
+      title: map['title'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      date: map['date'] != null ? dateTimeFromMillis(map['date']) : null,
+      isReached: map['isReached'] as bool? ?? false,
+    );
+  }
 }
 
 class SavingsGoalModel {
@@ -122,105 +165,73 @@ class SavingsGoalModel {
   /// Jar id for Financial Freedom — plans use this jar as source when adding money.
   static const String jarFinancialFreedom = 'financial_freedom';
 
-  static List<SavingsGoalModel> get mockList => [
-    SavingsGoalModel(
-      id: '1',
-      name: 'Buy iPhone 16 Pro',
-      description: 'New phone for work',
-      targetAmount: 30000000,
-      currentAmount: 15000000,
-      deadline: DateTime(2026, 6, 1),
-      color: const Color(0xFF6C5CE7),
-      icon: Icons.phone_iphone_rounded,
-      createdAt: DateTime(2025, 12, 1),
-      jarId: jarFinancialFreedom,
-    ),
-    SavingsGoalModel(
-      id: '2',
-      name: 'Japan Trip',
-      description: 'Summer vacation 2026',
-      targetAmount: 50000000,
-      currentAmount: 20000000,
-      deadline: DateTime(2026, 7, 15),
-      color: const Color(0xFFFF6B93),
-      icon: Icons.flight_rounded,
-      createdAt: DateTime(2025, 10, 1),
-      jarId: jarFinancialFreedom,
-    ),
-    SavingsGoalModel(
-      id: '3',
-      name: 'Emergency Fund',
-      description: '3 months expenses',
-      targetAmount: 50000000,
-      currentAmount: 45000000,
-      deadline: DateTime(2026, 3, 31),
-      color: const Color(0xFF00D09E),
-      icon: Icons.savings_rounded,
-      createdAt: DateTime(2025, 6, 1),
-      jarId: jarFinancialFreedom,
-    ),
-    SavingsGoalModel(
-      id: '4',
-      name: 'Buy a House',
-      description: 'First home',
-      targetAmount: 500000000,
-      currentAmount: 125000000,
-      deadline: DateTime(2030, 12, 31),
-      color: const Color(0xFF5B4EFF),
-      icon: Icons.home_rounded,
-      createdAt: DateTime(2025, 1, 1),
-      jarId: jarFinancialFreedom,
-      milestones: [
-        PlanMilestone(
-          title: 'Started Saving',
-          description: 'Initial commitment made',
-          date: DateTime(2025, 1, 1),
-          isReached: true,
-        ),
-        PlanMilestone(
-          title: '25% Milestone',
-          description: 'Quarter-way to the dream',
-          date: DateTime(2026, 9, 1),
-          isReached: true,
-        ),
-        PlanMilestone(
-          title: 'Goal Reached',
-          description: 'Final acquisition phase',
-          date: DateTime(2030, 12, 31),
-          isReached: false,
-        ),
-      ],
-      accumulationHistory: [
-        AccumulationEntry(
-          date: DateTime(2026, 2, 1),
-          title: 'Tiết kiệm tháng 2/2026',
-          subtitle: 'Chuyển từ tài khoản lương',
-          amount: 2500000,
-        ),
-        AccumulationEntry(
-          date: DateTime(2026, 1, 1),
-          title: 'Tiết kiệm tháng 1/2026',
-          subtitle: 'Chuyển từ tài khoản lương',
-          amount: 2500000,
-        ),
-        AccumulationEntry(
-          date: DateTime(2025, 12, 1),
-          title: 'Tiết kiệm tháng 12/2025',
-          subtitle: 'Chuyển từ tài khoản lương',
-          amount: 2500000,
-        ),
-      ],
-    ),
-    SavingsGoalModel(
-      id: '5',
-      name: 'Old Goal - Overdue',
-      targetAmount: 10000000,
-      currentAmount: 3000000,
-      deadline: DateTime(2025, 12, 31),
-      color: const Color(0xFFFFC94D),
-      icon: Icons.flag_rounded,
-      createdAt: DateTime(2025, 6, 1),
-      jarId: jarFinancialFreedom,
-    ),
-  ];
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      'targetAmount': targetAmount,
+      'currentAmount': currentAmount,
+      'deadline': dateTimeToMillis(deadline),
+      'imageUrl': imageUrl,
+      'color': colorToValue(color),
+      'icon': iconDataToMap(icon),
+      'createdAt': dateTimeToMillis(createdAt),
+      'jarId': jarId,
+      'milestones': milestones?.map((m) => m.toMap()).toList(),
+      'accumulationHistory': accumulationHistory.map((e) => e.toMap()).toList(),
+    };
+  }
+
+  factory SavingsGoalModel.fromMap(String id, Map<dynamic, dynamic> map) {
+    final rawMilestones = map['milestones'];
+    final rawHistory = map['accumulationHistory'];
+    final milestonesList = <PlanMilestone>[];
+    if (rawMilestones is List) {
+      for (int i = 0; i < rawMilestones.length; i++) {
+        final item = rawMilestones[i];
+        if (item is Map) {
+          milestonesList.add(PlanMilestone.fromMap(i.toString(), item));
+        }
+      }
+    } else if (rawMilestones is Map) {
+      rawMilestones.forEach((key, value) {
+        if (value is Map) {
+          milestonesList.add(PlanMilestone.fromMap(key.toString(), value));
+        }
+      });
+    }
+
+    final historyList = <AccumulationEntry>[];
+    if (rawHistory is List) {
+      for (int i = 0; i < rawHistory.length; i++) {
+        final item = rawHistory[i];
+        if (item is Map) {
+          historyList.add(AccumulationEntry.fromMap(i.toString(), item));
+        }
+      }
+    } else if (rawHistory is Map) {
+      rawHistory.forEach((key, value) {
+        if (value is Map) {
+          historyList.add(AccumulationEntry.fromMap(key.toString(), value));
+        }
+      });
+    }
+    return SavingsGoalModel(
+      id: id,
+      name: map['name'] as String? ?? '',
+      description: map['description'] as String?,
+      targetAmount: (map['targetAmount'] as num?)?.toDouble() ?? 0,
+      currentAmount: (map['currentAmount'] as num?)?.toDouble() ?? 0,
+      deadline: dateTimeFromMillis(map['deadline']),
+      imageUrl: map['imageUrl'] as String?,
+      color: colorFromValue((map['color'] as num?)?.toInt() ?? 0xFF6C5CE7),
+      icon: map['icon'] is Map
+          ? iconDataFromMap(map['icon'] as Map<dynamic, dynamic>)
+          : Icons.flag_rounded,
+      createdAt: dateTimeFromMillis(map['createdAt']),
+      jarId: map['jarId'] as String?,
+      milestones: milestonesList.isEmpty ? null : milestonesList,
+      accumulationHistory: historyList,
+    );
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/helpers/serialization_helpers.dart';
 
 enum BudgetCycle { weekly, monthly, yearly }
 
@@ -37,66 +38,42 @@ class BudgetModel {
   
   bool get isSafe => percentUsed < 0.8;
 
-  static List<BudgetModel> get mockList => [
-    BudgetModel(
-      id: '1',
-      categoryName: 'Food & Dining',
-      categoryIcon: Icons.restaurant_rounded,
-      categoryColor: const Color(0xFFFF6B93),
-      limitAmount: 5000000,
-      spentAmount: 3500000,
-      cycle: BudgetCycle.monthly,
-      expenseType: ExpenseType.variable,
-    ),
-    BudgetModel(
-      id: '2',
-      categoryName: 'Transportation',
-      categoryIcon: Icons.directions_car_rounded,
-      categoryColor: const Color(0xFF00D09E),
-      limitAmount: 2000000,
-      spentAmount: 1800000,
-      cycle: BudgetCycle.monthly,
-      expenseType: ExpenseType.variable,
-    ),
-    BudgetModel(
-      id: '3',
-      categoryName: 'Shopping',
-      categoryIcon: Icons.shopping_bag_rounded,
-      categoryColor: const Color(0xFF5B4EFF),
-      limitAmount: 3000000,
-      spentAmount: 3200000,
-      cycle: BudgetCycle.monthly,
-      expenseType: ExpenseType.variable,
-    ),
-    BudgetModel(
-      id: '4',
-      categoryName: 'Rent',
-      categoryIcon: Icons.home_rounded,
-      categoryColor: const Color(0xFF6C5CE7),
-      limitAmount: 8000000,
-      spentAmount: 8000000,
-      cycle: BudgetCycle.monthly,
-      expenseType: ExpenseType.fixed,
-    ),
-    BudgetModel(
-      id: '5',
-      categoryName: 'Utilities',
-      categoryIcon: Icons.bolt_rounded,
-      categoryColor: const Color(0xFFFFC94D),
-      limitAmount: 1500000,
-      spentAmount: 1200000,
-      cycle: BudgetCycle.monthly,
-      expenseType: ExpenseType.fixed,
-    ),
-    BudgetModel(
-      id: '6',
-      categoryName: 'Entertainment',
-      categoryIcon: Icons.movie_rounded,
-      categoryColor: const Color(0xFF4ECDC4),
-      limitAmount: 1000000,
-      spentAmount: 400000,
-      cycle: BudgetCycle.monthly,
-      expenseType: ExpenseType.variable,
-    ),
-  ];
+  Map<String, dynamic> toMap() {
+    return {
+      'categoryName': categoryName,
+      'categoryIcon': iconDataToMap(categoryIcon),
+      'categoryColor': colorToValue(categoryColor),
+      'limitAmount': limitAmount,
+      'spentAmount': spentAmount,
+      'cycle': cycle.name,
+      'expenseType': expenseType.name,
+      'startDate': startDate != null ? dateTimeToMillis(startDate!) : null,
+    };
+  }
+
+  factory BudgetModel.fromMap(String id, Map<dynamic, dynamic> map) {
+    return BudgetModel(
+      id: id,
+      categoryName: map['categoryName'] as String? ?? '',
+      categoryIcon: map['categoryIcon'] is Map
+          ? iconDataFromMap(map['categoryIcon'] as Map<dynamic, dynamic>)
+          : Icons.category_rounded,
+      categoryColor: colorFromValue(
+        (map['categoryColor'] as num?)?.toInt() ?? 0xFF9E9E9E,
+      ),
+      limitAmount: (map['limitAmount'] as num?)?.toDouble() ?? 0,
+      spentAmount: (map['spentAmount'] as num?)?.toDouble() ?? 0,
+      cycle: BudgetCycle.values.firstWhere(
+        (e) => e.name == (map['cycle'] as String? ?? 'monthly'),
+        orElse: () => BudgetCycle.monthly,
+      ),
+      expenseType: ExpenseType.values.firstWhere(
+        (e) => e.name == (map['expenseType'] as String? ?? 'variable'),
+        orElse: () => ExpenseType.variable,
+      ),
+      startDate: map['startDate'] != null
+          ? dateTimeFromMillis(map['startDate'])
+          : null,
+    );
+  }
 }

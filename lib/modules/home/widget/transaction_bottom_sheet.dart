@@ -1,4 +1,8 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 // 6 Jars categories
@@ -67,28 +71,86 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     super.dispose();
   }
 
-  void _onSave() {
-    final amount = double.tryParse(_amountController.text) ?? 0;
+  Future<void> _onSave() async {
+    final amountText = _amountController.text.replaceAll(',', '');
+    final amount = double.tryParse(amountText) ?? 0;
     final note = _noteController.text.trim();
 
     final tagRegex = RegExp(r'#\w+');
 
     final tags = tagRegex
         .allMatches(note)
-        .map((m) => m.group(0) ?? '')
+        .map((m) => (m.group(0) ?? '').replaceAll('#', ''))
         .toList();
 
     final noteText = note.replaceAll(tagRegex, '').trim();
 
-    print('====> Save Transaction');
-    print('Type: ${_isIncome ? 'Income' : 'Expense'}');
-    print('Amount: $amount');
-    print('Category: $_selectedCategory');
-    print('Date: $_selectedDate');
-    print('Note: $noteText');
-    print('Tags: $tags');
-
-    Navigator.pop(context);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please sign in again to save.'),
+          backgroundColor: AppColors.expenseRed,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    if (amount <= 0) {
+      return;
+    }
+    if (!_isIncome && _selectedCategory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a tag to record expense.'),
+          backgroundColor: AppColors.expenseRed,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    final category = _selectedCategory ?? _categories.first;
+    final service = FinanceDatabaseService();
+    try {
+      if (_isIncome) {
+        await service.addIncome(
+          uid: uid,
+          amount: amount,
+          date: _selectedDate,
+          title: category,
+          note: noteText,
+          tags: tags,
+        );
+      } else {
+        await service.addExpense(
+          uid: uid,
+          amount: amount,
+          date: _selectedDate,
+          category: category,
+          note: noteText,
+          tags: tags,
+        );
+      }
+      if (!mounted) return;
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isIncome ? 'Saved income' : 'Saved expense'),
+          backgroundColor:
+              _isIncome ? AppColors.incomeGreen : AppColors.expenseRed,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Save failed: ${e.toString()}'),
+          backgroundColor: AppColors.expenseRed,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   Future<void> _pickDate() async {
@@ -214,16 +276,28 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           ),
           child: Row(
             children: [
-              _buildToggleTab(
-                label: 'home_screen.income'.tr(),
-                isSelected: _isIncome,
-                onTap: () => setState(() => _isIncome = true),
-              ),
-              _buildToggleTab(
-                label: 'home_screen.expense'.tr(),
-                isSelected: !_isIncome,
-                onTap: () => setState(() => _isIncome = false),
-              ),
+                _buildToggleTab(
+                  label: 'home_screen.income'.tr(),
+                  isSelected: _isIncome,
+                  onTap: () => setState(() {
+                    _isIncome = true;
+                    if (_selectedCategory != null &&
+                        !_incomeCategories.contains(_selectedCategory)) {
+                      _selectedCategory = null;
+                    }
+                  }),
+                ),
+                _buildToggleTab(
+                  label: 'home_screen.expense'.tr(),
+                  isSelected: !_isIncome,
+                  onTap: () => setState(() {
+                    _isIncome = false;
+                    if (_selectedCategory != null &&
+                        !_expenseCategories.contains(_selectedCategory)) {
+                      _selectedCategory = null;
+                    }
+                  }),
+                ),
             ],
           ),
         ),
@@ -245,7 +319,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       child: Row(
         children: [
           Text(
-            '\$',
+            context.read<CurrencyProvider>().symbol,
             style: AppTextStyle.s24in.copyWith(
               color: context.secondaryTextColor,
               fontWeight: FontWeight.w600,

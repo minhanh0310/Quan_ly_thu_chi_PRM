@@ -1,6 +1,8 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/model/jar_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/jar/widget/sliver_jar_card_widget.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SliverJarsListWidget extends StatelessWidget {
@@ -8,13 +10,45 @@ class SliverJarsListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final service = FinanceDatabaseService();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(title: 'jars_screen.current_distribution'.tr()),
         AppGap.h16,
-
-        ...JarModel.mockList.map((jar) => SliverJarCardWidget(jar: jar)),
+        StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, authSnapshot) {
+            final uid = authSnapshot.data?.uid;
+            if (uid == null) {
+              return const SizedBox.shrink();
+            }
+            return FutureBuilder<void>(
+              future: service.ensureDefaultJars(uid),
+              builder: (context, snapshot) {
+                return StreamBuilder<List<JarModel>>(
+                  stream: service.watchJars(uid),
+                  builder: (context, snap) {
+                    final jars = snap.data ?? const [];
+                    if (jars.isEmpty) {
+                      return Text(
+                        'No jars yet',
+                        style: AppTextStyle.s12in.copyWith(
+                          color: context.secondaryTextColor,
+                        ),
+                      );
+                    }
+                    return Column(
+                      children: jars
+                          .map((jar) => SliverJarCardWidget(jar: jar))
+                          .toList(),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 class BudgetStatusSummary extends StatelessWidget {
   final double budget;
   final double expense;
+  final double? income;
   final String currentMonth;
 
   const BudgetStatusSummary({
@@ -15,6 +16,7 @@ class BudgetStatusSummary extends StatelessWidget {
     required this.budget,
     required this.expense,
     required this.currentMonth,
+    this.income,
   });
 
   @override
@@ -114,6 +116,23 @@ class BudgetStatusSummary extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (income != null) ...[
+                    AppGap.h4,
+                    Text(
+                      'stats_screen.income'.tr(),
+                      style: AppTextStyle.s12in.copyWith(
+                        color: context.secondaryTextColor,
+                      ),
+                    ),
+                    AppGap.h2,
+                    Text(
+                      cp.formatCurrency(income!),
+                      style: AppTextStyle.s14in.copyWith(
+                        color: AppColors.incomeGreen,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                   Text(
                     'stats_screen.of_budget'.tr(
                       args: [cp.formatCurrency(budget)],

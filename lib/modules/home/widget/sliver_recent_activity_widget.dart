@@ -1,5 +1,8 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/models/transaction_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -9,78 +12,70 @@ class SliverRecentActivityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Replace với data từ BLoC/Provider
+    final uid = FirebaseAuth.instance.currentUser?.uid;
     final cp = context.read<CurrencyProvider>();
-    final mockActivities = [
-      {
-        'icon': IconPath.arrowUpRight,
-        'iconColor': AppColors.incomeGreen,
-        'backgroundColor': AppColors.incomeLightGreen,
-        'title': 'Salary',
-        'date': '2024-02-01',
-        'amount': '+${cp.formatCurrency(5000)}',
-        'isIncome': true,
-      },
-      {
-        'icon': IconPath.arrowDownLeft,
-        'iconColor': AppColors.expenseRed,
-        'backgroundColor': AppColors.expenseLightRed,
-        'title': 'Rent',
-        'date': '2024-02-02',
-        'amount': '-${cp.formatCurrency(1200)}',
-        'isIncome': false,
-      },
-      {
-        'icon': IconPath.arrowDownLeft,
-        'iconColor': AppColors.expenseRed,
-        'backgroundColor': AppColors.expenseLightRed,
-        'title': 'Groceries',
-        'date': '2024-02-03',
-        'amount': '-${cp.formatCurrency(450)}',
-        'isIncome': false,
-      },
-      {
-        'icon': IconPath.arrowUpRight,
-        'iconColor': AppColors.incomeGreen,
-        'backgroundColor': AppColors.incomeLightGreen,
-        'title': 'Freelance',
-        'date': '2024-02-04',
-        'amount': '+${cp.formatCurrency(2300)}',
-        'isIncome': true,
-      },
-    ];
+    final service = FinanceDatabaseService();
 
     return SliverPadding(
       padding: AppPad.h20,
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          if (index == 0) {
-            return Text(
-              'home_screen.recent_activity'.tr(),
-              style: AppTextStyle.s16in.copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: context.primaryTextColor,
-              ),
-            );
-          }
-          final activityIndex = index - 1;
-          if (activityIndex >= mockActivities.length) {
-            return null;
-          }
-
-          final activity = mockActivities[activityIndex];
-
-          return _ActivityItem(
-            icon: activity['icon'] as String,
-            iconColor: activity['iconColor'] as Color,
-            backgroundColor: activity['backgroundColor'] as Color,
-            title: activity['title'] as String,
-            date: activity['date'] as String,
-            amount: activity['amount'] as String,
-            isIncome: activity['isIncome'] as bool,
+      sliver: StreamBuilder<List<TransactionModel>>(
+        stream: uid == null ? Stream.empty() : service.watchTransactions(uid),
+        builder: (context, snapshot) {
+          final items = snapshot.data ?? const [];
+          final recent = items.take(4).toList();
+          return SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              if (index == 0) {
+                return Text(
+                  'home_screen.recent_activity'.tr(),
+                  style: AppTextStyle.s16in.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: context.primaryTextColor,
+                  ),
+                );
+              }
+              if (recent.isEmpty) {
+                if (index == 1) {
+                  return Padding(
+                    padding: AppPad.v10,
+                    child: Text(
+                      'home_screen.no_activity'.tr(),
+                      style: AppTextStyle.s12in.copyWith(
+                        color: context.secondaryTextColor,
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              }
+              final activityIndex = index - 1;
+              if (activityIndex >= recent.length) {
+                return null;
+              }
+              final activity = recent[activityIndex];
+              final isIncome = activity.isIncome;
+              final icon = isIncome ? IconPath.arrowUpRight : IconPath.arrowDownLeft;
+              final iconColor =
+                  isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
+              final bgColor =
+                  isIncome ? AppColors.incomeLightGreen : AppColors.expenseLightRed;
+              final date =
+                  '${activity.date.year}-${activity.date.month.toString().padLeft(2, '0')}-${activity.date.day.toString().padLeft(2, '0')}';
+              final formatted =
+                  '${isIncome ? '+' : '-'}${cp.formatCurrency(activity.amount)}';
+              return _ActivityItem(
+                icon: icon,
+                iconColor: iconColor,
+                backgroundColor: bgColor,
+                title: activity.title,
+                date: date,
+                amount: formatted,
+                isIncome: isIncome,
+              );
+            }, childCount: recent.isEmpty ? 2 : recent.length + 1),
           );
-        }, childCount: mockActivities.length + 1),
+        },
       ),
     );
   }

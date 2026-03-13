@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/helpers/serialization_helpers.dart';
 
 class JarModel {
   final String name;
@@ -10,8 +10,10 @@ class JarModel {
   final double actualPercent;
   final double amount;
   final int activePlansCount;
+  final String? id;
 
   const JarModel({
+    this.id,
     required this.name,
     required this.description,
     required this.color,
@@ -22,88 +24,65 @@ class JarModel {
     this.activePlansCount = 0,
   });
 
-  /// Mock data — replace with real data source later
-  static const List<JarModel> mockList = [
-    JarModel(
-      name: 'Necessities',
-      description: 'Living expenses, food, utility bills',
-      color: Color(0xFF4CAF50),
-      icon: Icons.home_rounded,
-      targetPercent: 0.55,
-      actualPercent: 0.047,
-      amount: 2500,
-    ),
-    JarModel(
-      name: 'Financial Freedom',
-      description: 'Invest, accumulate for big plans',
-      color: Color(0xFF5B4EFF),
-      icon: Icons.trending_up_rounded,
-      targetPercent: 0.10,
-      actualPercent: 0.841,
-      amount: 45000,
-      activePlansCount: 2,
-    ),
-    JarModel(
-      name: 'Education',
-      description: 'Learning, personal development',
-      color: Color(0xFFFFC94D),
-      icon: Icons.school_rounded,
-      targetPercent: 0.10,
-      actualPercent: 0.028,
-      amount: 1500,
-    ),
-    JarModel(
-      name: 'Long-term Savings',
-      description: 'Emergency fund, big purchases',
-      color: Color(0xFF26C6DA),
-      icon: Icons.account_balance_rounded,
-      targetPercent: 0.10,
-      actualPercent: 0.028,
-      amount: 1500,
-      activePlansCount: 2,
-    ),
-    JarModel(
-      name: 'Entertainment',
-      description: 'Values, travel, rewards',
-      color: Color(0xFFFF6B93),
-      icon: Icons.celebration_rounded,
-      targetPercent: 0.10,
-      actualPercent: 0.028,
-      amount: 1500,
-    ),
-    JarModel(
-      name: 'Give',
-      description: 'Charity, gifts, helping others',
-      color: Color(0xFFAB47BC),
-      icon: Icons.volunteer_activism_rounded,
-      targetPercent: 0.05,
-      actualPercent: 0.028,
-      amount: 1500,
-    ),
-  ];
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'color': colorToValue(color),
+      'icon': iconDataToMap(icon),
+      'targetPercent': targetPercent,
+      'actualPercent': actualPercent,
+      'amount': amount,
+      'activePlansCount': activePlansCount,
+    };
+  }
+
+  factory JarModel.fromMap(String id, Map<dynamic, dynamic> map) {
+    return JarModel(
+      id: id,
+      name: map['name'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      color: colorFromValue((map['color'] as num?)?.toInt() ?? 0xFF9E9E9E),
+      icon: map['icon'] is Map
+          ? iconDataFromMap(map['icon'] as Map<dynamic, dynamic>)
+          : Icons.account_balance_wallet_rounded,
+      targetPercent: (map['targetPercent'] as num?)?.toDouble() ?? 0,
+      actualPercent: (map['actualPercent'] as num?)?.toDouble() ?? 0,
+      amount: (map['amount'] as num?)?.toDouble() ?? 0,
+      activePlansCount: (map['activePlansCount'] as num?)?.toInt() ?? 0,
+    );
+  }
 }
 
 class DistributionEntry {
   final String month;
   final String subtitle;
   final double amount;
+  final String? id;
 
   const DistributionEntry({
+    this.id,
     required this.month,
     required this.subtitle,
     required this.amount,
   });
 
-  static List<DistributionEntry> mockList = [
-    DistributionEntry(
-      month: 'February 2026',
-      subtitle: 'jars_screen.auto_distributed'.tr(),
-      amount: 5000,
-    ),
-    DistributionEntry(
-      month: 'January 2026',
-      subtitle: 'jars_screen.auto_distributed'.tr(),
-      amount: 5000,
-    ),
-  ];
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'month': month,
+      'subtitle': subtitle,
+      'amount': amount,
+    };
+  }
+
+  factory DistributionEntry.fromMap(String id, Map<dynamic, dynamic> map) {
+    return DistributionEntry(
+      id: id,
+      month: map['month'] as String? ?? '',
+      subtitle: map['subtitle'] as String? ?? '',
+      amount: (map['amount'] as num?)?.toDouble() ?? 0,
+    );
+  }
 }

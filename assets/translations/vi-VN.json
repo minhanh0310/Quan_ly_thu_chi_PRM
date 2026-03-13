@@ -113,6 +113,7 @@
         "budget": "Ngân sách",
         "actual": "Thực tế",
         "spent": "Đã chi",
+        "income": "Thu nhập",
         "remaining_amount": "Số tiền Còn lại",
         "overspent_amount": "Số tiền Vượt chi",
         "of_budget": "của ${}",

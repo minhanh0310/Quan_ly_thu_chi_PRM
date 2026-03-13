@@ -1,4 +1,9 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/savings_goal_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SliverActivePlansWidget extends StatelessWidget {
@@ -21,6 +26,8 @@ class SliverActivePlansWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final service = FinanceDatabaseService();
     return SliverToBoxAdapter(
       child: Column(
         children: [
@@ -60,23 +67,43 @@ class SliverActivePlansWidget extends StatelessWidget {
           // Plans List
           SizedBox(
             height: 200,
-            child: ListView.separated(
-              scrollDirection: Axis.vertical,
-              padding: AppPad.h20,
-              itemCount: mockPlans.length,
-              separatorBuilder: (context, index) => AppGap.w16,
-              itemBuilder: (context, index) {
-                final plan = mockPlans[index];
-
-                final color = getColorByIndex(index);
-
-                return _PlanCard(
-                  title: plan['title'],
-                  current: plan['current'],
-                  target: plan['target'],
-                  progress: plan['progress'],
-                  imageUrl: plan['imageUrl'],
-                  color: color,
+            child: StreamBuilder<List<SavingsGoalModel>>(
+              stream: uid == null ? Stream.empty() : service.watchSavingsGoals(uid),
+              builder: (context, snapshot) {
+                final plans = snapshot.data ?? const [];
+                final activePlans =
+                    plans.where((p) => p.status == SavingsGoalStatus.active).toList();
+                if (activePlans.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'home_screen.no_plans'.tr(),
+                      style: AppTextStyle.s12in.copyWith(
+                        color: context.secondaryTextColor,
+                      ),
+                    ),
+                  );
+                }
+                return ListView.separated(
+                  scrollDirection: Axis.vertical,
+                  padding: AppPad.h20,
+                  itemCount: activePlans.length,
+                  separatorBuilder: (context, index) => AppGap.w16,
+                  itemBuilder: (context, index) {
+                    final plan = activePlans[index];
+                    final color = getColorByIndex(index);
+                    return _PlanCard(
+                      title: plan.name,
+                      current: context.read<CurrencyProvider>().formatCurrency(
+                            plan.currentAmount,
+                          ),
+                      target: context.read<CurrencyProvider>().formatCurrency(
+                            plan.targetAmount,
+                          ),
+                      progress: plan.progressPercent,
+                      imageUrl: plan.imageUrl ?? Images.house,
+                      color: color,
+                    );
+                  },
                 );
               },
             ),
@@ -85,33 +112,6 @@ class SliverActivePlansWidget extends StatelessWidget {
       ),
     );
   }
-
-  static final List<Map<String, dynamic>> mockPlans = [
-    {
-      'title': 'home_screen.buy_house'.tr(),
-      'current': '\$125,000',
-      'target': '\$500,000',
-      'progress': 0.25, //TODO: Calculate progress based on actual values (ex: current/target)
-      'imageUrl': Images.house,
-      'category': 'property',
-    },
-    {
-      'title': 'home_screen.buy_tesla'.tr(),
-      'current': '\$15,000',
-      'target': '\$60,000',
-      'progress': 0.25,
-      'imageUrl': Images.tesla,
-      'category': 'vehicle',
-    },
-    {
-      'title': 'home_screen.travel_fund'.tr(),
-      'current': '\$8,000',
-      'target': '\$20,000',
-      'progress': 0.4,
-      'imageUrl': Images.house, // TODO: Add travel image
-      'category': 'travel',
-    },
-  ];
 }
 
 class _PlanCard extends StatelessWidget {
