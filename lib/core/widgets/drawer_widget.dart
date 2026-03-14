@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/security_biometrics_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -111,6 +112,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             title: 'drawer.general_settings'.tr(),
                             onTap: () {
                               Navigator.pop(context);
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.generalSettings,
+                              );
                             },
                           ),
 
@@ -120,6 +125,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             title: 'Security & Biometrics',
                             onTap: () {
                               Navigator.pop(context);
+                              SecurityBiometricsPopup.show(context);
                             },
                           ),
 
