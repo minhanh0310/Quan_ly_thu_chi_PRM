@@ -42,6 +42,22 @@ class UserDatabaseService {
     }
   }
 
+  Future<void> updateUserPhotoUrl(String uid, String photoUrl) async {
+    final existingUser = await getUserById(uid);
+    if (existingUser != null) {
+      await _usersRef.child(uid).set(
+        UserModel(
+          uid: existingUser.uid,
+          name: existingUser.name,
+          email: existingUser.email,
+          createdAt: existingUser.createdAt,
+          currency: existingUser.currency,
+          photoUrl: photoUrl,
+        ).toMap(),
+      );
+    }
+  }
+
   Future<void> updateUserName(String uid, String name) async {
     try {
       // Get existing user data to preserve all fields

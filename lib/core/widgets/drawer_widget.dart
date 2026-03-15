@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
+import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/auth/widgets/security_biometrics_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -16,6 +17,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
   bool _isLanguageExpanded = false;
+  String? _dbDisplayName;
 
   @override
   void initState() {
@@ -34,6 +36,18 @@ class _DrawerWidgetState extends State<DrawerWidget>
       ),
     );
     _animationController.forward();
+    _loadDbName();
+  }
+
+  Future<void> _loadDbName() async {
+    final user = FirebaseAuthService().currentUser;
+    if (user == null) return;
+    try {
+      final record = await UserDatabaseService().getUserById(user.uid);
+      if (mounted && record != null && record.name.isNotEmpty) {
+        setState(() => _dbDisplayName = record.name);
+      }
+    } catch (_) {}
   }
 
   @override
@@ -337,16 +351,26 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
   Widget _buildDrawerHeader(BuildContext context) {
     final currentUser = FirebaseAuthService().currentUser;
-    final displayName = currentUser?.displayName ?? 
-                        currentUser?.email?.split('@').first ?? 
-                        'User';
-    
+    // Prefer DB name (source of truth) over Firebase Auth displayName, which
+    // can be overwritten by Google's name after account linking.
+    final displayName =
+        _dbDisplayName ??
+        currentUser?.displayName ??
+        currentUser?.email?.split('@').first ??
+        'User';
+    final photoUrl = currentUser?.photoURL;
+
     return Row(
       children: [
         CircleAvatar(
           radius: 24,
           backgroundColor: context.primaryColor.withValues(alpha: 0.1),
-          child: Icon(Icons.person, color: context.primaryColor, size: 28),
+          backgroundImage: photoUrl != null && photoUrl.isNotEmpty
+              ? NetworkImage(photoUrl)
+              : null,
+          child: photoUrl == null || photoUrl.isEmpty
+              ? Icon(Icons.person, color: context.primaryColor, size: 28)
+              : null,
         ),
         AppGap.w12,
         Expanded(
@@ -379,22 +403,6 @@ class _DrawerWidgetState extends State<DrawerWidget>
                 ],
               ),
             ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF0EDFF),
-            borderRadius: AppBorderRadius.a12,
-          ),
-          child: Text(
-            'PREMIUM',
-            style: AppTextStyle.s12in.copyWith(
-              fontSize: 9,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF6C5CE7),
-              letterSpacing: 0.5,
-            ),
           ),
         ),
       ],
@@ -554,11 +562,11 @@ void _showLogoutDialog(BuildContext context) {
               try {
                 // Sign out from Firebase
                 await FirebaseAuthService().signOut();
-                
+
                 if (!context.mounted) return;
                 Navigator.pop(context); // Close dialog
                 Navigator.pop(context); // Close drawer
-                
+
                 // Navigate to signin screen
                 Navigator.pushNamedAndRemoveUntil(
                   context,

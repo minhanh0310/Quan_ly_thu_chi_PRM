@@ -168,12 +168,7 @@
         "dont_have_account": "Don't have an account?",
         "signup_link": "Sign Up",
         "signing_in": "Signing in...",
-        "signin_failed": "Sign in failed: ",
-        "or_divider": "Or",
-        "google_signin": "Continue with Google",
-        "link_accounts_title": "Link Accounts",
-        "link_accounts_message": "Email {email} is already registered with a password.\nEnter your password to link with your Google account.",
-        "link_button": "Link"
+        "signin_failed": "Sign in failed: "
     },
     "sign_up": {
         "appbar": "Sign Up ",
@@ -217,25 +212,14 @@
         "title": "Change Password",
         "subtitle": "Update your password",
         "current_password": "Current Password",
-        "current_password_hint": "Enter current password",
-        "current_password_required": "Current password is required",
         "new_password": "New Password",
-        "new_password_hint": "Enter new password",
-        "new_password_empty": "New password is required",
+        "new_password_empty": "Please enter new password",
         "confirm_password": "Confirm Password",
-        "confirm_password_hint": "Confirm new password",
         "confirm_password_empty": "Please confirm your password",
         "pw_unmatch": "Passwords do not match",
-        "min_length": "Password must be at least 6 characters",
-        "same_as_current": "New password must not match current password",
-        "wrong_current_password": "Current password is incorrect",
-        "requires_recent_login": "Please sign out and sign in again before changing password",
-        "user_not_found": "User not found",
-        "weak_password": "Password is too weak, please choose a stronger password",
-        "operation_not_allowed": "Cannot change password for this account type",
         "change_button": "Change Password",
-        "success_message": "Password changed successfully",
-        "error_message": "Error changing password"
+        "success_title": "Password Changed!",
+        "success_message": "Your password has been changed successfully"
     },
     "email_verification": {
         "title": "Verify Email",
@@ -333,7 +317,7 @@
         "necessities": "Necessities",
         "financial_freedom": "Financial Freedom",
         "education": "Education",
-        "long_term_savings": "Long-term Savings",
+        "lt_savings": "Long-term Savings",
         "entertainment": "Entertainment",
         "give": "Give"
     }

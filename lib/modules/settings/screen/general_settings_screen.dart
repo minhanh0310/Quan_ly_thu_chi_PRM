@@ -20,9 +20,27 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController();
+    _loadInitialName();
+  }
+
+  Future<void> _loadInitialName() async {
     final user = _authService.currentUser;
-    final displayName = user?.displayName ?? user?.email?.split('@').first ?? '';
-    _nameController = TextEditingController(text: displayName);
+    if (user == null) return;
+    try {
+      final record = await _userDbService.getUserById(user.uid);
+      final name = (record != null && record.name.isNotEmpty)
+          ? record.name
+          : (user.displayName ?? user.email?.split('@').first ?? '');
+      if (mounted) setState(() => _nameController.text = name);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _nameController.text =
+              user.displayName ?? user.email?.split('@').first ?? '';
+        });
+      }
+    }
   }
 
   @override
@@ -61,10 +79,10 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
 
       // Update Firebase Auth display name
       await _authService.updateDisplayName(name);
-      
+
       // Then update database with complete user data to prevent data loss
       await _userDbService.updateUserName(user.uid, name);
-      
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -99,7 +117,11 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
           elevation: 0,
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back_ios, size: 20, color: context.primaryTextColor),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: context.primaryTextColor,
+            ),
           ),
           title: Text(
             'drawer.general_settings'.tr(),
@@ -124,7 +146,11 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                       ? NetworkImage(photoUrl)
                       : null,
                   child: photoUrl == null || photoUrl.isEmpty
-                      ? Icon(Icons.person, size: 48, color: context.primaryColor)
+                      ? Icon(
+                          Icons.person,
+                          size: 48,
+                          color: context.primaryColor,
+                        )
                       : null,
                 ),
               ),
@@ -143,9 +169,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                   labelText: 'sign_up.full_name'.tr(),
                   hintText: 'sign_up.full_name'.tr(),
                   errorText: _errorText,
-                  border: OutlineInputBorder(
-                    borderRadius: AppBorderRadius.a12,
-                  ),
+                  border: OutlineInputBorder(borderRadius: AppBorderRadius.a12),
                   filled: true,
                   fillColor: context.surfaceVariant.withValues(alpha: 0.3),
                 ),
@@ -165,10 +189,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                 decoration: BoxDecoration(
                   color: context.surfaceVariant.withValues(alpha: 0.3),
                   borderRadius: AppBorderRadius.a12,
-                  border: Border.all(
-                    color: context.dividerColor,
-                    width: 1,
-                  ),
+                  border: Border.all(color: context.dividerColor, width: 1),
                 ),
                 child: Text(
                   email,
@@ -214,6 +235,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                         ),
                 ),
               ),
+              AppGap.h40,
             ],
           ),
         ),
