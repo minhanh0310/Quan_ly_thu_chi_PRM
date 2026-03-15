@@ -13,7 +13,6 @@ import 'package:Quan_ly_thu_chi_PRM/core/widgets/drawer_widget.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -104,7 +103,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // print('====> Navigated to: ${_navItems[index].route}');
   }
 
-  late final List<BottomNavItem> _navItems = [
+  List<BottomNavItem> get _navItems => [
     BottomNavItem(
       screen: HomeScreen(onOpenDrawer: _openDrawer),
       route: AppRoutes.home,

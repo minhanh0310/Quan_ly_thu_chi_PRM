@@ -5,23 +5,14 @@ import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-// 6 Jars categories
-const _incomeCategories = [
-  'Necessities',
-  'Financial Freedom',
-  'Education',
-  'Long-term Savings',
-  'Entertainment',
-  'Give',
-];
-
-const _expenseCategories = [
-  'Necessities',
-  'Financial Freedom',
-  'Education',
-  'Long-term Savings',
-  'Entertainment',
-  'Give',
+// Category translation keys for 6 Jars
+const _categoryKeys = [
+  'tags.necessities',
+  'tags.financial_freedom',
+  'tags.education',
+  'tags.long_term_savings',
+  'tags.entertainment',
+  'tags.give',
 ];
 
 void showAddTransactionBottomSheet(
@@ -55,8 +46,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   String? _selectedCategory;
   DateTime _selectedDate = DateTime.now();
 
-  List<String> get _categories =>
-      _isIncome ? _incomeCategories : _expenseCategories;
+  List<String> get _categories => _categoryKeys;
 
   @override
   void initState() {
@@ -136,8 +126,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(_isIncome ? 'Saved income' : 'Saved expense'),
-          backgroundColor:
-              _isIncome ? AppColors.incomeGreen : AppColors.expenseRed,
+          backgroundColor: _isIncome
+              ? AppColors.incomeGreen
+              : AppColors.expenseRed,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -276,28 +267,28 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           ),
           child: Row(
             children: [
-                _buildToggleTab(
-                  label: 'home_screen.income'.tr(),
-                  isSelected: _isIncome,
-                  onTap: () => setState(() {
-                    _isIncome = true;
-                    if (_selectedCategory != null &&
-                        !_incomeCategories.contains(_selectedCategory)) {
-                      _selectedCategory = null;
-                    }
-                  }),
-                ),
-                _buildToggleTab(
-                  label: 'home_screen.expense'.tr(),
-                  isSelected: !_isIncome,
-                  onTap: () => setState(() {
-                    _isIncome = false;
-                    if (_selectedCategory != null &&
-                        !_expenseCategories.contains(_selectedCategory)) {
-                      _selectedCategory = null;
-                    }
-                  }),
-                ),
+              _buildToggleTab(
+                label: 'home_screen.income'.tr(),
+                isSelected: _isIncome,
+                onTap: () => setState(() {
+                  _isIncome = true;
+                  if (_selectedCategory != null &&
+                      !_categoryKeys.contains(_selectedCategory)) {
+                    _selectedCategory = null;
+                  }
+                }),
+              ),
+              _buildToggleTab(
+                label: 'home_screen.expense'.tr(),
+                isSelected: !_isIncome,
+                onTap: () => setState(() {
+                  _isIncome = false;
+                  if (_selectedCategory != null &&
+                      !_categoryKeys.contains(_selectedCategory)) {
+                    _selectedCategory = null;
+                  }
+                }),
+              ),
             ],
           ),
         ),
@@ -415,7 +406,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               ),
             ),
             child: Text(
-              cat,
+              cat.tr(),
               style: AppTextStyle.s12in.copyWith(
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isSelected

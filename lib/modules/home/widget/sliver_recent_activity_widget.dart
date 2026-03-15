@@ -55,11 +55,15 @@ class SliverRecentActivityWidget extends StatelessWidget {
               }
               final activity = recent[activityIndex];
               final isIncome = activity.isIncome;
-              final icon = isIncome ? IconPath.arrowUpRight : IconPath.arrowDownLeft;
-              final iconColor =
-                  isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
-              final bgColor =
-                  isIncome ? AppColors.incomeLightGreen : AppColors.expenseLightRed;
+              final icon = isIncome
+                  ? IconPath.arrowUpRight
+                  : IconPath.arrowDownLeft;
+              final iconColor = isIncome
+                  ? AppColors.incomeGreen
+                  : AppColors.expenseRed;
+              final bgColor = isIncome
+                  ? AppColors.incomeLightGreen
+                  : AppColors.expenseLightRed;
               final date =
                   '${activity.date.year}-${activity.date.month.toString().padLeft(2, '0')}-${activity.date.day.toString().padLeft(2, '0')}';
               final formatted =
@@ -68,7 +72,7 @@ class SliverRecentActivityWidget extends StatelessWidget {
                 icon: icon,
                 iconColor: iconColor,
                 backgroundColor: bgColor,
-                title: activity.title,
+                title: activity.title.tr(),
                 date: date,
                 amount: formatted,
                 isIncome: isIncome,

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
-import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
-import 'package:provider/provider.dart';
 
 /// Bar chart widget comparing Budget vs Actual spending
 class BudgetComparisonBarChart extends StatelessWidget {
@@ -19,7 +17,6 @@ class BudgetComparisonBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cp = context.read<CurrencyProvider>();
     return Container(
       height: height,
       padding: const EdgeInsets.only(right: 16, top: 16),
@@ -41,7 +38,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
                     ? 'stats_screen.budget'.tr()
                     : 'stats_screen.actual'.tr();
                 return BarTooltipItem(
-                  '$label: ${context.read<CurrencyProvider>().formatCurrency(rod.toY)}',
+                  '$label: \$${rod.toY.toStringAsFixed(0)}',
                   AppTextStyle.s12in.copyWith(
                     color: context.surfaceColor,
                     fontWeight: FontWeight.w600,
@@ -80,7 +77,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
                 reservedSize: 50,
                 getTitlesWidget: (value, meta) {
                   return Text(
-                    cp.formatCurrency(value),
+                    '\$${value.toInt()}',
                     style: TextStyle(
                       fontSize: 10,
                       color: context.secondaryTextColor,
@@ -100,7 +97,7 @@ class BudgetComparisonBarChart extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
-            horizontalInterval: _getMaxY() / 4,
+            horizontalInterval: (_getMaxY() / 4).clamp(1, double.infinity),
             getDrawingHorizontalLine: (value) {
               return FlLine(
                 color: context.borderColor.withValues(alpha: 0.2),
@@ -123,7 +120,8 @@ class BudgetComparisonBarChart extends StatelessWidget {
       if (item.actual > maxActual) maxActual = item.actual;
     }
     final max = maxBudget > maxActual ? maxBudget : maxActual;
-    return max * 1.2;
+    // Ensure max is never 0 to prevent division by zero
+    return max > 0 ? max * 1.2 : 100;
   }
 
   List<BarChartGroupData> _buildBarGroups(BuildContext context) {

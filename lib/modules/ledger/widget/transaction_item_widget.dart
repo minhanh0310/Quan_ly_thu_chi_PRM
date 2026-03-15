@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TransactionItemWidget extends StatelessWidget {
   final String title;
@@ -63,8 +64,8 @@ class TransactionItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                Text( 
-                  title,
+                Text(
+                  title.tr(),
                   style: AppTextStyle.s16in.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,

@@ -168,7 +168,12 @@
         "dont_have_account": "Chưa có tài khoản?",
         "signup_link": "Đăng ký",
         "signing_in": "Đang đăng nhập...",
-        "signin_failed": "Đăng nhập thất bại: "
+        "signin_failed": "Đăng nhập thất bại: ",
+        "or_divider": "Hoặc",
+        "google_signin": "Đăng nhập với Google",
+        "link_accounts_title": "Liên kết tài khoản",
+        "link_accounts_message": "Email {email} đã được đăng ký bằng mật khẩu.\nNhập mật khẩu để liên kết tài khoản Google.",
+        "link_button": "Liên kết"
     },
     "sign_up": {
         "appbar": "Đăng ký",
@@ -183,9 +188,9 @@
         "signin_link": "Đăng nhập",
         "creating_account": "Đang tạo tài khoản...",
         "failed": "Đăng ký thất bại: ",
-        "agree_notif": "Vui lòng đồng ý với Điều khoản và Điều kiện",
+        "agree_notif": "Vui lòng đồng ý với Điều khoản sử dụng để tiếp tục",
         "text_checkbox": "Bằng cách tạo tài khoản, bạn đồng ý với ",
-        "term_n_conditions": "Điều khoản và Điều kiện"
+        "term_n_conditions": "Điều khoản sử dụng"
     },
     "forgot_password": {
         "title": "Quên mật khẩu",
@@ -212,14 +217,25 @@
         "title": "Đổi mật khẩu",
         "subtitle": "Cập nhật mật khẩu của bạn",
         "current_password": "Mật khẩu hiện tại",
+        "current_password_hint": "Nhập mật khẩu hiện tại",
+        "current_password_required": "Vui lòng nhập mật khẩu hiện tại",
         "new_password": "Mật khẩu mới",
+        "new_password_hint": "Nhập mật khẩu mới",
         "new_password_empty": "Vui lòng nhập mật khẩu mới",
         "confirm_password": "Xác nhận mật khẩu",
+        "confirm_password_hint": "Xác nhận mật khẩu mới",
         "confirm_password_empty": "Vui lòng xác nhận mật khẩu",
         "pw_unmatch": "Mật khẩu không khớp",
+        "min_length": "Mật khẩu phải có ít nhất 6 ký tự",
+        "same_as_current": "Mật khẩu mới không được trùng với mật khẩu hiện tại",
+        "wrong_current_password": "Mật khẩu hiện tại không chính xác",
+        "requires_recent_login": "Vui lòng đăng xuất và đăng nhập lại trước khi đổi mật khẩu",
+        "user_not_found": "Không tìm thấy người dùng",
+        "weak_password": "Mật khẩu quá yếu, vui lòng chọn mật khẩu mạnh hơn",
+        "operation_not_allowed": "Không thể đổi mật khẩu cho loại tài khoản này",
         "change_button": "Đổi mật khẩu",
-        "success_title": "Đổi mật khẩu thành công!",
-        "success_message": "Mật khẩu của bạn đã được thay đổi thành công"
+        "success_message": "Đổi mật khẩu thành công",
+        "error_message": "Lỗi khi đổi mật khẩu"
     },
     "email_verification": {
         "title": "Xác minh email",
@@ -317,7 +333,7 @@
         "necessities": "Thiết yếu",
         "financial_freedom": "Tự do tài chính",
         "education": "Giáo dục",
-        "lt_savings": "Tiết kiệm dài hạn",
+        "long_term_savings": "Tiết kiệm dài hạn",
         "entertainment": "Giải trí",
         "give": "Cho đi"
     }

@@ -20,15 +20,16 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
   bool _isBalanceVisible = true;
 
   void _openJarsDetail(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const JarsDetailScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const JarsDetailScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
+    // Force rebuild when locale changes
+    final _ = context.locale;
+
     final uid = FirebaseAuth.instance.currentUser?.uid;
     final service = FinanceDatabaseService();
     if (uid != null) {
@@ -73,7 +74,10 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                 stream: uid == null ? Stream.empty() : service.watchJars(uid),
                 builder: (context, snapshot) {
                   final jars = snapshot.data ?? const [];
-                  final total = jars.fold<double>(0, (sum, j) => sum + j.amount);
+                  final total = jars.fold<double>(
+                    0,
+                    (sum, j) => sum + j.amount,
+                  );
                   return Text(
                     _isBalanceVisible
                         ? context.read<CurrencyProvider>().formatCurrency(total)
@@ -150,14 +154,16 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                         .where((t) => !t.isIncome)
                         .fold<double>(0, (sum, t) => sum + t.amount);
                     final total = income + expense;
-                    final incomePct =
-                        total > 0 ? (income / total).toDouble() : 0.0;
+                    final incomePct = total > 0
+                        ? (income / total).toDouble()
+                        : 0.0;
                     return _MiniStatCard(
                       icon: IconPath.arrowUpRight,
                       iconColor: const Color(0xFF00D09E),
                       label: 'home_screen.income'.tr(),
-                      amount:
-                          context.read<CurrencyProvider>().formatCurrency(income),
+                      amount: context.read<CurrencyProvider>().formatCurrency(
+                        income,
+                      ),
                       backgroundColor: AppColors.white.withAlpha(38),
                       progressValue: incomePct,
                     );
@@ -187,14 +193,16 @@ class _SliverBalanceCardWidgetState extends State<SliverBalanceCardWidget> {
                         .where((t) => !t.isIncome)
                         .fold<double>(0, (sum, t) => sum + t.amount);
                     final total = income + expense;
-                    final expensePct =
-                        total > 0 ? (expense / total).toDouble() : 0.0;
+                    final expensePct = total > 0
+                        ? (expense / total).toDouble()
+                        : 0.0;
                     return _MiniStatCard(
                       icon: IconPath.arrowDownLeft,
                       iconColor: const Color(0xFFFF6B93),
                       label: 'home_screen.expense'.tr(),
-                      amount:
-                          context.read<CurrencyProvider>().formatCurrency(expense),
+                      amount: context.read<CurrencyProvider>().formatCurrency(
+                        expense,
+                      ),
                       backgroundColor: AppColors.white.withAlpha(38),
                       progressValue: expensePct,
                     );
