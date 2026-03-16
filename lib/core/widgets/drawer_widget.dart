@@ -1,3 +1,4 @@
+import 'package:Quan_ly_thu_chi_PRM/common/widgets/images/cached_network_shaped_image.dart';
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/firebase_auth_service.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/user_database_service.dart';
@@ -362,16 +363,25 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
     return Row(
       children: [
-        CircleAvatar(
-          radius: 24,
-          backgroundColor: context.primaryColor.withValues(alpha: 0.1),
-          backgroundImage: photoUrl != null && photoUrl.isNotEmpty
-              ? NetworkImage(photoUrl)
-              : null,
-          child: photoUrl == null || photoUrl.isEmpty
-              ? Icon(Icons.person, color: context.primaryColor, size: 28)
-              : null,
-        ),
+        photoUrl != null && photoUrl.isNotEmpty
+            ? CachedNetworkCircleImage(
+                size: 48,
+                imageUrl: photoUrl,
+                imageDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: context.primaryColor.withValues(alpha: 0.1),
+                ),
+                errorWidget: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: context.primaryColor.withValues(alpha: 0.1),
+                  child: Icon(Icons.person, color: context.primaryColor, size: 28),
+                ),
+              )
+            : CircleAvatar(
+                radius: 24,
+                backgroundColor: context.primaryColor.withValues(alpha: 0.1),
+                child: Icon(Icons.person, color: context.primaryColor, size: 28),
+              ),
         AppGap.w12,
         Expanded(
           child: Column(
