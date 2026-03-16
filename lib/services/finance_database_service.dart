@@ -237,6 +237,21 @@ class FinanceDatabaseService {
     await _financeRoot(uid).update(updates);
   }
 
+  Future<double> getJarBalance({
+    required String uid,
+    required String jarId,
+  }) async {
+    final snapshot = await _jarsRef(uid).child(jarId).get();
+    if (snapshot.exists && snapshot.value is Map) {
+      final data = snapshot.value as Map<dynamic, dynamic>;
+      final amount = data['amount'];
+      if (amount is num) {
+        return amount.toDouble();
+      }
+    }
+    return 0.0;
+  }
+
   Future<void> addExpense({
     required String uid,
     required double amount,
@@ -247,6 +262,15 @@ class FinanceDatabaseService {
   }) async {
     await ensureDefaultJars(uid);
     final jarId = _jarIdFromName(category) ?? 'necessities';
+    
+    // Check if jar has sufficient balance
+    final currentBalance = await getJarBalance(uid: uid, jarId: jarId);
+    if (amount > currentBalance) {
+      throw Exception(
+        'Insufficient balance. Jar has ${currentBalance.toStringAsFixed(2)}, but you are trying to spend ${amount.toStringAsFixed(2)}.',
+      );
+    }
+    
     final updates = <String, dynamic>{
       'jars/$jarId/amount': ServerValue.increment(-amount),
     };

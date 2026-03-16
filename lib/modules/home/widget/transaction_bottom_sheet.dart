@@ -45,6 +45,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
 
   String? _selectedCategory;
   DateTime _selectedDate = DateTime.now();
+  double _selectedJarBalance = 0.0;
+  bool _isBalanceSufficient = true;
 
   List<String> get _categories => _categoryKeys;
 
@@ -52,13 +54,64 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   void initState() {
     super.initState();
     _isIncome = widget.isIncome;
+    _amountController.addListener(_validateAmount);
   }
 
   @override
   void dispose() {
+    _amountController.removeListener(_validateAmount);
     _amountController.dispose();
     _noteController.dispose();
     super.dispose();
+  }
+
+  void _validateAmount() {
+    if (_isIncome) return;
+    
+    final amountText = _amountController.text.replaceAll(',', '');
+    final amount = double.tryParse(amountText) ?? 0;
+    
+    setState(() {
+      _isBalanceSufficient = amount <= _selectedJarBalance;
+    });
+  }
+
+  Future<void> _updateJarBalance() async {
+    if (_isIncome || _selectedCategory == null) {
+      setState(() {
+        _selectedJarBalance = 0.0;
+        _isBalanceSufficient = true;
+      });
+      return;
+    }
+
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) return;
+
+      final service = FinanceDatabaseService();
+      final categoryKey = _selectedCategory ?? _categories.first;
+      
+      // Map category to jar ID
+      final jarIdMap = {
+        'tags.necessities': 'necessities',
+        'tags.financial_freedom': 'financial_freedom',
+        'tags.education': 'education',
+        'tags.long_term_savings': 'long_term_savings',
+        'tags.entertainment': 'entertainment',
+        'tags.give': 'give',
+      };
+      
+      final jarId = jarIdMap[categoryKey] ?? 'necessities';
+      final balance = await service.getJarBalance(uid: uid, jarId: jarId);
+      
+      setState(() {
+        _selectedJarBalance = balance;
+        _validateAmount();
+      });
+    } catch (e) {
+      // Handle error silently
+    }
   }
 
   Future<void> _onSave() async {
@@ -134,11 +187,17 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       );
     } catch (e) {
       if (!mounted) return;
+      final errorMessage = e.toString();
+      final displayMessage = errorMessage.contains('Exception:')
+          ? errorMessage.replaceAll('Exception: ', '')
+          : 'Save failed: $errorMessage';
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Save failed: ${e.toString()}'),
+          content: Text(displayMessage),
           backgroundColor: AppColors.expenseRed,
           behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
         ),
       );
     }
@@ -190,6 +249,10 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                   _buildSectionLabel('home_screen.tags'.tr()),
                   const SizedBox(height: 10),
                   _buildCategoryChips(),
+                  if (!_isIncome && _selectedCategory != null) ...[
+                    const SizedBox(height: 12),
+                    _buildJarBalanceInfo(),
+                  ],
                   const SizedBox(height: 16),
                   _buildDateRow(),
                   const SizedBox(height: 16),
@@ -388,9 +451,14 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
 
         return GestureDetector(
           onTap: () {
+            final wasSelected = _selectedCategory == cat;
             setState(() {
-              _selectedCategory = isSelected ? null : cat;
+              _selectedCategory = wasSelected ? null : cat;
             });
+            // Update jar balance after selection
+            if (!wasSelected) {
+              _updateJarBalance();
+            }
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 180),
@@ -500,4 +568,78 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       ],
     );
   }
+
+  Widget _buildJarBalanceInfo() {
+    final amountText = _amountController.text.replaceAll(',', '');
+    final amount = double.tryParse(amountText) ?? 0;
+    final remaining = _selectedJarBalance - amount;
+    final currencyProvider = context.read<CurrencyProvider>();
+    final formattedBalance = currencyProvider.formatCurrency(_selectedJarBalance);
+    final formattedRemaining = currencyProvider.formatCurrency(remaining.clamp(0, double.infinity));
+
+    return Container(
+      padding: AppPad.a12,
+      decoration: BoxDecoration(
+        color: _isBalanceSufficient 
+            ? AppColors.incomeGreen.withValues(alpha: 0.1)
+            : AppColors.expenseRed.withValues(alpha: 0.1),
+        borderRadius: AppBorderRadius.a12,
+        border: Border.all(
+          color: _isBalanceSufficient 
+              ? AppColors.incomeGreen.withValues(alpha: 0.3)
+              : AppColors.expenseRed.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Available balance',
+                style: AppTextStyle.s12in.copyWith(
+                  color: context.secondaryTextColor,
+                  fontSize: 11,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                formattedBalance,
+                style: AppTextStyle.s14in.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.incomeGreen,
+                ),
+              ),
+            ],
+          ),
+          if (amount > 0)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Remaining',
+                  style: AppTextStyle.s12in.copyWith(
+                    color: context.secondaryTextColor,
+                    fontSize: 11,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  formattedRemaining,
+                  style: AppTextStyle.s14in.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: _isBalanceSufficient 
+                        ? AppColors.incomeGreen
+                        : AppColors.expenseRed,
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
 }
+
