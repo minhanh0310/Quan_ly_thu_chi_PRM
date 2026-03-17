@@ -29,8 +29,9 @@ class FinanceStatsService {
     );
 
     final monthlyData = _buildMonthlyData(transactions, budgets, current);
-    final categoryExpenses =
-        _buildCategoryExpenses(currentMonthTx.where((t) => !t.isIncome));
+    final categoryExpenses = _buildCategoryExpenses(
+      currentMonthTx.where((t) => !t.isIncome),
+    );
 
     return StatsData(
       totalBudget: totalBudget,
@@ -102,7 +103,8 @@ class FinanceStatsService {
     }
   }
 
-  String _monthKey(DateTime date) => '${date.year}-${date.month.toString().padLeft(2, '0')}';
+  String _monthKey(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}';
 
   String _monthLabel(DateTime date) {
     final name = _monthNames[date.month - 1];
@@ -115,7 +117,11 @@ class FinanceStatsService {
   }
 
   _CategoryStyle _categoryStyle(String category) {
-    switch (category.toLowerCase()) {
+    // Strip 'tags.' prefix for translation-key format (e.g. 'tags.necessities')
+    final key = category.startsWith('tags.')
+        ? category.substring(5)
+        : category.toLowerCase();
+    switch (key) {
       case 'necessities':
       case 'housing':
         return const _CategoryStyle(
@@ -155,6 +161,11 @@ class FinanceStatsService {
           color: Color(0xFF00D09E),
           icon: Icons.arrow_upward_rounded,
         );
+      case 'plan':
+        return const _CategoryStyle(
+          color: Color(0xFF6C5CE7),
+          icon: Icons.savings_rounded,
+        );
       default:
         return const _CategoryStyle(
           color: Color(0xFF607D8B),
@@ -168,10 +179,7 @@ class _CategoryStyle {
   final Color color;
   final IconData icon;
 
-  const _CategoryStyle({
-    required this.color,
-    required this.icon,
-  });
+  const _CategoryStyle({required this.color, required this.icon});
 }
 
 const List<String> _monthNames = [

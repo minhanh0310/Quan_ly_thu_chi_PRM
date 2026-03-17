@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/helpers/category_tr.dart';
 
 // Category translation keys for 6 Jars
 const _categoryKeys = [
@@ -67,10 +68,10 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
 
   void _validateAmount() {
     if (_isIncome) return;
-    
+
     final amountText = _amountController.text.replaceAll(',', '');
     final amount = double.tryParse(amountText) ?? 0;
-    
+
     setState(() {
       _isBalanceSufficient = amount <= _selectedJarBalance;
     });
@@ -91,7 +92,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
 
       final service = FinanceDatabaseService();
       final categoryKey = _selectedCategory ?? _categories.first;
-      
+
       // Map category to jar ID
       final jarIdMap = {
         'tags.necessities': 'necessities',
@@ -101,10 +102,10 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         'tags.entertainment': 'entertainment',
         'tags.give': 'give',
       };
-      
+
       final jarId = jarIdMap[categoryKey] ?? 'necessities';
       final balance = await service.getJarBalance(uid: uid, jarId: jarId);
-      
+
       setState(() {
         _selectedJarBalance = balance;
         _validateAmount();
@@ -119,20 +120,39 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     final amount = double.tryParse(amountText) ?? 0;
     final note = _noteController.text.trim();
 
+    // Tách từng từ: từ có # giữ nguyên, từ không có # tự thêm #
+    // Ví dụ: "work salary #bonus" → tags: [work, salary, bonus], noteText: ""
     final tagRegex = RegExp(r'#\w+');
+    final wordRegex = RegExp(r'\b\w+\b');
 
-    final tags = tagRegex
-        .allMatches(note)
-        .map((m) => (m.group(0) ?? '').replaceAll('#', ''))
-        .toList();
+    List<String> tags;
+    String noteText;
 
-    final noteText = note.replaceAll(tagRegex, '').trim();
+    if (tagRegex.hasMatch(note)) {
+      // Có ít nhất 1 từ có # → dùng logic cũ: chỉ lấy từ có #, phần còn lại là note
+      tags = tagRegex
+          .allMatches(note)
+          .map((m) => (m.group(0) ?? '').replaceAll('#', ''))
+          .toList();
+      noteText = note.replaceAll(tagRegex, '').trim();
+    } else if (note.isNotEmpty) {
+      // Không có # → toàn bộ từ đều thành tag
+      tags = wordRegex
+          .allMatches(note)
+          .map((m) => m.group(0) ?? '')
+          .where((w) => w.isNotEmpty)
+          .toList();
+      noteText = '';
+    } else {
+      tags = [];
+      noteText = '';
+    }
 
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please sign in again to save.'),
+          content: Text('home_screen.sign_in_warning'.tr()),
           backgroundColor: AppColors.expenseRed,
           behavior: SnackBarBehavior.floating,
         ),
@@ -145,7 +165,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     if (!_isIncome && _selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please select a tag to record expense.'),
+          content: Text('home_screen.select_tag_warning'.tr()),
           backgroundColor: AppColors.expenseRed,
           behavior: SnackBarBehavior.floating,
         ),
@@ -153,6 +173,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       return;
     }
     final category = _selectedCategory ?? _categories.first;
+    // Lưu translation key làm title để khi đổi ngôn ngữ vẫn dịch đúng
+    // trCategory() sẽ dịch lúc hiển thị
     final service = FinanceDatabaseService();
     try {
       if (_isIncome) {
@@ -160,7 +182,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           uid: uid,
           amount: amount,
           date: _selectedDate,
-          title: category,
+          title: category, // lưu key: 'tags.necessities', 'INCOME'...
           note: noteText,
           tags: tags,
         );
@@ -170,6 +192,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           amount: amount,
           date: _selectedDate,
           category: category,
+          title: category, // lưu key, không lưu tên đã dịch
           note: noteText,
           tags: tags,
         );
@@ -178,7 +201,11 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(_isIncome ? 'Saved income' : 'Saved expense'),
+          content: Text(
+            _isIncome
+                ? 'home_screen.saved_income'.tr()
+                : 'home_screen.saved_expense'.tr(),
+          ),
           backgroundColor: _isIncome
               ? AppColors.incomeGreen
               : AppColors.expenseRed,
@@ -191,7 +218,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       final displayMessage = errorMessage.contains('Exception:')
           ? errorMessage.replaceAll('Exception: ', '')
           : 'Save failed: $errorMessage';
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(displayMessage),
@@ -260,7 +287,9 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                   const SizedBox(height: 20),
                   PrimaryButton(
                     onClick: _onSave,
-                    text: _isIncome ? 'Save Income' : 'Save Expense',
+                    text: _isIncome
+                        ? 'home_screen.save_income'.tr()
+                        : 'home_screen.save_expense'.tr(),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -559,7 +588,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               borderSide: BorderSide.none,
             ),
             prefixIcon: Icon(
-              Icons.notes_outlined,
+              Icons.tag,
               size: 18,
               color: context.secondaryTextColor,
             ),
@@ -574,18 +603,22 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     final amount = double.tryParse(amountText) ?? 0;
     final remaining = _selectedJarBalance - amount;
     final currencyProvider = context.read<CurrencyProvider>();
-    final formattedBalance = currencyProvider.formatCurrency(_selectedJarBalance);
-    final formattedRemaining = currencyProvider.formatCurrency(remaining.clamp(0, double.infinity));
+    final formattedBalance = currencyProvider.formatCurrency(
+      _selectedJarBalance,
+    );
+    final formattedRemaining = currencyProvider.formatCurrency(
+      remaining.clamp(0, double.infinity),
+    );
 
     return Container(
       padding: AppPad.a12,
       decoration: BoxDecoration(
-        color: _isBalanceSufficient 
+        color: _isBalanceSufficient
             ? AppColors.incomeGreen.withValues(alpha: 0.1)
             : AppColors.expenseRed.withValues(alpha: 0.1),
         borderRadius: AppBorderRadius.a12,
         border: Border.all(
-          color: _isBalanceSufficient 
+          color: _isBalanceSufficient
               ? AppColors.incomeGreen.withValues(alpha: 0.3)
               : AppColors.expenseRed.withValues(alpha: 0.3),
           width: 1,
@@ -598,7 +631,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Available balance',
+                'home_screen.available_balance'.tr(),
                 style: AppTextStyle.s12in.copyWith(
                   color: context.secondaryTextColor,
                   fontSize: 11,
@@ -619,7 +652,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'Remaining',
+                  'plans_screen.remaining_label'.tr(),
                   style: AppTextStyle.s12in.copyWith(
                     color: context.secondaryTextColor,
                     fontSize: 11,
@@ -630,7 +663,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
                   formattedRemaining,
                   style: AppTextStyle.s14in.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: _isBalanceSufficient 
+                    color: _isBalanceSufficient
                         ? AppColors.incomeGreen
                         : AppColors.expenseRed,
                   ),
@@ -642,4 +675,3 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     );
   }
 }
-

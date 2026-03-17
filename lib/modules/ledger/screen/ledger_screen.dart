@@ -9,6 +9,7 @@ import 'package:Quan_ly_thu_chi_PRM/models/transaction_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/helpers/category_tr.dart';
 
 class LedgerScreen extends StatefulWidget {
   final VoidCallback? onOpenDrawer;
@@ -44,12 +45,13 @@ class _BodyState extends State<_Body> {
   String? _categoryFilter;
 
   static const List<String> _categories = [
-    'Necessities',
-    'Financial Freedom',
-    'Education',
-    'Long-term Savings',
-    'Entertainment',
-    'Give',
+    'tags.necessities',
+    'tags.financial_freedom',
+    'tags.education',
+    'tags.long_term_savings',
+    'tags.entertainment',
+    'tags.give',
+    'PLAN',
     'INCOME',
   ];
 
@@ -67,9 +69,7 @@ class _BodyState extends State<_Body> {
     super.dispose();
   }
 
-  List<TransactionModel> _filteredTransactions(
-    List<TransactionModel> input,
-  ) {
+  List<TransactionModel> _filteredTransactions(List<TransactionModel> input) {
     var filtered = input;
     if (selectedFilterIndex == 1) {
       filtered = filtered.where((t) => t.isIncome).toList();
@@ -90,9 +90,9 @@ class _BodyState extends State<_Body> {
     }
     if (_categoryFilter != null && _categoryFilter!.isNotEmpty) {
       filtered = filtered
-          .where((t) =>
-              t.category.toLowerCase() ==
-              _categoryFilter!.toLowerCase())
+          .where(
+            (t) => t.category.toLowerCase() == _categoryFilter!.toLowerCase(),
+          )
           .toList();
     }
     if (_dateRange != null) {
@@ -155,7 +155,9 @@ class _BodyState extends State<_Body> {
 
         Expanded(
           child: StreamBuilder<List<TransactionModel>>(
-            stream: uid == null ? Stream.empty() : service.watchTransactions(uid),
+            stream: uid == null
+                ? Stream.empty()
+                : service.watchTransactions(uid),
             builder: (context, snapshot) {
               final items = snapshot.data ?? const [];
               final filtered = _filteredTransactions(items);
@@ -176,7 +178,9 @@ class _BodyState extends State<_Body> {
                       date: date,
                       amount: formatted,
                       category: transaction.category,
-                      tag: transaction.tags.isNotEmpty ? transaction.tags.first : null,
+                      tag: transaction.tags.isNotEmpty
+                          ? transaction.tags.first
+                          : null,
                       isIncome: transaction.isIncome,
                     );
                   }).toList(),
@@ -217,7 +221,7 @@ class _BodyState extends State<_Body> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Filter',
+                      'ledger_screen.filter_title'.tr(),
                       style: AppTextStyle.s18in.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary,
@@ -225,7 +229,7 @@ class _BodyState extends State<_Body> {
                     ),
                     AppGap.h16,
                     Text(
-                      'Time range',
+                      'ledger_screen.time_range'.tr(),
                       style: AppTextStyle.s12in.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -269,23 +273,23 @@ class _BodyState extends State<_Body> {
                     ),
                     AppGap.h16,
                     Text(
-                      'Category',
+                      'ledger_screen.category_filter'.tr(),
                       style: AppTextStyle.s12in.copyWith(
                         color: AppColors.textSecondary,
                       ),
                     ),
                     AppGap.h8,
                     DropdownButtonFormField<String?>(
-                      value: tempCategory,
+                      initialValue: tempCategory,
                       items: [
-                        const DropdownMenuItem<String?>(
+                        DropdownMenuItem<String?>(
                           value: null,
-                          child: Text('All'),
+                          child: Text('ledger_screen.all'.tr()),
                         ),
                         ..._categories.map(
                           (c) => DropdownMenuItem<String?>(
                             value: c,
-                            child: Text(c),
+                            child: Text(c.trCategory()),
                           ),
                         ),
                       ],
@@ -313,7 +317,7 @@ class _BodyState extends State<_Body> {
                               });
                               Navigator.pop(context);
                             },
-                            child: const Text('Clear'),
+                            child: Text('common.reset'.tr()),
                           ),
                         ),
                         AppGap.w12,
@@ -330,7 +334,7 @@ class _BodyState extends State<_Body> {
                               backgroundColor: AppColors.primaryPurple,
                               foregroundColor: AppColors.white,
                             ),
-                            child: const Text('Apply'),
+                            child: Text('common.apply'.tr()),
                           ),
                         ),
                       ],

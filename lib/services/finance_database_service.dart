@@ -78,8 +78,7 @@ class FinanceDatabaseService {
     ),
   ];
 
-  static List<String> get jarOrder =>
-      _defaultJars.map((e) => e.id).toList();
+  static List<String> get jarOrder => _defaultJars.map((e) => e.id).toList();
 
   Future<void> ensureDefaultJars(String uid) async {
     final snapshot = await _jarsRef(uid).get();
@@ -174,7 +173,9 @@ class FinanceDatabaseService {
     });
   }
 
-  Stream<List<RecurringTransactionModel>> watchRecurringTransactions(String uid) {
+  Stream<List<RecurringTransactionModel>> watchRecurringTransactions(
+    String uid,
+  ) {
     return _recurringRef(uid).onValue.map((event) {
       final data = event.snapshot.value as Map<dynamic, dynamic>? ?? {};
       final items = <RecurringTransactionModel>[];
@@ -208,8 +209,7 @@ class FinanceDatabaseService {
     final distribution = _buildDistribution(amount);
     final updates = <String, dynamic>{};
     for (final entry in distribution.entries) {
-      updates['jars/${entry.key}/amount'] =
-          ServerValue.increment(entry.value);
+      updates['jars/${entry.key}/amount'] = ServerValue.increment(entry.value);
     }
     final txId = _transactionsRef(uid).push().key!;
     final transaction = TransactionModel(
@@ -257,12 +257,13 @@ class FinanceDatabaseService {
     required double amount,
     required DateTime date,
     required String category,
+    String? title,
     String? note,
     List<String>? tags,
   }) async {
     await ensureDefaultJars(uid);
     final jarId = _jarIdFromName(category) ?? 'necessities';
-    
+
     // Check if jar has sufficient balance
     final currentBalance = await getJarBalance(uid: uid, jarId: jarId);
     if (amount > currentBalance) {
@@ -270,14 +271,14 @@ class FinanceDatabaseService {
         'Insufficient balance. Jar has ${currentBalance.toStringAsFixed(2)}, but you are trying to spend ${amount.toStringAsFixed(2)}.',
       );
     }
-    
+
     final updates = <String, dynamic>{
       'jars/$jarId/amount': ServerValue.increment(-amount),
     };
     final txId = _transactionsRef(uid).push().key!;
     final transaction = TransactionModel(
       id: txId,
-      title: category,
+      title: title ?? category,
       amount: amount,
       isIncome: false,
       category: category,
@@ -399,8 +400,13 @@ class FinanceDatabaseService {
   }
 
   String? _jarIdFromName(String name) {
+    // Handle translation key format: 'tags.necessities' -> 'necessities'
+    final cleanName = name.startsWith('tags.')
+        ? name.substring(5)
+        : name.toLowerCase();
     for (final def in _defaultJars) {
-      if (def.name.toLowerCase() == name.toLowerCase()) {
+      if (def.id == cleanName ||
+          def.name.toLowerCase() == cleanName.toLowerCase()) {
         return def.id;
       }
     }

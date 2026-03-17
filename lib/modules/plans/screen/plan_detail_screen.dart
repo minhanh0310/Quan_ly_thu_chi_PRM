@@ -44,7 +44,7 @@ class PlanDetailScreen extends StatelessWidget {
                         goal.name,
                         style: AppTextStyle.s24in.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: context.primaryTextColor,
                         ),
                       ),
                       AppGap.h20,
@@ -52,7 +52,7 @@ class PlanDetailScreen extends StatelessWidget {
                       AppGap.h16,
                       if (!goal.isCompleted) _buildSmartForecast(context, goal),
                       AppGap.h16,
-                      _buildJourneySection(goal),
+                      _buildJourneySection(context, goal),
                       AppGap.h24,
                       _buildAccumulationHistory(context, goal),
                       AppGap.h100,
@@ -188,7 +188,7 @@ class PlanDetailScreen extends StatelessWidget {
     return Container(
       padding: AppPad.a20,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.surfaceColor,
         borderRadius: AppBorderRadius.a16,
         boxShadow: [
           BoxShadow(
@@ -204,7 +204,7 @@ class PlanDetailScreen extends StatelessWidget {
           Text(
             'plans_screen.current_progress'.tr(),
             style: AppTextStyle.s12in.copyWith(
-              color: AppColors.textTertiary,
+              color: context.secondaryTextColor,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -224,7 +224,7 @@ class PlanDetailScreen extends StatelessWidget {
                   borderRadius: AppBorderRadius.a4,
                   child: LinearProgressIndicator(
                     value: goal.progressPercent,
-                    backgroundColor: AppColors.lightGrayBackground,
+                    backgroundColor: context.surfaceVariant,
                     valueColor: AlwaysStoppedAnimation<Color>(goal.color),
                     minHeight: 10,
                   ),
@@ -242,7 +242,7 @@ class PlanDetailScreen extends StatelessWidget {
                   Text(
                     'plans_screen.accumulated'.tr().toUpperCase(),
                     style: AppTextStyle.s10in.copyWith(
-                      color: AppColors.textTertiary,
+                      color: context.secondaryTextColor,
                     ),
                   ),
                   Text(
@@ -260,7 +260,7 @@ class PlanDetailScreen extends StatelessWidget {
                   Text(
                     'plans_screen.remaining'.tr().toUpperCase(),
                     style: AppTextStyle.s10in.copyWith(
-                      color: AppColors.textTertiary,
+                      color: context.secondaryTextColor,
                     ),
                   ),
                   Text(
@@ -279,18 +279,44 @@ class PlanDetailScreen extends StatelessWidget {
     );
   }
 
+  /// Dịch title/subtitle của history entry — xử lý cả data cũ tiếng Anh
+  String _translateHistoryTitle(String text) {
+    // "Savings 3/2026" → dịch theo ngôn ngữ hiện tại
+    final savingsRegex = RegExp(r'^Savings (\d+)/(\d+)$');
+    final match = savingsRegex.firstMatch(text);
+    if (match != null) {
+      return 'plans_screen.savings_month'.tr(
+        namedArgs: {'month': match.group(1)!, 'year': match.group(2)!},
+      );
+    }
+    return text;
+  }
+
+  String _translateHistorySubtitle(String text) {
+    if (text == 'Transfer from financial freedom') {
+      return 'plans_screen.from_salary_account'.tr();
+    }
+    return text;
+  }
+
   Widget _buildSmartForecast(BuildContext context, SavingsGoalModel goal) {
     final monthly = goal.monthlyRequired;
     final monthsLeft = goal.deadline.difference(DateTime.now()).inDays / 30;
-    String forecast = '';
+    String forecast;
     if (monthsLeft > 0 && monthly > 0) {
       final estimatedMonth = DateTime.now().add(
         Duration(days: (goal.remainingAmount / monthly * 30).round()),
       );
-      forecast =
-          'Với tốc độ tiết kiệm ${_formatCurrency(context, monthly)}/tháng, bạn sẽ hoàn thành mục tiêu này vào tháng ${estimatedMonth.month}/${estimatedMonth.year}.';
+      forecast = 'plans_screen.forecast_with_rate'.tr(
+        namedArgs: {
+          'amount': _formatCurrency(context, monthly),
+          'month': estimatedMonth.month.toString(),
+          'year': estimatedMonth.year.toString(),
+        },
+      );
+    } else {
+      forecast = 'plans_screen.forecast_empty'.tr();
     }
-    if (forecast.isEmpty) forecast = 'Thêm tiền tích lũy để xem dự báo.';
     return Container(
       padding: AppPad.a16,
       decoration: BoxDecoration(
@@ -318,7 +344,7 @@ class PlanDetailScreen extends StatelessWidget {
                 Text(
                   forecast,
                   style: AppTextStyle.s12in.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.secondaryTextColor,
                   ),
                 ),
               ],
@@ -329,7 +355,7 @@ class PlanDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildJourneySection(SavingsGoalModel goal) {
+  Widget _buildJourneySection(BuildContext context, SavingsGoalModel goal) {
     final milestones = goal.milestones ?? [];
     if (milestones.isEmpty) return const SizedBox.shrink();
     return Column(
@@ -342,7 +368,7 @@ class PlanDetailScreen extends StatelessWidget {
               'plans_screen.roadmap'.tr(),
               style: AppTextStyle.s14in.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: context.primaryTextColor,
               ),
             ),
             TextButton(
@@ -363,7 +389,7 @@ class PlanDetailScreen extends StatelessWidget {
                       ? Icons.check_circle_rounded
                       : Icons.radio_button_unchecked_rounded,
                   size: 20,
-                  color: m.isReached ? goal.color : AppColors.textTertiary,
+                  color: m.isReached ? goal.color : context.secondaryTextColor,
                 ),
                 AppGap.w12,
                 Expanded(
@@ -374,20 +400,20 @@ class PlanDetailScreen extends StatelessWidget {
                         m.title,
                         style: AppTextStyle.s14in.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                          color: context.primaryTextColor,
                         ),
                       ),
                       Text(
                         m.description,
                         style: AppTextStyle.s12in.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.secondaryTextColor,
                         ),
                       ),
                       if (m.date != null)
                         Text(
                           _formatDate(m.date!),
                           style: AppTextStyle.s10in.copyWith(
-                            color: AppColors.textTertiary,
+                            color: context.secondaryTextColor,
                           ),
                         ),
                     ],
@@ -415,14 +441,14 @@ class PlanDetailScreen extends StatelessWidget {
               'plans_screen.accumulation_history'.tr(),
               style: AppTextStyle.s16in.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: context.primaryTextColor,
               ),
             ),
             AppGap.w8,
             Icon(
               Icons.history_rounded,
               size: 20,
-              color: AppColors.textTertiary,
+              color: context.secondaryTextColor,
             ),
           ],
         ),
@@ -431,14 +457,14 @@ class PlanDetailScreen extends StatelessWidget {
           Container(
             padding: AppPad.a20,
             decoration: BoxDecoration(
-              color: AppColors.lightGrayBackground,
+              color: context.surfaceVariant,
               borderRadius: AppBorderRadius.a12,
             ),
             child: Center(
               child: Text(
-                'Chưa có lịch sử tích lũy',
+                'plans_screen.no_history'.tr(),
                 style: AppTextStyle.s14in.copyWith(
-                  color: AppColors.textTertiary,
+                  color: context.secondaryTextColor,
                 ),
               ),
             ),
@@ -446,7 +472,7 @@ class PlanDetailScreen extends StatelessWidget {
         else
           Container(
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: context.surfaceColor,
               borderRadius: AppBorderRadius.a16,
               boxShadow: [
                 BoxShadow(
@@ -488,16 +514,16 @@ class PlanDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              entry.title,
+                              _translateHistoryTitle(entry.title),
                               style: AppTextStyle.s14in.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary,
+                                color: context.primaryTextColor,
                               ),
                             ),
                             Text(
-                              entry.subtitle,
+                              _translateHistorySubtitle(entry.subtitle),
                               style: AppTextStyle.s12in.copyWith(
-                                color: AppColors.textSecondary,
+                                color: context.secondaryTextColor,
                               ),
                             ),
                           ],
@@ -529,8 +555,8 @@ class PlanDetailScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
         padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-        decoration: const BoxDecoration(
-          color: AppColors.white,
+        decoration: BoxDecoration(
+          color: context.surfaceColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Padding(

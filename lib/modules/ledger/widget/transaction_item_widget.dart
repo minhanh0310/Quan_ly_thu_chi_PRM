@@ -1,5 +1,6 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/helpers/category_tr.dart';
 
 class TransactionItemWidget extends StatelessWidget {
   final String title;
@@ -18,6 +19,32 @@ class TransactionItemWidget extends StatelessWidget {
     this.tag,
     required this.isIncome,
   });
+
+  static Color _categoryColor(String category) {
+    final key = category.startsWith('tags.')
+        ? category.substring(5)
+        : category.toLowerCase();
+    switch (key) {
+      case 'necessities':
+        return const Color(0xFF4CAF50);
+      case 'financial_freedom':
+        return const Color(0xFF5B4EFF);
+      case 'education':
+        return const Color(0xFFFFC94D);
+      case 'long_term_savings':
+        return const Color(0xFF26C6DA);
+      case 'entertainment':
+        return const Color(0xFFFF6B93);
+      case 'give':
+        return const Color(0xFFAB47BC);
+      case 'income':
+        return const Color(0xFF00D09E);
+      case 'plan':
+        return const Color(0xFF6C5CE7);
+      default:
+        return const Color(0xFF607D8B);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +92,7 @@ class TransactionItemWidget extends StatelessWidget {
               children: [
                 // Title
                 Text(
-                  title.tr(),
+                  title.trCategory(),
                   style: AppTextStyle.s16in.copyWith(
                     fontWeight: FontWeight.w600,
                     color: context.primaryTextColor,
@@ -87,27 +114,32 @@ class TransactionItemWidget extends StatelessWidget {
                       ),
                     ),
 
-                    // Category badge (if exists)
-                    if (category.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
-                          borderRadius: AppBorderRadius.a8,
-                        ),
-                        child: Text(
-                          category.toUpperCase(),
-                          style: AppTextStyle.s12in.copyWith(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF6C5CE7),
-                            letterSpacing: 0.5,
-                          ),
+                    // Income / Expense badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isIncome
+                            ? AppColors.incomeGreen.withValues(alpha: 0.12)
+                            : AppColors.expenseRed.withValues(alpha: 0.12),
+                        borderRadius: AppBorderRadius.a8,
+                      ),
+                      child: Text(
+                        isIncome
+                            ? 'home_screen.income'.tr().toUpperCase()
+                            : 'home_screen.expense'.tr().toUpperCase(),
+                        style: AppTextStyle.s12in.copyWith(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: isIncome
+                              ? AppColors.incomeGreen
+                              : AppColors.expenseRed,
+                          letterSpacing: 0.5,
                         ),
                       ),
+                    ),
 
                     // Tag (if exists)
                     if (tag != null && tag!.isNotEmpty)

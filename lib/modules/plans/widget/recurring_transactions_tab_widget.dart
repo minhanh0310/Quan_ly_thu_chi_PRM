@@ -1,4 +1,5 @@
 import 'package:Quan_ly_thu_chi_PRM/init.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/plans/model/recurring_transaction_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
 import 'package:Quan_ly_thu_chi_PRM/services/finance_database_service.dart';
@@ -19,127 +20,136 @@ class RecurringTransactionsTabWidget extends StatelessWidget {
           : service.watchRecurringTransactions(uid),
       builder: (context, snapshot) {
         final transactions = snapshot.data ?? const [];
-        final expenseTransactions =
-            transactions.where((t) => !t.isIncome).toList();
-        final incomeTransactions =
-            transactions.where((t) => t.isIncome).toList();
-        final dueSoonTransactions =
-            transactions.where((t) => t.isDueSoon).toList();
-        final overdueTransactions =
-            transactions.where((t) => t.isOverdue).toList();
+        final expenseTransactions = transactions
+            .where((t) => !t.isIncome)
+            .toList();
+        final incomeTransactions = transactions
+            .where((t) => t.isIncome)
+            .toList();
+        final dueSoonTransactions = transactions
+            .where((t) => t.isDueSoon)
+            .toList();
+        final overdueTransactions = transactions
+            .where((t) => t.isOverdue)
+            .toList();
 
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-        SliverToBoxAdapter(child: AppGap.h20),
+            SliverToBoxAdapter(child: AppGap.h20),
 
-        // Upcoming Payments Summary
-        if (dueSoonTransactions.isNotEmpty || overdueTransactions.isNotEmpty)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: AppPad.h20,
-              child: _UpcomingPaymentsCard(
-                dueSoon: dueSoonTransactions,
-                overdue: overdueTransactions,
+            // Upcoming Payments Summary
+            if (dueSoonTransactions.isNotEmpty ||
+                overdueTransactions.isNotEmpty)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppPad.h20,
+                  child: _UpcomingPaymentsCard(
+                    dueSoon: dueSoonTransactions,
+                    overdue: overdueTransactions,
+                  ),
+                ),
+              ),
+
+            // Section Header - Expenses
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: AppPad.h20,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'plans_screen.recurring_expenses'.tr(),
+                      style: AppTextStyle.s16in.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        print('====> Add new recurring transaction');
+                      },
+                      icon: const Icon(Icons.add, size: 20),
+                      label: Text('common.add'.tr()),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primaryPurple,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-        // Section Header - Expenses
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: AppPad.h20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Recurring Expenses',
+            // Expenses List
+            if (expenseTransactions.isNotEmpty)
+              SliverPadding(
+                padding: AppPad.h20,
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final transaction = expenseTransactions[index];
+                    return Padding(
+                      padding: AppPad.b12,
+                      child: _RecurringTransactionCard(
+                        transaction: transaction,
+                      ),
+                    );
+                  }, childCount: expenseTransactions.length),
+                ),
+              )
+            else
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppPad.h20,
+                  child: _EmptyStateCard(
+                    icon: Icons.receipt_long_outlined,
+                    message: 'plans_screen.no_recurring_expenses'.tr(),
+                  ),
+                ),
+              ),
+
+            // Section Header - Income
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: AppPad.h20,
+                child: Text(
+                  'plans_screen.recurring_income'.tr(),
                   style: AppTextStyle.s16in.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
                   ),
                 ),
-                TextButton.icon(
-                  onPressed: () {
-                    print('====> Add new recurring transaction');
-                  },
-                  icon: const Icon(Icons.add, size: 20),
-                  label: const Text('Add'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.primaryPurple,
+              ),
+            ),
+
+            // Income List
+            if (incomeTransactions.isNotEmpty)
+              SliverPadding(
+                padding: AppPad.h20,
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final transaction = incomeTransactions[index];
+                    return Padding(
+                      padding: AppPad.b12,
+                      child: _RecurringTransactionCard(
+                        transaction: transaction,
+                      ),
+                    );
+                  }, childCount: incomeTransactions.length),
+                ),
+              )
+            else
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppPad.h20,
+                  child: _EmptyStateCard(
+                    icon: Icons.attach_money_rounded,
+                    message: 'plans_screen.no_recurring_income'.tr(),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-
-        // Expenses List
-        if (expenseTransactions.isNotEmpty)
-          SliverPadding(
-            padding: AppPad.h20,
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final transaction = expenseTransactions[index];
-                return Padding(
-                  padding: AppPad.b12,
-                  child: _RecurringTransactionCard(transaction: transaction),
-                );
-              }, childCount: expenseTransactions.length),
-            ),
-          )
-        else
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: AppPad.h20,
-              child: _EmptyStateCard(
-                icon: Icons.receipt_long_outlined,
-                message: 'No recurring expenses',
               ),
-            ),
-          ),
 
-        // Section Header - Income
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: AppPad.h20,
-            child: Text(
-              'Recurring Income',
-              style: AppTextStyle.s16in.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-        ),
-
-        // Income List
-        if (incomeTransactions.isNotEmpty)
-          SliverPadding(
-            padding: AppPad.h20,
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final transaction = incomeTransactions[index];
-                return Padding(
-                  padding: AppPad.b12,
-                  child: _RecurringTransactionCard(transaction: transaction),
-                );
-              }, childCount: incomeTransactions.length),
-            ),
-          )
-        else
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: AppPad.h20,
-              child: _EmptyStateCard(
-                icon: Icons.attach_money_rounded,
-                message: 'No recurring income',
-              ),
-            ),
-          ),
-
-        SliverToBoxAdapter(child: AppGap.h100),
-      ],
+            SliverToBoxAdapter(child: AppGap.h100),
+          ],
         );
       },
     );
@@ -200,7 +210,9 @@ class _UpcomingPaymentsCard extends StatelessWidget {
               ),
               AppGap.w12,
               Text(
-                overdue.isNotEmpty ? 'Overdue Payments' : 'Upcoming Payments',
+                overdue.isNotEmpty
+                    ? 'plans_screen.overdue_payments'.tr()
+                    : 'plans_screen.upcoming_payments'.tr(),
                 style: AppTextStyle.s18in.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -211,11 +223,15 @@ class _UpcomingPaymentsCard extends StatelessWidget {
           AppGap.h16,
           if (overdue.isNotEmpty) ...[
             Text(
-              '${overdue.length} payment(s) overdue',
+              'plans_screen.payments_overdue'.tr(
+                namedArgs: {'count': overdue.length.toString()},
+              ),
               style: AppTextStyle.s14in.copyWith(color: Colors.white),
             ),
             Text(
-              'Total: ${_formatCurrency(context, totalOverdue)}',
+              'plans_screen.total_amount'.tr(
+                namedArgs: {'amount': _formatCurrency(context, totalOverdue)},
+              ),
               style: AppTextStyle.s16in.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -223,11 +239,15 @@ class _UpcomingPaymentsCard extends StatelessWidget {
             ),
           ] else ...[
             Text(
-              '${dueSoon.length} payment(s) due within 3 days',
+              'plans_screen.payments_due_soon'.tr(
+                namedArgs: {'count': dueSoon.length.toString()},
+              ),
               style: AppTextStyle.s14in.copyWith(color: Colors.white),
             ),
             Text(
-              'Total: ${_formatCurrency(context, totalDueSoon)}',
+              'plans_screen.total_amount'.tr(
+                namedArgs: {'amount': _formatCurrency(context, totalDueSoon)},
+              ),
               style: AppTextStyle.s16in.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -388,8 +408,16 @@ class _RecurringTransactionCard extends StatelessWidget {
                     AppGap.w4,
                     Text(
                       transaction.isOverdue
-                          ? 'Overdue: ${_formatDate(transaction.nextDueDate)}'
-                          : 'Next: ${_formatDate(transaction.nextDueDate)}',
+                          ? 'plans_screen.overdue_date'.tr(
+                              namedArgs: {
+                                'date': _formatDate(transaction.nextDueDate),
+                              },
+                            )
+                          : 'plans_screen.next_date'.tr(
+                              namedArgs: {
+                                'date': _formatDate(transaction.nextDueDate),
+                              },
+                            ),
                       style: AppTextStyle.s12in.copyWith(
                         color: transaction.isOverdue
                             ? AppColors.expenseRed
@@ -407,7 +435,7 @@ class _RecurringTransactionCard extends StatelessWidget {
                           borderRadius: AppBorderRadius.a4,
                         ),
                         child: Text(
-                          'Due Soon',
+                          'plans_screen.due_soon'.tr(),
                           style: AppTextStyle.s10in.copyWith(
                             color: AppColors.accentYellow,
                             fontWeight: FontWeight.w600,
@@ -424,7 +452,7 @@ class _RecurringTransactionCard extends StatelessWidget {
                           borderRadius: AppBorderRadius.a4,
                         ),
                         child: Text(
-                          'Overdue',
+                          'plans_screen.overdue_label'.tr(),
                           style: AppTextStyle.s10in.copyWith(
                             color: AppColors.expenseRed,
                             fontWeight: FontWeight.w600,

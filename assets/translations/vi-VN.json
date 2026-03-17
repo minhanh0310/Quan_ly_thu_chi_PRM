@@ -30,7 +30,8 @@
         "apply": "Áp dụng",
         "view_all": "Xem tất cả",
         "see_more": "Xem thêm",
-        "see_less": "Thu gọn"
+        "see_less": "Thu gọn",
+        "add": "Thêm"
     },
     "home_screen": {
         "home": "Trang chủ",
@@ -54,8 +55,15 @@
         "amount": "Số tiền",
         "transaction_date": "Ngày giao dịch",
         "note": "Ghi chú",
-        "hint_note": "Ví dụ: Lương tháng #work",
-        "tags": "Thẻ"
+        "hint_note": "vd: work, luong (tự thành #tag)",
+        "tags": "Thẻ",
+        "save_income": "Lưu thu nhập",
+        "save_expense": "Lưu chi tiêu",
+        "available_balance": "Số dư khả dụng",
+        "sign_in_warning": "Vui lòng đăng nhập lại để lưu.",
+        "select_tag_warning": "Vui lòng chọn thẻ để ghi chi tiêu.",
+        "saved_income": "Đã lưu thu nhập",
+        "saved_expense": "Đã lưu chi tiêu"
     },
     "ledger_screen": {
         "title": "Sổ cái",
@@ -64,7 +72,11 @@
         "all": "Tất cả",
         "income": "Thu nhập",
         "expense": "Chi tiêu",
-        "no_transactions": "Chưa có giao dịch nào"
+        "no_transactions": "Chưa có giao dịch nào",
+        "filter_title": "Lọc",
+        "time_range": "Khoảng thời gian",
+        "all_time": "Tất cả thời gian",
+        "category_filter": "Danh mục"
     },
     "plans_screen": {
         "title": "Kế hoạch",
@@ -100,7 +112,45 @@
         "from_salary_account": "Chuyển từ tài khoản lương",
         "savings_month": "Tiết kiệm tháng {month}/{year}",
         "goal_reached_title": "Về đích",
-        "complete_plan": "Hoàn thành kế hoạch {name}"
+        "complete_plan": "Hoàn thành kế hoạch {name}",
+        "overdue_goals": "Mục tiêu quá hạn",
+        "completed_goals": "Mục tiêu đã hoàn thành",
+        "goal_label": "Mục tiêu: {amount}",
+        "target_year": "MỤC TIÊU: {year}",
+        "target_detail": "Mục tiêu: {target} · Hiện tại: {current}",
+        "budget_categories": "Danh mục ngân sách",
+        "total_budget": "Tổng ngân sách",
+        "this_month": "Tháng này",
+        "remaining_of": "Còn lại của {amount}",
+        "over_budget_by": "Vượt ngân sách {amount}",
+        "percent_used": "{percent}% đã dùng",
+        "amount_spent": "đã chi {amount}",
+        "spent_label": "Đã chi",
+        "budget_label": "Ngân sách",
+        "overspent_label": "Vượt chi",
+        "remaining_label": "Còn lại",
+        "fixed": "Cố định",
+        "variable": "Biến đổi",
+        "weekly": "Hàng tuần",
+        "monthly": "Hàng tháng",
+        "yearly": "Hàng năm",
+        "budget_exceeded_advice": "Bạn đã vượt ngân sách! Hãy cân nhắc giảm chi tiêu trong danh mục này.",
+        "recurring_expenses": "Chi tiêu định kỳ",
+        "no_recurring_expenses": "Chưa có chi tiêu định kỳ",
+        "recurring_income": "Thu nhập định kỳ",
+        "no_recurring_income": "Chưa có thu nhập định kỳ",
+        "overdue_payments": "Thanh toán quá hạn",
+        "upcoming_payments": "Thanh toán sắp đến",
+        "payments_overdue": "{count} khoản quá hạn",
+        "payments_due_soon": "{count} khoản đến hạn trong 3 ngày",
+        "total_amount": "Tổng: {amount}",
+        "due_soon": "Sắp đến hạn",
+        "overdue_label": "Quá hạn",
+        "next_date": "Tiếp theo: {date}",
+        "overdue_date": "Quá hạn: {date}",
+        "no_history": "Chưa có lịch sử tích lũy",
+        "forecast_with_rate": "Với tốc độ tiết kiệm {amount}/tháng, bạn sẽ hoàn thành mục tiêu này vào tháng {month}/{year}.",
+        "forecast_empty": "Thêm tiền tích lũy để xem dự báo."
     },
     "stats_screen": {
         "title": "Thống Kê",
@@ -335,6 +385,12 @@
         "education": "Giáo dục",
         "long_term_savings": "Tiết kiệm dài hạn",
         "entertainment": "Giải trí",
-        "give": "Cho đi"
+        "give": "Cho đi",
+        "PLAN": "Kế hoạch",
+        "INCOME": "Thu nhập"
+    },
+    "category_labels": {
+        "plan": "Kế hoạch",
+        "income": "Thu nhập"
     }
 }

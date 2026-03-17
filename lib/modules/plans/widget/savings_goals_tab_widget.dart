@@ -76,12 +76,15 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
       stream: uid == null ? Stream.empty() : _service.watchSavingsGoals(uid),
       builder: (context, snapshot) {
         final goals = snapshot.data ?? const [];
-        final activeGoals =
-            goals.where((g) => g.status == SavingsGoalStatus.active).toList();
-        final completedGoals =
-            goals.where((g) => g.status == SavingsGoalStatus.completed).toList();
-        final overdueGoals =
-            goals.where((g) => g.status == SavingsGoalStatus.overdue).toList();
+        final activeGoals = goals
+            .where((g) => g.status == SavingsGoalStatus.active)
+            .toList();
+        final completedGoals = goals
+            .where((g) => g.status == SavingsGoalStatus.completed)
+            .toList();
+        final overdueGoals = goals
+            .where((g) => g.status == SavingsGoalStatus.overdue)
+            .toList();
 
         return StreamBuilder<List<JarModel>>(
           stream: uid == null ? Stream.empty() : _service.watchJars(uid),
@@ -105,169 +108,175 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
             return CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
-        SliverToBoxAdapter(child: AppGap.h16),
+                SliverToBoxAdapter(child: AppGap.h16),
 
-        // Header: Financial Journey + subtitle + Add (+) button
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: AppPad.h20,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'plans_screen.financial_journey'.tr(),
-                        style: AppTextStyle.s20in.copyWith(
+                // Header: Financial Journey + subtitle + Add (+) button
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: AppPad.h20,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'plans_screen.financial_journey'.tr(),
+                                style: AppTextStyle.s20in.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: context.primaryTextColor,
+                                ),
+                              ),
+                              AppGap.h4,
+                              Text(
+                                'plans_screen.long_term_goals_tracking'.tr(),
+                                style: AppTextStyle.s14in.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Material(
+                          color: AppColors.primaryPurple,
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            onTap: _showAddPlanDialog,
+                            customBorder: const CircleBorder(),
+                            child: const SizedBox(
+                              width: 48,
+                              height: 48,
+                              child: Icon(
+                                Icons.add_rounded,
+                                color: AppColors.white,
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                SliverToBoxAdapter(child: AppGap.h24),
+
+                // Active goals — card style (reference design)
+                if (activeGoals.isNotEmpty)
+                  SliverPadding(
+                    padding: AppPad.h20,
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final goal = activeGoals[index];
+                        return Padding(
+                          padding: AppPad.b16,
+                          child: _FinancialJourneyCard(
+                            goal: goal,
+                            onTap: () => _openPlanDetail(
+                              context,
+                              goal,
+                              financialFreedomBalance,
+                            ),
+                            onUpdateProgress: () => _showAllocateDialog(
+                              context,
+                              goal,
+                              financialFreedomBalance,
+                            ),
+                          ),
+                        );
+                      }, childCount: activeGoals.length),
+                    ),
+                  )
+                else
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: AppPad.h20,
+                      child: _EmptyStateCard(
+                        icon: Icons.savings_outlined,
+                        message: 'plans_screen.no_goals'.tr(),
+                      ),
+                    ),
+                  ),
+
+                // Overdue
+                if (overdueGoals.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: AppPad.h20,
+                      child: Text(
+                        'plans_screen.overdue_goals'.tr(),
+                        style: AppTextStyle.s16in.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: context.primaryTextColor,
+                          color: AppColors.expenseRed,
                         ),
-                      ),
-                      AppGap.h4,
-                      Text(
-                        'plans_screen.long_term_goals_tracking'.tr(),
-                        style: AppTextStyle.s14in.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Material(
-                  color: AppColors.primaryPurple,
-                  shape: const CircleBorder(),
-                  child: InkWell(
-                    onTap: _showAddPlanDialog,
-                    customBorder: const CircleBorder(),
-                    child: const SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: Icon(
-                        Icons.add_rounded,
-                        color: AppColors.white,
-                        size: 28,
                       ),
                     ),
                   ),
-                ),
+                  SliverPadding(
+                    padding: AppPad.h20,
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final goal = overdueGoals[index];
+                        return Padding(
+                          padding: AppPad.b16,
+                          child: _FinancialJourneyCard(
+                            goal: goal,
+                            onTap: () => _openPlanDetail(
+                              context,
+                              goal,
+                              financialFreedomBalance,
+                            ),
+                            onUpdateProgress: () => _showAllocateDialog(
+                              context,
+                              goal,
+                              financialFreedomBalance,
+                            ),
+                          ),
+                        );
+                      }, childCount: overdueGoals.length),
+                    ),
+                  ),
+                ],
+
+                // Completed
+                if (completedGoals.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: AppPad.h20,
+                      child: Text(
+                        'plans_screen.completed_goals'.tr(),
+                        style: AppTextStyle.s16in.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.incomeGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: AppPad.h20,
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final goal = completedGoals[index];
+                        return Padding(
+                          padding: AppPad.b16,
+                          child: _FinancialJourneyCard(
+                            goal: goal,
+                            onTap: () => _openPlanDetail(
+                              context,
+                              goal,
+                              financialFreedomBalance,
+                            ),
+                            onUpdateProgress: null,
+                          ),
+                        );
+                      }, childCount: completedGoals.length),
+                    ),
+                  ),
+                ],
+
+                SliverToBoxAdapter(child: AppGap.h100),
               ],
-            ),
-          ),
-        ),
-
-        SliverToBoxAdapter(child: AppGap.h24),
-
-        // Active goals — card style (reference design)
-        if (activeGoals.isNotEmpty)
-          SliverPadding(
-            padding: AppPad.h20,
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final goal = activeGoals[index];
-                return Padding(
-                  padding: AppPad.b16,
-                  child: _FinancialJourneyCard(
-                    goal: goal,
-                    onTap: () => _openPlanDetail(
-                      context,
-                      goal,
-                      financialFreedomBalance,
-                    ),
-                    onUpdateProgress: () =>
-                        _showAllocateDialog(context, goal, financialFreedomBalance),
-                  ),
-                );
-              }, childCount: activeGoals.length),
-            ),
-          )
-        else
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: AppPad.h20,
-              child: _EmptyStateCard(
-                icon: Icons.savings_outlined,
-                message: 'plans_screen.no_goals'.tr(),
-              ),
-            ),
-          ),
-
-        // Overdue
-        if (overdueGoals.isNotEmpty) ...[
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: AppPad.h20,
-              child: Text(
-                'Overdue Goals',
-                style: AppTextStyle.s16in.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.expenseRed,
-                ),
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: AppPad.h20,
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final goal = overdueGoals[index];
-                return Padding(
-                  padding: AppPad.b16,
-                  child: _FinancialJourneyCard(
-                    goal: goal,
-                    onTap: () => _openPlanDetail(
-                      context,
-                      goal,
-                      financialFreedomBalance,
-                    ),
-                    onUpdateProgress: () =>
-                        _showAllocateDialog(context, goal, financialFreedomBalance),
-                  ),
-                );
-              }, childCount: overdueGoals.length),
-            ),
-          ),
-        ],
-
-        // Completed
-        if (completedGoals.isNotEmpty) ...[
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: AppPad.h20,
-              child: Text(
-                'Completed Goals',
-                style: AppTextStyle.s16in.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.incomeGreen,
-                ),
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: AppPad.h20,
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final goal = completedGoals[index];
-                return Padding(
-                  padding: AppPad.b16,
-                  child: _FinancialJourneyCard(
-                    goal: goal,
-                    onTap: () => _openPlanDetail(
-                      context,
-                      goal,
-                      financialFreedomBalance,
-                    ),
-                    onUpdateProgress: null,
-                  ),
-                );
-              }, childCount: completedGoals.length),
-            ),
-          ),
-        ],
-
-        SliverToBoxAdapter(child: AppGap.h100),
-      ],
             );
           },
         );
@@ -492,7 +501,12 @@ class _SavingsGoalsTabWidgetState extends State<SavingsGoalsTabWidget> {
               ),
               AppGap.h8,
               Text(
-                'Target: ${_formatCurrency(context, goal.targetAmount)} · Current: ${_formatCurrency(context, goal.currentAmount)}',
+                'plans_screen.target_detail'.tr(
+                  namedArgs: {
+                    'target': _formatCurrency(context, goal.targetAmount),
+                    'current': _formatCurrency(context, goal.currentAmount),
+                  },
+                ),
                 style: AppTextStyle.s14in.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -636,7 +650,11 @@ class _FinancialJourneyCard extends StatelessWidget {
                             borderRadius: AppBorderRadius.a8,
                           ),
                           child: Text(
-                            'TARGET: ${goal.deadline.year}',
+                            'plans_screen.target_year'.tr(
+                              namedArgs: {
+                                'year': goal.deadline.year.toString(),
+                              },
+                            ),
                             style: AppTextStyle.s12in.copyWith(
                               color: goal.color,
                               fontWeight: FontWeight.w600,
@@ -647,7 +665,11 @@ class _FinancialJourneyCard extends StatelessWidget {
                     ),
                     AppGap.h4,
                     Text(
-                      'Goal: ${_formatCurrency(context, goal.targetAmount)}',
+                      'plans_screen.goal_label'.tr(
+                        namedArgs: {
+                          'amount': _formatCurrency(context, goal.targetAmount),
+                        },
+                      ),
                       style: AppTextStyle.s14in.copyWith(
                         color: AppColors.textSecondary,
                       ),

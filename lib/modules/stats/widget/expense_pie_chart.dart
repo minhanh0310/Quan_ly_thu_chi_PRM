@@ -5,6 +5,7 @@ import 'package:Quan_ly_thu_chi_PRM/init.dart';
 import 'package:Quan_ly_thu_chi_PRM/modules/stats/model/stats_model.dart';
 import 'package:Quan_ly_thu_chi_PRM/core/providers/currency_provider.dart';
 import 'package:Quan_ly_thu_chi_PRM/models/transaction_model.dart';
+import 'package:Quan_ly_thu_chi_PRM/utils/helpers/category_tr.dart';
 import 'package:provider/provider.dart';
 
 /// Pie chart widget showing expense breakdown by category
@@ -63,8 +64,9 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
       final index = entry.key;
       final item = entry.value;
       final isTouched = index == touchedIndex;
-      final percentage =
-          total > 0 ? ((item.amount / total) * 100).toDouble() : 0.0;
+      final percentage = total > 0
+          ? ((item.amount / total) * 100).toDouble()
+          : 0.0;
 
       return PieChartSectionData(
         color: item.color,
@@ -118,7 +120,7 @@ class _ExpensePieChartState extends State<ExpensePieChart> {
             ),
             AppGap.w6,
             Text(
-              label,
+              label.trCategory(),
               style: AppTextStyle.s12in.copyWith(
                 color: isSelected ? color : AppColors.textSecondary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
@@ -148,8 +150,9 @@ class CategoryBreakdownList extends StatelessWidget {
 
     return Column(
       children: data.map((item) {
-        final percentage =
-            total > 0 ? ((item.amount / total) * 100).toDouble() : 0.0;
+        final percentage = total > 0
+            ? ((item.amount / total) * 100).toDouble()
+            : 0.0;
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: _buildCategoryItem(context, item, percentage),
@@ -179,13 +182,13 @@ class CategoryBreakdownList extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   GestureDetector(
                     onTap: () => _showCategoryDetails(context, item.category),
                     child: Text(
-                      '${item.category} (${percentage.toStringAsFixed(1)}%)',
+                      '${item.category.trCategory()} (${percentage.toStringAsFixed(1)}%)',
                       style: AppTextStyle.s14.copyWith(
                         color: context.primaryTextColor,
                         fontWeight: FontWeight.w500,
@@ -223,11 +226,13 @@ class CategoryBreakdownList extends StatelessWidget {
   void _showCategoryDetails(BuildContext context, String category) {
     final now = DateTime.now();
     final tx = transactions
-        .where((t) =>
-            !t.isIncome &&
-            t.category.toLowerCase() == category.toLowerCase() &&
-            t.date.year == now.year &&
-            t.date.month == now.month)
+        .where(
+          (t) =>
+              !t.isIncome &&
+              t.category.toLowerCase() == category.toLowerCase() &&
+              t.date.year == now.year &&
+              t.date.month == now.month,
+        )
         .toList();
     showModalBottomSheet(
       context: context,
@@ -249,7 +254,7 @@ class CategoryBreakdownList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  category,
+                  category.trCategory(),
                   style: AppTextStyle.s18in.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -299,8 +304,8 @@ class CategoryBreakdownList extends StatelessWidget {
                             ),
                             Text(
                               context.read<CurrencyProvider>().formatCurrency(
-                                    item.amount,
-                                  ),
+                                item.amount,
+                              ),
                               style: AppTextStyle.s14in.copyWith(
                                 color: AppColors.expenseRed,
                                 fontWeight: FontWeight.w600,

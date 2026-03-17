@@ -21,72 +21,72 @@ class BudgetTabWidget extends StatelessWidget {
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-        SliverToBoxAdapter(child: AppGap.h20),
+            SliverToBoxAdapter(child: AppGap.h20),
 
-        // Summary Card
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: AppPad.h20,
-            child: _BudgetSummaryCard(budgets: budgets),
-          ),
-        ),
-
-        // Section Header
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: AppPad.h20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Budget Categories',
-                  style: AppTextStyle.s16in.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    print('====> Add new budget');
-                  },
-                  icon: const Icon(Icons.add, size: 20),
-                  label: const Text('Add'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.primaryPurple,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Budget List
-        if (budgets.isNotEmpty)
-          SliverPadding(
-            padding: AppPad.h20,
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final budget = budgets[index];
-                return Padding(
-                  padding: AppPad.b16,
-                  child: _BudgetCard(budget: budget),
-                );
-              }, childCount: budgets.length),
-            ),
-          )
-        else
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: AppPad.h20,
-              child: _EmptyStateCard(
-                icon: Icons.receipt_long_outlined,
-                message: 'plans_screen.no_budgets'.tr(),
+            // Summary Card
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: AppPad.h20,
+                child: _BudgetSummaryCard(budgets: budgets),
               ),
             ),
-          ),
 
-        SliverToBoxAdapter(child: AppGap.h100),
-      ],
+            // Section Header
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: AppPad.h20,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'plans_screen.budget_categories'.tr(),
+                      style: AppTextStyle.s16in.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        print('====> Add new budget');
+                      },
+                      icon: const Icon(Icons.add, size: 20),
+                      label: Text('common.add'.tr()),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primaryPurple,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Budget List
+            if (budgets.isNotEmpty)
+              SliverPadding(
+                padding: AppPad.h20,
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final budget = budgets[index];
+                    return Padding(
+                      padding: AppPad.b16,
+                      child: _BudgetCard(budget: budget),
+                    );
+                  }, childCount: budgets.length),
+                ),
+              )
+            else
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppPad.h20,
+                  child: _EmptyStateCard(
+                    icon: Icons.receipt_long_outlined,
+                    message: 'plans_screen.no_budgets'.tr(),
+                  ),
+                ),
+              ),
+
+            SliverToBoxAdapter(child: AppGap.h100),
+          ],
         );
       },
     );
@@ -168,7 +168,7 @@ class _BudgetSummaryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total Budget',
+                'plans_screen.total_budget'.tr(),
                 style: AppTextStyle.s14in.copyWith(color: Colors.white70),
               ),
               Container(
@@ -178,7 +178,7 @@ class _BudgetSummaryCard extends StatelessWidget {
                   borderRadius: AppBorderRadius.a12,
                 ),
                 child: Text(
-                  'This Month',
+                  'plans_screen.this_month'.tr(),
                   style: AppTextStyle.s12in.copyWith(color: Colors.white),
                 ),
               ),
@@ -195,8 +195,14 @@ class _BudgetSummaryCard extends StatelessWidget {
           AppGap.h4,
           Text(
             totalRemaining >= 0
-                ? 'Remaining of ${_formatCurrency(context, totalLimit)}'
-                : 'Over budget by ${_formatCurrency(context, -totalRemaining)}',
+                ? 'plans_screen.remaining_of'.tr(
+                    namedArgs: {'amount': _formatCurrency(context, totalLimit)},
+                  )
+                : 'plans_screen.over_budget_by'.tr(
+                    namedArgs: {
+                      'amount': _formatCurrency(context, -totalRemaining),
+                    },
+                  ),
             style: AppTextStyle.s14in.copyWith(color: Colors.white70),
           ),
           AppGap.h16,
@@ -214,11 +220,17 @@ class _BudgetSummaryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${(percentUsed * 100).toInt()}% used',
+                'plans_screen.percent_used'.tr(
+                  namedArgs: {
+                    'percent': (percentUsed * 100).toInt().toString(),
+                  },
+                ),
                 style: AppTextStyle.s12in.copyWith(color: Colors.white70),
               ),
               Text(
-                '${_formatCurrency(context, totalSpent)} spent',
+                'plans_screen.amount_spent'.tr(
+                  namedArgs: {'amount': _formatCurrency(context, totalSpent)},
+                ),
                 style: AppTextStyle.s12in.copyWith(color: Colors.white70),
               ),
             ],
@@ -345,7 +357,7 @@ class _BudgetCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Spent',
+                    'plans_screen.spent_label'.tr(),
                     style: AppTextStyle.s12in.copyWith(
                       color: AppColors.textTertiary,
                     ),
@@ -365,7 +377,7 @@ class _BudgetCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Budget',
+                    'plans_screen.budget_label'.tr(),
                     style: AppTextStyle.s12in.copyWith(
                       color: AppColors.textTertiary,
                     ),
@@ -383,7 +395,9 @@ class _BudgetCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    budget.isOverspent ? 'Overspent' : 'Remaining',
+                    budget.isOverspent
+                        ? 'plans_screen.overspent_label'.tr()
+                        : 'plans_screen.remaining_label'.tr(),
                     style: AppTextStyle.s12in.copyWith(
                       color: AppColors.textTertiary,
                     ),
@@ -421,7 +435,7 @@ class _BudgetCard extends StatelessWidget {
                   AppGap.w8,
                   Expanded(
                     child: Text(
-                      'You\'ve exceeded your budget! Consider reducing expenses in this category.',
+                      'plans_screen.budget_exceeded_advice'.tr(),
                       style: AppTextStyle.s12in.copyWith(
                         color: AppColors.expenseRed,
                       ),
@@ -458,7 +472,7 @@ class _ExpenseTypeChip extends StatelessWidget {
         borderRadius: AppBorderRadius.a4,
       ),
       child: Text(
-        isFixed ? 'Fixed' : 'Variable',
+        isFixed ? 'plans_screen.fixed'.tr() : 'plans_screen.variable'.tr(),
         style: AppTextStyle.s10in.copyWith(
           color: isFixed ? AppColors.primaryPurple : AppColors.accentYellow,
           fontWeight: FontWeight.w600,
@@ -478,13 +492,13 @@ class _CycleChip extends StatelessWidget {
     String label;
     switch (cycle) {
       case BudgetCycle.weekly:
-        label = 'Weekly';
+        label = 'plans_screen.weekly'.tr();
         break;
       case BudgetCycle.monthly:
-        label = 'Monthly';
+        label = 'plans_screen.monthly'.tr();
         break;
       case BudgetCycle.yearly:
-        label = 'Yearly';
+        label = 'plans_screen.yearly'.tr();
         break;
     }
 

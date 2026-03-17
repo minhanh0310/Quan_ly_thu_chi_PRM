@@ -30,7 +30,8 @@
         "apply": "Apply",
         "view_all": "View All",
         "see_more": "See More",
-        "see_less": "See Less"
+        "see_less": "See Less",
+        "add": "Add"
     },
     "home_screen": {
         "home": "Home",
@@ -54,8 +55,15 @@
         "amount": "Amount",
         "transaction_date": "Transaction Date",
         "note": "Note",
-        "hint_note": "e.g. Monthly salary #work",
-        "tags": "Tags"
+        "hint_note": "e.g. work, salary (auto becomes #tag)",
+        "tags": "Tags",
+        "save_income": "Save Income",
+        "save_expense": "Save Expense",
+        "available_balance": "Available balance",
+        "sign_in_warning": "Please sign in again to save.",
+        "select_tag_warning": "Please select a tag to record expense.",
+        "saved_income": "Saved income",
+        "saved_expense": "Saved expense"
     },
     "ledger_screen": {
         "title": "Ledger",
@@ -64,7 +72,11 @@
         "all": "All",
         "income": "Income",
         "expense": "Expense",
-        "no_transactions": "No transactions yet"
+        "no_transactions": "No transactions yet",
+        "filter_title": "Filter",
+        "time_range": "Time range",
+        "all_time": "All time",
+        "category_filter": "Category"
     },
     "plans_screen": {
         "title": "Plans",
@@ -100,7 +112,45 @@
         "from_salary_account": "From salary account",
         "savings_month": "Savings {month}/{year}",
         "goal_reached_title": "Goal",
-        "complete_plan": "Complete plan {name}"
+        "complete_plan": "Complete plan {name}",
+        "overdue_goals": "Overdue Goals",
+        "completed_goals": "Completed Goals",
+        "goal_label": "Goal: {amount}",
+        "target_year": "TARGET: {year}",
+        "target_detail": "Target: {target} · Current: {current}",
+        "budget_categories": "Budget Categories",
+        "total_budget": "Total Budget",
+        "this_month": "This Month",
+        "remaining_of": "Remaining of {amount}",
+        "over_budget_by": "Over budget by {amount}",
+        "percent_used": "{percent}% used",
+        "amount_spent": "{amount} spent",
+        "spent_label": "Spent",
+        "budget_label": "Budget",
+        "overspent_label": "Overspent",
+        "remaining_label": "Remaining",
+        "fixed": "Fixed",
+        "variable": "Variable",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "budget_exceeded_advice": "You've exceeded your budget! Consider reducing expenses in this category.",
+        "recurring_expenses": "Recurring Expenses",
+        "no_recurring_expenses": "No recurring expenses",
+        "recurring_income": "Recurring Income",
+        "no_recurring_income": "No recurring income",
+        "overdue_payments": "Overdue Payments",
+        "upcoming_payments": "Upcoming Payments",
+        "payments_overdue": "{count} payment(s) overdue",
+        "payments_due_soon": "{count} payment(s) due within 3 days",
+        "total_amount": "Total: {amount}",
+        "due_soon": "Due Soon",
+        "overdue_label": "Overdue",
+        "next_date": "Next: {date}",
+        "overdue_date": "Overdue: {date}",
+        "no_history": "No accumulation history yet",
+        "forecast_with_rate": "At a savings rate of {amount}/month, you will complete this goal by {month}/{year}.",
+        "forecast_empty": "Add more savings to see forecast."
     },
     "stats_screen": {
         "title": "Statistics",
@@ -335,6 +385,12 @@
         "education": "Education",
         "long_term_savings": "Long-term Savings",
         "entertainment": "Entertainment",
-        "give": "Give"
+        "give": "Give",
+        "PLAN": "Plan",
+        "INCOME": "Income"
+    },
+    "category_labels": {
+        "plan": "Plan",
+        "income": "Income"
     }
 }
