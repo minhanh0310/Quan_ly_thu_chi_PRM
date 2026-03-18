@@ -4,7 +4,6 @@ class UserModel {
   final String email;
   final String createdAt;
   final String? currency;
-  final String? photoUrl;
 
   const UserModel({
     required this.uid,
@@ -12,7 +11,6 @@ class UserModel {
     required this.email,
     required this.createdAt,
     this.currency,
-    this.photoUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,7 +20,6 @@ class UserModel {
       'email': email,
       'createdAt': createdAt,
       if (currency != null) 'currency': currency,
-      if (photoUrl != null) 'photoUrl': photoUrl,
     };
   }
 
@@ -33,7 +30,6 @@ class UserModel {
       email: map['email'] as String? ?? '',
       createdAt: map['createdAt'] as String? ?? '',
       currency: map['currency'] as String?,
-      photoUrl: map['photoUrl'] as String?,
     );
   }
 }

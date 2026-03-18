@@ -160,7 +160,6 @@ class _SignInFormState extends State<SignInForm> {
               name: user.displayName ?? user.email!.split('@').first,
               email: user.email!,
               createdAt: DateTime.now().toUtc().toIso8601String(),
-              photoUrl: user.photoURL,
             ),
           );
         }
@@ -268,19 +267,12 @@ class _SignInFormState extends State<SignInForm> {
   ) async {
     setState(() => _isLoading = true);
     try {
-      final (userCred, googlePhotoUrl) =
+      final userCred =
           await FirebaseAuthService().linkGoogleToExistingAccount(
         email: email,
         password: password,
         googleCredential: googleCredential,
       );
-      // Update DB with Google photo URL; existing display name is preserved.
-      if (googlePhotoUrl != null) {
-        await UserDatabaseService().updateUserPhotoUrl(
-          userCred.user!.uid,
-          googlePhotoUrl,
-        );
-      }
       // Remember this Google account for auto-login
       try {
         await RememberMeService().saveGoogleAccount(

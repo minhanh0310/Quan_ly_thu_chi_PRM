@@ -52,7 +52,6 @@ class UserDatabaseService {
           email: existingUser.email,
           createdAt: existingUser.createdAt,
           currency: existingUser.currency,
-          photoUrl: photoUrl,
         ).toMap(),
       );
     }

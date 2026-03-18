@@ -232,11 +232,9 @@ class FirebaseAuthService {
   /// Signs in with email/password then links the provided Google credential,
   /// effectively merging the two accounts.
   ///
-  /// Returns `(UserCredential, googlePhotoUrl)`. The photo URL is extracted
-  /// from Google's provider data and, if available, also applied to the
-  /// Firebase Auth profile so [currentUser.photoURL] is populated.
-  /// The display name in both Firebase Auth and the database is left unchanged.
-  Future<(UserCredential, String?)> linkGoogleToExistingAccount({
+  /// Returns `UserCredential`. The display name from the manually created
+  /// account is preserved (not overwritten by Google's name).
+  Future<UserCredential> linkGoogleToExistingAccount({
     required String email,
     required String password,
     required AuthCredential googleCredential,
@@ -253,20 +251,6 @@ class FirebaseAuthService {
     final linkedCred =
         await userCred.user!.linkWithCredential(googleCredential);
 
-    // Extract Google's photo URL from the linked provider data.
-    String? googlePhotoUrl;
-    for (final provider in (linkedCred.user?.providerData ?? [])) {
-      if (provider.providerId == 'google.com' && provider.photoURL != null) {
-        googlePhotoUrl = provider.photoURL;
-        break;
-      }
-    }
-
-    // Update Firebase Auth photoURL with Google's photo.
-    if (googlePhotoUrl != null) {
-      await linkedCred.user?.updatePhotoURL(googlePhotoUrl);
-    }
-
     // Restore the original display name — do NOT let Google's name overwrite
     // the name the user registered with manually.
     if (originalDisplayName != null && originalDisplayName.isNotEmpty) {
@@ -275,6 +259,6 @@ class FirebaseAuthService {
 
     await linkedCred.user?.reload();
 
-    return (userCred, googlePhotoUrl);
+    return userCred;
   }
 }
